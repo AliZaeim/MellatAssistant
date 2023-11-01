@@ -1,0 +1,45 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.UpdateCarBodyFilmsStateVM
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateCBIns" asp-action="UpdateCarBodyFilms" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#cbFilms">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Str_CarInteriorFilm" />
+            <input type="hidden" asp-for="Str_EngineSpaceFilm" />
+            <input type="hidden" asp-for="Str_OuterBodyFilm" />
+           
+            <div class="offset-md-3 col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="CarInteriorFilm" class="control-label"></label><video controls height="100" width="100" class="float-md-left zoom"><source src="~/images/Ins/carbody/@Model.Str_CarInteriorFilm" /></video>                    
+                    <input asp-for="CarInteriorFilm" type="file" class="form-control" />
+                    <span asp-validation-for="CarInteriorFilm" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EngineSpaceFilm" class="control-label"></label><video controls height="100" width="100" class="float-md-left zoom"><source src="~/images/Ins/carbody/@Model.Str_EngineSpaceFilm" /></video>
+                    <input asp-for="EngineSpaceFilm" type="file" class="form-control" />
+                    <span asp-validation-for="EngineSpaceFilm" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OuterBodyFilm" class="control-label"></label><video controls height="100" width="100" class="float-md-left zoom"><source src="~/images/Ins/carbody/@Model.Str_OuterBodyFilm" /></video>
+                    <input asp-for="OuterBodyFilm" type="file" class="form-control" />
+                    <span asp-validation-for="OuterBodyFilm" class="text-danger"></span>
+                </div>
+            </div>
+           
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

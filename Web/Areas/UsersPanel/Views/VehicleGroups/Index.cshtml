@@ -1,0 +1,117 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.ThirdParty.VehicleGroup>
+@using Core.Services.Interfaces;
+@inject IVehicleGroupService _vahicleGroup
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "گروه های وسیله نقلیه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">گروه های وسیله نقلیه</h1>
+@if (_userService.CheckPermissionByName("addvg", User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت گروه</a>
+    </p>
+}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.GroupTitle)
+            </th>
+            <th class="text-xs-center align-middle">کاربری ها</th>
+            <th class="text-xs-center align-middle">وسیله نقلیه</th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(w => w.Parent == null).ToList())
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.GroupTitle)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @{
+                        var usages = await _vahicleGroup.GetVehicleGroupUsagesByGroupIdAsync(item.Id);
+                    }
+                    @foreach (var us in usages)
+                    {
+                        @if (us == usages.LastOrDefault())
+                        {
+                            @us.VehicleUsage.Usage
+                        }
+                        else
+                        {
+                            @us.VehicleUsage.Usage <span> - </span>
+                        }
+                    }
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-xs-center align-middle p-0">عنوان</th>
+                                <th class="text-xs-center align-middle p-0">حق بیمه مالی</th>
+                                <th class="text-xs-center align-middle p-0">جریمه دیرکرد</th>
+                                <th class="text-xs-center align-middle p-0">شروع بخشودگی</th>
+                                <th class="text-xs-center align-middle p-0">پایان بخشودگی</th>
+                                <th class="text-xs-center align-middle p-0">حق بیمه</th>
+                                <th class="text-xs-center align-middle p-0">محدویت سال ساخت</th>
+                                <th class="text-xs-center align-middle p-0">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var child in Model.Where(w => w.ParentId == item.Id).ToList())
+                            {
+                                <tr>
+                                    <td class="text-xs-center align-middle p-0">@child.GroupTitle</td>
+                                    <td class="text-xs-center align-middle p-0">@child.FinancialPremium.GetValueOrDefault().ToString("N0")</td>
+                                    <td class="text-xs-center align-middle p-0">@child.DelayedPenalty.GetValueOrDefault(0)</td>
+                                    <td class="text-xs-center align-middle p-0">@child.ImmunityStartDate</td>
+                                    <td class="text-xs-center align-middle p-0">@child.ImmunityEndDate</td>
+                                    <td class="text-xs-center align-middle p-0">@child.GroupPremium.Value.ToString("N0")</td>
+                                    <td class="text-xs-center align-middle p-0">@child.VehicleConstructionYearLimit</td>
+                                    <td class="text-xs-center align-middle p-0">
+                                        @if (_userService.CheckPermissionByName("editvg",User.Identity.Name))
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@child.Id">ویرایش</a> <span>|</span>
+                                        }
+                                        @if (_userService.CheckPermissionByName("deletevg",User.Identity.Name))
+                                        {
+                                            <a asp-action="Delete" class="text-danger" asp-route-id="@child.Id">حــذف</a>
+                                        }                                        
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+
+                <td class="text-xs-center align-middle">
+                    @if (item.Parent == null)
+                    {
+                        @if (_userService.CheckPermissionByName("addvg",User.Identity.Name))
+                        {
+                            <a asp-action="Create" asp-route-parentId="@item.Id">ثبت وسیله نقلیه</a> <span>|</span>
+                        }                        
+                    }
+                    @if (_userService.CheckPermissionByName("editvg", User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletevg", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" class="text-danger" asp-route-id="@item.Id">حــذف</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("manageusage", User.Identity.Name))
+                    {
+                        <a asp-action="AddVehicleUsages" asp-route-gId="@item.Id">مدیریت کاربری</a>
+                    }                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,66 @@
+﻿@model DataLayer.Entities.InsPolicy.Life.LifeInsurance
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر صفحه اول پرسشنامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.QuestionnairePage1Image" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر صفحه دوم پرسشنامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.QuestionnairePage2Image" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر صفحه سوم پرسشنامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.QuestionnairePage3Image" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر صفحه چهارم پرسشنامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.QuestionnairePage4Image" />
+    </div>
+</div>
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined") {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes") {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "") {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>  

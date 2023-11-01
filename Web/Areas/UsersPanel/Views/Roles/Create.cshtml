@@ -1,0 +1,76 @@
+﻿@model DataLayer.Entities.User.Role
+
+@{
+    ViewData["Title"] = "ثبت نقش";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ثبت نقش جدید</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <form asp-action="Create">
+            <div class="col-md-4 col-xs-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="RoleName" class="control-label"></label>
+                    <input asp-for="RoleName" class="form-control" placeholder="انگلیسی باشد" />
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoleTitle" class="control-label"></label>
+                    <input asp-for="RoleTitle" class="form-control" />
+                    <span asp-validation-for="RoleTitle" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="ThirdPartyPercent" class="control-label"></label>
+                    <input asp-for="ThirdPartyPercent" class="form-control" />
+                    <span asp-validation-for="ThirdPartyPercent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LifePercent" class="control-label"></label>
+                    <input asp-for="LifePercent" class="form-control" />
+                    <span asp-validation-for="LifePercent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LiabilityPercent" class="control-label"></label>
+                    <input asp-for="LiabilityPercent" class="form-control" />
+                    <span asp-validation-for="LiabilityPercent" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="FirePercent" class="control-label"></label>
+                    <input asp-for="FirePercent" class="form-control" />
+                    <span asp-validation-for="FirePercent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarBodyPercent" class="control-label"></label>
+                    <input asp-for="CarBodyPercent" class="form-control" />
+                    <span asp-validation-for="CarBodyPercent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TravelPercent" class="control-label"></label>
+                    <input asp-for="TravelPercent" class="form-control" />
+                    <span asp-validation-for="TravelPercent" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group offset-md-4 col-md-4 col-xs-12">
+                <input type="submit" value="ثــبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}

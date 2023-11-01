@@ -1,0 +1,194 @@
+﻿@page "{code:int?}"
+
+@model IndexModel
+
+@{
+    ViewData["Title"] = "بیمه ملت - سرپرستی سازمان فروش";
+
+}
+@section Head{
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="سایت بیمه ملت به نمایندگی از بیمه ملت جهت ثبت آسان درخواست هر نوع بیمه نامه تهیه شده است." />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    <link rel="canonical" href="https://metainsur.ir/" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<section id="above-page" class="container-fluid mb-5 mb-3 ">
+    <div class="above-page-img">
+        <img src="/Images/bg1.jpg" alt="Ins Assistant Header Background" class="d-lg-block d-none">
+    </div>
+    <div class="container">
+        <div class="row d-block">
+            <div class="above-page-content col-12">
+                <div class="above-page-tagline">
+                    <h1 class="main-tagline IRANSansWeb_Bold">سامانه جامع مشاوره و خرید بیمه</h1>
+                    <p class="explaine-tagline">
+                        با کارشناسان متخصص ما آنلاین
+                        گفتگو کنید
+                    </p>
+                </div>
+                <div class="above-page-search">
+                    <div id="frmSearch">
+                        <input type="search" name="search" autocomplete="off" class="srch-input" id="inpSearch" placeholder="چه بیمه ای نیاز دارید؟ ..." />
+                        <a href="javascripts:void(0)" id="indexBtnSearch" class="search-icon">
+                            <i class="fas fa-search text-danger fa-2x "></i>
+                        </a>
+                    </div>
+                    <div id="searchDiv"></div>
+                </div>
+                <div class="last-question-time d-lg-block d-none">
+                    <div class="d-flex flex-row justify-content-center">
+                        <a href="https://wa.me/message/VLJ5A5TAET2ZH1" class="btn btn-danger text-white rad25 py-2 m-2"><i class="fa fa-cart-plus  ml-2"></i>گفتگو با کارشناس فروش</a>
+                        <a href="https://wa.me/message/6Y63NCQB6AMLF1" class="btn btn-purple text-white rad25 py-2 m-2"><i class="fa fa-briefcase  ml-2"></i>گفتگو با کارشناس امور نمایندگان</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container-fluid bg-white my-5 p-4 ">
+    <div class="max_w mx-auto d-flex flex-lg-row flex-column text-lg-right text-center mt-lg-0 mt-5">
+        <div>
+            <img id="mo_pic" src="/Images/moshavere.png" />
+        </div>
+        <div class="pt-lg-5">
+            <h4 class="IRANSansWeb_Medium mb-3"> نیاز به مشاوره دارید ؟</h4>
+            <p class="text-justify">
+                مسلما هدف از خرید هر بیمه نامه رفع نگرانی در زمان وقوع حوادث پیش بینی نشده است و زمانی می توان اطمینان داشت که در زمان خسارت از پوشش مناسبی برخوردار هستیم که در زمان خرید بیمه نامه بیمه ای کامل و متناسب با نیاز خود خریده باشیم. بیمه نامه ای که هم پوششهای مناسب و کافی داشته باشد و هم با مناسبترین قیمت صادر شده باشد. کارشناسان ما هم در زمان خرید بیمه نامه و هم در زمان دریافت خسارت در کنار شما هستند تا بهترین بیمه نامه با مناسبترین قیمت را تهیه کنید و در زمان وقوع خسارت احتمالی نیز کاملترین خسارت را از محل بیمه نامه خود دریافت کنید. کافی است با ما تماس بگیرید و در کلیه امور بیمه ای مشاوره تخصصی دریافت کنید.
+            </p>
+        </div>
+    </div>
+</section>
+<section id="reason" class="container py-3 py-sm-3 ">
+    <h5 class="IRANSansWeb_Medium bt-color text-center">محصولات بیمه ملت </h5>
+    <div class="row  mt-4 mx-1">
+        <div class="col-lg-4  mb-3">
+            <a href="/Life-Insurance">
+                <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                    <div class="mt-4 ">
+                        <img src="/Images/icons/life-ins.png" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="IRANSansWeb_Medium">بیمه زندگی</h6>
+                        <p class="text-justify">با بیمه زندگی آرامش امروز و آسایش فردا را برای خود و خانواده به ارمغان بیاورید </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4  mb-3">
+            <a href="/Third-Party-Price-Inquiry">
+                <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                    <div class="mt-4">
+                        <img src="/Images/icons/third-ins.png" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="IRANSansWeb_Medium">بیمه ثالث</h6>
+                        <p class="text-justify">بیمه ثالث مسئولیت قانونی شماست، ما این مسئولیت را سریع و آنلاین پوشش می دهیم</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4  mb-3">
+            <a href="/Car-Body-Price-Inquiry">
+                <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                    <div class="mt-4">
+                        <img src="/Images/icons/car-ins.gif" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="IRANSansWeb_Medium">بیمه بدنه</h6>
+                        <p class="text-justify">بیمه ثالث خسارت خودرو مقصر را پوشش نمی دهد، شما به یک بیمه بدنه هم نیاز دارید</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="row  mt-4 mx-1">
+        <div class="col-lg-4  mb-3">
+            <a href="/Fire-Insurance-Price-Inquiry">
+                <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                    <div class="mt-4">
+                        <img src="/images/icons/fires-ins.png" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="IRANSansWeb_Medium">بیمه آتش سوزی</h6>
+                        <p class="text-justify">آتش سوزی، انفجار، زلزله، سیل و طوفان در یک بیمه اتش سوزی پوشش داده می شود</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+        <div class="col-lg-4  mb-3">
+            <a href="/Liabilty-Insurance">
+                <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                    <div class="mt-4">
+                        <img src="/images/icons/legal-ins.png" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="IRANSansWeb_Medium">بیمه مسئولیت</h6>
+                        <p class="text-justify">اگر شاغل هستید، کارفرما یا پزشک هستید یا مدیر یک ساختمان، بیمه مسئولیت نیاز دارید</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4  mb-3">
+            <a href="/Travel-Insurance">
+                <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                    <div class="mt-4">
+                        <img src="/Images/icons/travel-ins.png" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="IRANSansWeb_Medium">بیمه مسافرتی</h6>
+                        <p class="text-justify">عازم سفر هستید؟ سفارت کشور مقصد از شما بیمه میخواد؟ براتون آنلاین صدر می کنیم</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</section>
+<section class="container my-4">
+    <div id="foottop" class="row p-3 value-body grad-bg m-2 text-center">
+        <div class="col-md-4 d-flex flex-sm-row  flex-wrap flex-column float-left text-md-left text-center">
+            <a href="#"><img src="/Images/logo2.png" /></a><br />
+        </div>
+        <div class="col-md-8 pt-3 d-flex flex-md-row flex-wrap flex-column text-md-right text-center">
+            <span class="mb-2 pl-3 IRANSansWeb_Medium text-white"><i class="fa fa-stethoscope fa-2x ml-2"></i>راهنمایی و مشاوره :</span>
+            <a href="tel:021284285333" class="rounded-btn text-white support-phone IRANSansWeb_Bold">021-28428533</a>
+        </div>
+    </div>
+</section>
+
+
+@await Component.InvokeAsync("LastBlogsComponent")
+
+@section Footer{
+    <partial name="_Footer" />
+}
+@section Scripts{
+    <script src="~/Layout/Js/jquery-2.0.0.min.js"></script>    
+    <script src="~/Layout/Js/bootstrap.min.js"></script>
+    <script src="~/Layout/Js/owl.carousel.js"></script>
+    <script src="~/Layout/Js/custom.js"></script>
+    <script src="~/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+}
+
+
+
+
+

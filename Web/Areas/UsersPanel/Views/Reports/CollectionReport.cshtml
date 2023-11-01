@@ -1,0 +1,101 @@
+﻿@model Core.DTOs.Admin.CollectionReportModelVM
+@{
+    ViewData["Title"] = "گزارش کارمزد وصول";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<h1 class="text-xs-center alert alert-info">کارمزد وصول</h1>
+
+<div class="container-fluid mb-2">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form aasp-action="CollectionReport" method="post">
+            <div class="form-group col-md-6 col-xs-12">
+                <label class="control-label" asp-for="Mounth"></label>
+                <select class="form-control" asp-for="Mounth">
+                    @for (var m = 1; m <= 12; m++)
+                    {
+                        <option value="@m">@m</option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="Mounth"></span>
+            </div>
+            <div class="form-group col-md-6 col-xs-12">
+                <label class="control-label" asp-for="Year"></label>
+                <select class="form-control" asp-for="Year">
+                    @for (var y = 1401; y < 1450; y++)
+                    {
+                        <option value="@y">@y</option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="Year"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="تایید" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+@if (Model.MyCollectionModelVMs != null)
+{
+    if (Model.MyCollectionModelVMs.Count != 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-xs-center align-middle p-0">ردیف</th>
+                        <th class="text-xs-center align-middle p-0">شماره بیمه نامه</th>
+                        <th class="text-xs-center align-middle p-0">بیمه گذار</th>
+                        <th class="text-xs-center align-middle p-0">بیمه شده</th>
+                        <th class="text-xs-center align-middle p-0">کارشناس فروش</th>
+                        <th class="text-xs-center align-middle p-0">کد کارشناس</th>
+                        <th class="text-xs-center align-middle p-0">نوع تعهد</th>
+                        <th class="text-xs-center align-middle p-0">مبلغ تعهد</th>
+                        <th class="text-xs-center align-middle p-0">مبلغ کارمزد</th>
+                        <th class="text-xs-center align-middle p-0">تاریخ تعهد</th>
+                        <th class="text-xs-center align-middle p-0">تاریخ انجام تعهد</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int radif = 1;
+                    }
+                    @foreach (var item in Model.MyCollectionModelVMs)
+                    {
+                        <tr>
+                            <td class="text-xs-center align-middle p-0">@radif</td>
+                            <td class="text-xs-center align-middle p-0">@item.InsNO</td>
+                            <td class="text-xs-center align-middle p-0">@item.InsurerName</td>
+                            <td class="text-xs-center align-middle p-0">@item.InsuredName</td>
+                            <td class="text-xs-center align-middle p-0">@item.MarketerName</td>
+                            <td class="text-xs-center align-middle p-0">@item.MarketerCode</td>
+                            <td class="text-xs-center align-middle p-0">@item.CommitmentType</td>
+                            <td class="text-xs-center align-middle p-0">@item.CommitmentValue.GetValueOrDefault().ToString("N0")</td>
+                            <td class="text-xs-center align-middle p-0">@item.UserCommissionValue.GetValueOrDefault().ToString("N0")</td>
+                            <td class="text-xs-center align-middle p-0">@item.CommitmentDate</td>
+                            <td class="text-xs-center align-middle p-0">@item.CommitmentDoDate</td>
+                        </tr>
+                        radif++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <h3 class="text-xs-center alert alert-danger">برای این دوره زمانی کارمزدی وجود ندارد !</h3>
+    }
+}
+else
+{
+    <h3 class="text-xs-center alert alert-danger">برای این دوره زمانی کارمزدی وجود ندارد !</h3>
+}
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+        });
+    </script>
+}

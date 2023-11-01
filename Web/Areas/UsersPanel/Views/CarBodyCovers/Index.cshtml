@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.CarBody.CarBodyCover>
+@using Core.Services.Interfaces;
+@inject ICarBodyService _carBodyService
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "پوشش های بیمه بدنه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@if (ViewData["parent"] == null)
+{
+    <h1 class="text-xs-center alert alert-info">پوششهای بیمه بدنه</h1>
+    @if (_userService.CheckPermissionByName("addcbc", User.Identity.Name))
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-success">ثبت پوشش</a>
+        </p>
+    }
+
+}
+else
+{
+    <h1 class="text-xs-center alert alert-info">زیر پوشش های @ViewData["parent"].ToString() بیمه بدنه</h1>
+    <p>
+        @if (_userService.CheckPermissionByName("addcbc", User.Identity.Name))
+        {
+            <a asp-action="Create" asp-route-parentId="@ViewData["pId"]" class="btn btn-success">ثبت زیر پوشش</a>
+        }
+        @if (_userService.CheckPermissionByName("cbcovers", User.Identity.Name))
+        {
+            <a asp-action="Index" class="btn btn-info">بازگشت</a>
+        }
+
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Rate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th class="text-xs-center align-middle">
+                والد
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (item.Parent != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Parent.Title)
+                    }
+                    else
+                    {
+                        <span> - </span>
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editcbc", User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span> | </span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletecbc", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حـذف</a>
+                    }
+
+                    @if (item.ParentId == null)
+                    {
+                        @if (_userService.CheckPermissionByName("cbcovers", User.Identity.Name))
+                        {
+                            <span> | </span>
+                            <a asp-action="Index" asp-route-pId="@item.Id">زیر پوشش ها <span class="tag tag-square tag-success">@await _carBodyService.GetChildsOfCoverParentCountAsync(item.Id)</span></a>
+                        }
+
+                    }
+
+
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

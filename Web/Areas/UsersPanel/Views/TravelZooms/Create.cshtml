@@ -1,0 +1,57 @@
+﻿@model DataLayer.Entities.InsPolicy.Travel.TravelZoom
+
+@{
+    ViewData["Title"] = "ثبت منطقه سفر";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    List<DataLayer.Entities.InsPolicy.Travel.TravelInsClass> travelInsClasses = ViewData["TravelClasses"] as List<DataLayer.Entities.InsPolicy.Travel.TravelInsClass>;
+}
+
+<h1 class="text-xs-center alert alert-info">ثبت منطقه سفر</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-md-4 col-md-4 col-xs-12">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsActive" class="control-label"></label>
+                    <select asp-for="IsActive" class="form-control">
+                        <option value="true">فعال</option>
+                        <option value="false">غیر فعال</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label border-bottom w-100"><span >کلاس های سفر</span><span class="text-danger text-bold-900 font-size-large">*</span></label>
+                    @for (int i = 0; i < travelInsClasses.Count; i++)
+                    {
+                        <div class="form-group form-check text-xs-right">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="SelectedClasses" value="@travelInsClasses[i].Id" class="form-check-input" /> @travelInsClasses[i].Title
+                            </label>
+                        </div>
+                    }
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+

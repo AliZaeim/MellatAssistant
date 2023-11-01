@@ -1,0 +1,114 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس جلوی ماشین</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarFrontImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس پشت ماشین</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBehindImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس سمت راننده</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DriverSideImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس سمت شاگرد</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ApprenticeSideImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس زاویه 1</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle1Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس زاویه 2</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle2Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس زاویه 3</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle3Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس زاویه 4</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle4Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس کاپوت</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.HoodImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس صندوق عقب</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.TrunkImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس سقف ماشین</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RoofImage" />
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="inpSuccOuter" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccOuter").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

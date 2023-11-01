@@ -1,0 +1,89 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.UpdateCarBodyInnerImagesVM
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateCBIns" asp-action="UpdateCarBodyInnerImages" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#cbInnerImages">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="guid" />
+            <input type="hidden" asp-for="Str_DashboardFullViewImage" />
+            <input type="hidden" asp-for="Str_ApprenticeGlassImage" />
+            <input type="hidden" asp-for="Str_ApprenticeRearGlassImage" />
+            <input type="hidden" asp-for="Str_DriverGlassImage" />
+            <input type="hidden" asp-for="Str_DriverRearGlassImage" />
+            <input type="hidden" asp-for="Str_FrontWindShieldImage" />
+            <input type="hidden" asp-for="Str_KilometersImage" />
+            <input type="hidden" asp-for="Str_RearWindowImage" />
+            <input type="hidden" asp-for="Str_TapeRecorderImage" />
+            <input type="hidden" asp-for="Str_SunRoofGlassImage" />         
+            <div class="col-md-4 col-xs-12">                 
+                <div class="form-group">
+                    <label asp-for="DashboardFullViewImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_DashboardFullViewImage" />
+                    <input asp-for="DashboardFullViewImage" type="file" class="form-control" />
+                    <span asp-validation-for="DashboardFullViewImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TapeRecorderImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_TapeRecorderImage" />
+                    <input asp-for="TapeRecorderImage" type="file" class="form-control" />
+                    <span asp-validation-for="TapeRecorderImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="KilometersImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_KilometersImage" />
+                    <input asp-for="KilometersImage" type="file" class="form-control" />
+                    <span asp-validation-for="KilometersImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FrontWindShieldImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_FrontWindShieldImage" />
+                    <input asp-for="FrontWindShieldImage" type="file" class="form-control" />
+                    <span asp-validation-for="FrontWindShieldImage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">                 
+                <div class="form-group">
+                    <label asp-for="RearWindowImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_RearWindowImage" />
+                    <input asp-for="RearWindowImage" type="file" class="form-control" />
+                    <span asp-validation-for="RearWindowImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DriverGlassImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_DriverGlassImage" />
+                    <input asp-for="DriverGlassImage" type="file" class="form-control" />
+                    <span asp-validation-for="DriverGlassImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ApprenticeGlassImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_ApprenticeGlassImage" />
+                    <input asp-for="ApprenticeGlassImage" type="file" class="form-control" />
+                    <span asp-validation-for="ApprenticeGlassImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DriverRearGlassImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_DriverRearGlassImage" />
+                    <input asp-for="DriverRearGlassImage" type="file" class="form-control" />
+                    <span asp-validation-for="DriverRearGlassImage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                 <div class="form-group">
+                    <label asp-for="ApprenticeRearGlassImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_ApprenticeRearGlassImage" />
+                    <input asp-for="ApprenticeRearGlassImage" type="file" class="form-control" />
+                    <span asp-validation-for="ApprenticeRearGlassImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SunRoofGlassImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_SunRoofGlassImage" />
+                    <input asp-for="SunRoofGlassImage" type="file" class="form-control" />
+                    <span asp-validation-for="SunRoofGlassImage" class="text-danger"></span>
+                </div>                
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

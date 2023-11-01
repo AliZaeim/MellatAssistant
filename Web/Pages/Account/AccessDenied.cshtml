@@ -1,0 +1,50 @@
+﻿@page "/AccessDenied"
+@model Web.Pages.Account.AccessDeniedModel
+@{
+    ViewData["Title"] = "مجوز دسترسی";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+@section Head{
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+   @* <link href="/Layout/Css/animate.css" rel="stylesheet" />*@
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    @*<link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />*@
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+
+}
+    @section Header{
+    <partial name="_Header" />
+}
+
+    <div class="container text-center mt-5">
+        <img src="~/images/icons/accessdenied.jpg" class="w-50" alt="access denied image" />
+        <h3 class="text-danger text-xs-center mt-1">
+            شما مجوز دسترسی به آدرس مورد نظر را ندارید !
+        </h3>
+    </div>
+
+
+
+
+    @section Footer{
+    <partial name="_Footer" />
+}
+    @section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+}

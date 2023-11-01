@@ -1,0 +1,105 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 1</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison1Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 2</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison2Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 3</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison3Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 4</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison4Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 5</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison5Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 6</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison6Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 7</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison7Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 8</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison8Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 9</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison9Image" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 10</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison10Image" />
+        </div>
+    </div>
+</div>
+<input type="hidden" id="inpSuccCorrission" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccCorrission").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

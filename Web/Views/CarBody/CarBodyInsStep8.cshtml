@@ -1,0 +1,628 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+
+<section class="row">
+    <div class="col-12 p-3">
+        <div class="row pr-2 pl-2">
+            <div class="col-md-4 col-12">
+                <a href="/Fire-Insurance-Price-Inquiry" class="btn btn-success text-white col-12 col-md-6">استعلام مجدد</a>
+            </div>
+            <div class="col-md-4 col-12 text-center pt-1">
+                @*<h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault().ToString("N0") ریال</h5>*@
+            </div>
+            <div class="col-md-4 col-12 text-md-left">
+                <form asp-action="CarBodyInsurance" method="post">
+                    <input type="hidden" name="Premium" value="@Model.Premium" />
+                    <input type="hidden" name="Clear" value="true" />
+                    <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-center text-white pl-1 pr-1 col-12 col-md-6">
+                </form>
+            </div>
+        </div>
+         <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        مشخصات
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">            
+            <h5 class="text-center col-12">شماره پیگیری : @Model.TraceCode</h5>
+            <div class="col-12 col-md-4 text-center">
+                <h6 class="text-center border-bottom col-12"><span class="text-primary">کارشناس فروش</span></h6>
+                @{
+                    DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.SellerCode);
+                    var role = await _genericInsService.GetLastActiveRoleAsync(Model.SellerRoleId.Value);
+                }
+                <p>نام : @seller?.FullName</p>
+                <p>تلفن : @seller?.Cellphone</p>
+                <p>کد : @Model.SellerCode</p>
+            </div>
+            <div class="col-12 col-md-8">
+                @{
+                    string state = "فرد عادی";
+                    if (Model.InsurerStatus == "retired")
+                    {
+                        state = "بازنشته کشوری یا تامین اجتماعی";
+                    }
+                    if (Model.InsurerStatus == "related")
+                    {
+                        state = "منتسب بازنشسته";
+                    }
+                }
+                <h6 class="text-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+                <p class="text-center">نام : @Model.InsurerName @Model.InsurerFamily</p>
+                <p class="text-center">تلفن : @Model.InsurerCellphone</p>
+                <p class="text-center">تصویر کارت ملی</p>
+                <div class="col-12 text-center">
+                    <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/carbody/@Model.InsurerNCImage" />
+                </div>
+                <p class="text-center">وضعیت : @state</p>
+                @if (Model.HasInstallmentRequest)
+                {
+                    <p class="text-center">پرداخت به صورت اقساط : بله</p>
+                    <p class="text-center">تصویر رضایت کسر از حقوق</p>
+                    <div class="col-12 text-center">
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/carbody/@Model.PayrollDeductionImage" />
+                    </div>
+
+                }
+                else
+                {
+                    <p class="text-center">پرداخت به صورت اقساط : خیر</p>
+                }
+                @if (Model.InsurerStatus == "related")
+                {
+                    <p class="text-center">تصویر معرفی نامه منتسب</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/carbody/@Model.AttributedLetterImage" />
+                    </div>
+                }
+            </div>
+        </section>
+         <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        مدارک
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            
+            <div class="col-12 col-md-4 mb-1">
+                <div class="col-12 text-center">تصویر فرم پیشنهاد صفحه</div>
+                <div class="col-12 text-center">
+                    <a href="/images/Ins/carbody/@Model.SuggestionFormImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.SuggestionFormImage" /></a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="col-12 text-center">تصویر روی کارت خودرو</div>
+                <div class="col-12 text-center">
+                    <a href="/images/Ins/carbody/@Model.CarCardFrontImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarCardFrontImage" /></a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="col-12 text-center">تصویر پشت کارت خودرو</div>
+                <div class="col-12 text-center">
+                    <a href="/images/Ins/carbody/@Model.CarCardBackImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarCardBackImage" /></a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="col-12 text-center">تصویر روی گواهینامه</div>
+                <div class="col-12 text-center">
+                    <a href="/images/Ins/carbody/@Model.DrivingPermitFrontImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DrivingPermitFrontImage" /></a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="col-12 text-center">تصویر پشت گواهینامه</div>
+                <div class="col-12 text-center">
+                    <a href="/images/Ins/carbody/@Model.DrivingPermitBackImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DrivingPermitBackImage" /></a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="col-12 text-center">تصویر بیمه نامه قبلی</div>
+                <div class="col-12 text-center">
+                    <a href="/images/Ins/carbody/@Model.PreviousInsImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.PreviousInsImage" /></a>
+                </div>
+            </div>
+            @{
+                string InsHis = "بیمه بدنه ندارد";
+                switch (Model.InsuranceHistoryStatus.GetValueOrDefault())
+                {
+                    case 1:
+                        InsHis = "بیمه بدنه ندارد";
+                        break;
+                    case 2:
+                        InsHis = "بیمه از سایر شرکت ها دارد";
+                        break;
+                    case 3:
+                        InsHis = "بیمه بدنه از بیمه ملت دارد";
+                        break;
+                    default:
+                        InsHis = "بیمه بدنه ندارد";
+                        break;
+                }
+
+            }
+            <div class="col-12 col-md-4">
+                <p class="text-center">
+                    وضعیت سابقه بیمه : @InsHis
+                </p>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">آیا تخفیف عدم خسارت دارد؟ @((Model.HasNoneDamageDiscount) ? "بله" : "خیر")</div>
+                    <div class="col-12 text-center">تصویر گواهینامه عدم خسارت</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.NoDamageCertificateImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.NoDamageCertificateImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">آیا سلامت خودرو تغییر کرده است؟ @((Model.IsChangedHealthOfCar) ? "بله" : "خیر")</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">آیا سال قبل خسارت گرفته اید؟ @((Model.RecievedDamageLastYear) ? "بله" : "خیر")</div>
+                </div>
+            </div>
+        </section>
+        <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        تصاویر بیرونی
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس جلوی ماشین</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.CarFrontImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarFrontImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس پشت ماشین</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.CarBehindImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBehindImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس سمت راننده</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.DriverSideImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DriverSideImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس سمت شاگرد</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.ApprenticeSideImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ApprenticeSideImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس زاویه 1</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Angle1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle1Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس زاویه 2</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Angle2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle2Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس زاویه 3</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Angle3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle3Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس زاویه 4</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Angle4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Angle4Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس کاپوت</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.HoodImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.HoodImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس صندوق عقب</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.TrunkImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.TrunkImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس سقف ماشین</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.RoofImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RoofImage" /></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        تصاویر داخلی
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس نمای کامل داشبورد</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.DashboardFullViewImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DashboardFullViewImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس ضبط صوت</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.TapeRecorderImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.TapeRecorderImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس کیلومتر کارکرد</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.KilometersImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.KilometersImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه جلو</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.FrontWindShieldImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.FrontWindShieldImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه عقب</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.RearWindowImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RearWindowImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه راننده</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.DriverGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DriverGlassImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه شاگرد</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.ApprenticeGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ApprenticeGlassImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه عقب راننده</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.DriverGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DriverRearGlassImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه عقب شاگرد</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.ApprenticeRearGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ApprenticeRearGlassImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس شیشه سانروف</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.SunRoofGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.SunRoofGlassImage" /></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        تصاویر موتور
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس نمای کامل موتور</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.EngineFullViewImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.EngineFullViewImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس پلاک موتور</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.EngineLicensePlate"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.EngineLicensePlate" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس حک شاسی</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.ChassisEngravingImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ChassisEngravingImage" /></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        تصاویر لاستیک ها و لوازم اضافه
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس رینگ و لاستیک 1</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.RimsandTires1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RimsandTires1Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس رینگ و لاستیک 2</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.RimsandTires2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RimsandTires2Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس رینگ و لاستیک 3</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.RimsandTires3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RimsandTires3Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس رینگ و لاستیک 4</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.RimsandTires4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RimsandTires4Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس باندها از داخل اتاق</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.InsideBandsImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.InsideBandsImage" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس سیستم صوتی از صندوق عقب</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.AudioSystemFromTrunkImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.AudioSystemFromTrunkImage" /></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        تصاویر خوردگی ها و لکه های بدنه
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 1</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison1Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 2</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison2Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 3</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison3Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 4</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison4Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 5</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison5Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison5Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 6</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison6Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison6Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 7</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison7Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison7Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 8</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison8Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison8Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 9</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison9Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison9Image" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1">
+                <div class="row">
+                    <div class="col-12 text-center">عکس خوردگی و لکه بدنه 10</div>
+                    <div class="col-12 text-center">
+                        <a href="/images/Ins/carbody/@Model.Corrison10Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.Corrison10Image" /></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="col-12 alert alert-info">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="text-center ">
+                        فیلم ها
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <section class="row">
+            <div class="col-12 col-md-4 mb-1 text-center">
+                <div class="row">
+                    <div class="col-12 text-center">فیلم کوتاه از بدنه بیرونی</div>
+                    <div class="col-12 text-md-center">
+                        <video controls width="150" height="150" >
+                            <source src="/images/Ins/carbody/@Model.OuterBodyFilm" />
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1 text-center">
+                <div class="row">
+                    <div class="col-12 text-center">فیلم کوتاه از فضای داخلی</div>
+                    <div class="col-12 text-center">
+                        <video controls width="150" height="150" >
+                            <source src="/images/Ins/carbody/@Model.CarInteriorFilm" />
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-1 text-center">
+                <div class="row">
+                    <div class="col-12 text-center">فیلم کوتاه از فضای موتور</div>
+                    <div class="col-12 text-center">
+                        <video controls width="150" height="150">
+                            <source src="/images/Ins/carbody/@Model.EngineSpaceFilm" />
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-12 p-3">
+        
+        <div class="form-group text-center">
+            @if (string.IsNullOrEmpty(Model.MobileImagesTraceCode))
+            {
+                <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep7" data-ajax-update="#cbform-card">مرحله قبل</a>
+            }
+            else
+            {
+                <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep1" data-ajax-update="#cbform-card">مرحله قبل</a>
+            }
+            
+            
+           
+            <a class="btn btn-outline-info" href="/FollowupRequest/?TrcCode=@Model.TraceCode&&InsType=cb">ثبت و ارسال درخواست</a>
+            <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+                <img src="~/images/Spinner-3.gif" />
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var percent = parseFloat((100 / 8) * 8);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("exterior").classList.remove("active");
+    document.getElementById("internal").classList.remove("active");
+    document.getElementById("motor").classList.remove("active");
+    document.getElementById("accessories").classList.remove("active");
+    document.getElementById("bodystains").classList.remove("active");
+    document.getElementById("filmes").classList.remove("active");
+    document.getElementById("check").classList.add("active");
+</script>

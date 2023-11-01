@@ -1,0 +1,199 @@
+﻿@model Core.DTOs.SiteGeneric.Liability.LiabilityInsStep3VM
+
+<section class="row">
+
+    <div class="col-lg-12 p-3">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row pr-2 pl-2">
+                    <div class="col-md-4 col-xs-12">
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-center pt-1">
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-md-left">
+                        <a href="/TravelIns/RefreshForm" class="btn btn-danger  text-white col-xs-12 col-md-6">خالی کردن فرم</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="text-center mt-1">مرحله سوم - وضعیت</h4>
+        <div class="col-xs-12 text-center">
+            <h6 class="text-center col-12 border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+            <div class="row">
+                <p class="col-md-6 col-xs-12">نام : @Model.SellerFullName</p>
+                <p class="col-md-6 col-xs-12">تلفن : @Model.SellerCellphone</p>
+                <p class="col-md-6 col-xs-12">کد : @Model.LiabilityInsurance.SellerCode</p>
+            </div>
+        </div>
+
+        <div class="col-xs-12 text-center">
+            @{
+                string state = "فرد عادی";
+                if (Model.LiabilityInsurance.InsurerStatus == "retired")
+                {
+                    state = "بازنشته کشوری یا تامین اجتماعی";
+                }
+                if (Model.LiabilityInsurance.InsurerStatus == "related")
+                {
+                    state = "منتسب بازنشسته";
+                }
+                if (Model.LiabilityInsurance.InsurerStatus == "group")
+                {
+                    state = "گروهی";
+                }
+            }
+            <h6 class="text-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+            <div class="row">
+
+                <p class="col-md-6 col-xs-12">نام : @Model.LiabilityInsurance.InsurerName @Model.LiabilityInsurance.InsurerFamily</p>
+                <p class="col-md-6 col-xs-12">تلفن : @Model.LiabilityInsurance.InsurerCellphone</p>
+                <div class="col-md-6 col-xs-12 text-center">
+                    <p class="p-0">تصویر کارت ملی</p>
+                    <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.InsurerNCImage" />
+                </div>
+                @if (Model.LiabilityInsurance.InsurerStatus == "related")
+                {
+                    <div class="col-md-6 col-xs-12">
+                        <p>وضعیت : @state</p>
+                        <div class="text-center">
+                            <p class="p-0">تصویر معرفی نامه منتسب</p>
+                            <img width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.AttributedLetterImage" />
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <p class="col-md-6 col-xs-12">وضعیت : @state</p>
+                }
+            </div>
+            <h6 class="text-center border-bottom"><span class="text-primary">بیمه نامه</span></h6>
+            <div class="row">
+                @{
+                    string insType = "";
+                    switch (Model.LiabilityInsurance.InsuranceType.GetValueOrDefault())
+                    {
+                        case 1:
+                            {
+                                insType = "مدیران (مجتمع های مسکونی)";
+                                break;
+                            }
+                        case 2:
+                            {
+                                insType = "حرفه ای (پزشکان)";
+                                break;
+                            }
+                        case 3:
+                            {
+                                insType = "حرفه ای (پیرا پزشکان)";
+                                break;
+                            }
+                        case 4:
+                            {
+                                insType = "حرفه ای (نظام مهندسی ساختمان)";
+                                break;
+                            }
+                        case 5:
+                            {
+                                insType = "حرفه ای (باشگاه های ورزشی)";
+                                break;
+                            }
+                        case 6:
+                            {
+                                insType = "کارفرما (کارگران ساختمانی و عمرانی)";
+                                break;
+                            }
+                        case 7:
+                            {
+                                insType = "کارفرما (صنعتی، بازرگانی،خدماتی)";
+                                break;
+                            }
+                        case 8:
+                            {
+                                insType = "آسانسور (دارندگان، نصابان، شرکت ها)";
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+
+                }
+                <p class="col-md-6 col-xs-12">نوع بیمه نامه : @insType</p>
+                @if (Model.LiabilityInsurance.InsuranceType.GetValueOrDefault() == 1)
+                {
+                    <div class="col-md-6 col-xs-12 text-center">
+                        <p class="p-0">تصویر کارت ملی مدیر ساختمان</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.BuildingManagerNCImage" />
+                    </div>
+                }
+                @if (Model.LiabilityInsurance.InsuranceType.GetValueOrDefault() == 3)
+                {
+                    <div class="col-md-6 col-xs-12 text-center">
+                        <p class="p-0">تصویر صفحه اول فرم پیشنهاد</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.SuggestionFormPage1" />
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6 col-xs-12 text-center">
+                        <p class="p-0">تصویر صفحه اول فرم پیشنهاد</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.SuggestionFormPage1" />
+                    </div>
+                    <div class="col-md-6 col-xs-12 text-center">
+                        <p class="p-0">تصویر صفحه دوم فرم پیشنهاد</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.SuggestionFormPage2" />
+                    </div>
+                }
+                <p class="col-md-6 col-xs-12">
+                    آیا سال قبل بیمه نامه داشتید؟ : @((Model.LiabilityInsurance.HasPreviousYearInsurance)? "بله":"خیر")
+                </p>
+                @if (Model.LiabilityInsurance.HasPreviousYearInsurance)
+                {
+                    <div class="col-md-6 col-xs-12 text-center">
+                        <p class="p-0">تصویر بیمه نامه قبلی</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.PreviousInsuranceImage" />
+                    </div>
+                }
+                <p class="col-md-6 col-xs-12">
+                    سابقه عدم خسارت دارید؟ : @((Model.LiabilityInsurance.HasNoDamageHistory)? "بله":"خیر")
+                </p>
+                @if (Model.LiabilityInsurance.HasNoDamageHistory)
+                {
+                    <div class="col-md-6 col-xs-12 text-center">
+                        <p class="p-0">تصویر استعلام عدم خسارت</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/lia/@Model.LiabilityInsurance.NoDamageHistoryImage" />
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-12 p-3">
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/Liability/LiabilityInsStep2" data-ajax-update="#liaform-card">مرحله قبل</a>
+            @if(Model.Premium != 0)
+            {
+                <input type="submit" value="پرداخت (@Model.Premium.ToString("N0") ریال)" class="btn btn-primary text-center" />
+            }
+            else
+            {
+                <a class="btn btn-success text-white" href="#" data-ajax="true" data-ajax-url="/Liability/ConfirmRequest?TrCode=@Model.LiabilityInsurance.TraceCode" data-ajax-update="#liaform-card">ثبت نهایی</a>
+            }
+            
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function(){
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    var percent = parseFloat(100);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.remove("active");
+    document.getElementById("check").classList.add("active");
+</script>

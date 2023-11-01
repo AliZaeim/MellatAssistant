@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DataLayer.Entities.Supplementary.CoWorker>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "همکاران";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">همکاران</h1>
+@if (_userService.CheckPermissionByName("addww",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">همکار جدید</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td class="text-xs-center align-middle">
+                    <img src="/images/coworkers/@item.Image" width="50" height="50">
+                </td>
+                
+                <td class="text-xs-center align-middle">
+                    @item.Comment
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editww",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deleteww", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

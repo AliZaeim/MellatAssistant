@@ -1,0 +1,109 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس نمای کامل داشبورد</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DashboardFullViewImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس ضبط صوت</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.TapeRecorderImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس کیلومتر کارکرد</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.KilometersImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه جلو</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.FrontWindShieldImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه عقب</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.RearWindowImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه راننده</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DriverGlassImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه شاگرد</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ApprenticeGlassImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه عقب راننده</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DriverRearGlassImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه عقب شاگرد</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ApprenticeRearGlassImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس شیشه سانروف</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.SunRoofGlassImage" />
+        </div>
+    </div>
+</div>
+
+
+
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

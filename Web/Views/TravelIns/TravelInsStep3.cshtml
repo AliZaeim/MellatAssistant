@@ -1,0 +1,132 @@
+﻿@model Core.DTOs.SiteGeneric.Travel.TravelInsuranceStep3VM
+
+<section class="row">
+
+    <div class="col-lg-12 p-3">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row pr-2 pl-2">
+                    <div class="col-md-4 col-xs-12">
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-center pt-1">
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-md-left">
+                        <a href="/TravelIns/RefreshForm" class="btn btn-danger  text-white col-xs-12 col-md-6">خالی کردن فرم</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="text-center mt-1">مرحله سوم - وضعیت</h4>
+        <div class="col-xs-12 text-center">
+            <h6 class="text-center col-12 border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+            <div class="row">
+                <p class="col-md-6 col-xs-12">نام : @Model.SellerFullName</p>
+                <p class="col-md-6 col-xs-12">تلفن : @Model.SellerCellphone</p>
+                <p class="col-md-6 col-xs-12">کد : @Model.TravelInsurance.SellerCode</p>
+            </div>
+        </div>
+
+        <div class="col-xs-12 text-center">
+            @{
+                string state = "فرد عادی";
+                if (Model.TravelInsurance.InsurerStatus == "retired")
+                {
+                    state = "بازنشته کشوری یا تامین اجتماعی";
+                }
+                if (Model.TravelInsurance.InsurerStatus == "related")
+                {
+                    state = "منتسب بازنشسته";
+                }
+                if (Model.TravelInsurance.InsurerStatus == "group")
+                {
+                    state = "گروهی";
+                }
+            }
+            <h6 class="text-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+            <div class="row">
+
+                <p class="col-md-6 col-xs-12">نام : @Model.TravelInsurance.InsurerName @Model.TravelInsurance.InsurerFamily</p>
+                <p class="col-md-6 col-xs-12">تلفن : @Model.TravelInsurance.InsurerCellphone</p>
+                <div class="col-md-6 col-xs-12 text-center">
+                    <p class="p-0">تصویر کارت ملی</p>
+                    <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.InsurerNCImage" />
+                </div>
+                @if (Model.TravelInsurance.InsurerStatus == "related")
+                {
+                    <div class="col-md-6 col-xs-12">
+                        <p>وضعیت : @state</p>
+                        <div class="text-center">
+                            <p class="p-0">تصویر معرفی نامه منتسب</p>
+                            <img width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.AttributedLetterImage" />
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <p class="col-md-6 col-xs-12">وضعیت : @state</p>
+                }
+            </div>
+            <h6 class="text-center border-bottom"><span class="text-primary">بیمه شده</span></h6>
+            <div class="row">
+
+                <p class="col-md-6 col-xs-12">نام : @Model.TravelInsurance.InsuredName</p>
+                <p class="col-md-6 col-xs-12">نام خانوادگی : @Model.TravelInsurance.InsuredFamily</p>
+
+                <div class="col-md-6 col-xs-12 text-center">
+                    <p class="p-0">تصویر کارت ملی</p>
+                    <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.InsuredNCImage" />
+                </div>
+                <div class="col-md-6 col-xs-12 text-center">
+                    <p class="p-0">تصویر گذرنامه</p>
+                    <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.InsuredPassportImage" />
+                </div>
+                <p class="col-md-6 col-xs-12 mt-1">سن : @Model.TravelInsurance.InsuredAge سال</p>
+            </div>
+            <h6 class="text-center border-bottom"><span class="text-primary">بیمه نامه</span></h6>
+            <div class="row">
+
+                <p class="col-md-6 col-xs-12">بیمه گر : @Model.TravelInsCo.Title</p>
+                <p class="col-md-6 col-xs-12">کلاس بیمه نامه : @Model.TravelInsClass.Title</p>
+                <p class="col-md-6 col-xs-12">منطقه سفر : @Model.TravelZoom.Title</p>
+                <p class="col-md-6 col-xs-12">پوشش کرونا دارد؟ : @((Model.TravelInsurance.HasCrona.GetValueOrDefault())? "بله" : "خیر")</p>
+                <p class="col-md-6 col-xs-12">مدت سفر : @Model.TravelInsurance.TravelPeriod روز</p>
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 p-3">
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/TravelIns/TravelInsStep2" data-ajax-update="#travelform-card">مرحله قبل</a>
+            @if (Model.Premium != 0)
+            {
+                <input type="submit" value="پرداخت (@Model.Premium.ToString("N0") ریال)" class="btn btn-primary text-center" />
+            }
+            else
+            {
+                <a class="btn btn-success text-white" href="#" data-ajax="true" data-ajax-url="/TravelIns/ConfirmRequest?TrCode=@Model.TravelInsurance.TraceCode" data-ajax-update="#travelform-card">ثبت نهایی</a>
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+                
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+        $("html, body").animate({ scrollTop: 0 }, "slow");       
+    });
+    var percent = parseFloat(100);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.remove("active");
+    document.getElementById("check").classList.add("active");
+</script>

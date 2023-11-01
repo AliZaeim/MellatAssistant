@@ -1,0 +1,84 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyCar
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "جزئیات خودرو";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">جزئیات خودرو</h1>
+
+<div class="container-fluid">
+    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Price.Value.ToString("N0")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ConsYear)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ConsYear)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BasePremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.BasePremium?.ToString("N0")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Second2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Second2YearsPremium?.ToString("N0")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Third2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Third2YearsPremium?.ToString("N0")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Fourth2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Fourth2YearsPremium?.ToString("N0")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Fifth2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Fifth2YearsPremium?.ToString("N0")
+        </dd>
+         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Sixth2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Sixth2YearsPremium?.ToString("N0")
+        </dd>
+         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Seventh2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Seventh2YearsPremium?.ToString("N0")
+        </dd>
+         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Eighth2YearsPremium)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Eighth2YearsPremium?.ToString("N0")
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">ویرایش</a> |    
+    <a asp-action="Index"  asp-route-gId="@Model.CarBodyCarGroupId">بازگشت</a>
+</div>

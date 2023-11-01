@@ -1,0 +1,17 @@
+﻿@model DataLayer.Entities.Supplementary.AdminHelpInfo
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<h2 class="text-xs-center">راهنمای کاربران <a asp-action="HelpInfos" class="float-xs-left">بازگشت</a></h2>
+<h3 class="text-xs-center alert alert-info">@Model.Title</h3>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            @Html.Raw(Model.Description)
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="HelpInfos">بازگشت</a>
+</div>

@@ -1,0 +1,127 @@
+﻿@model DataLayer.Entities.InsPolicy.Travel.TravelInsurance
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+<h6 class="text-xs-center"><span class="text-primary">بیمه شده</span></h6>
+<div class="col-xs-12">
+    <div class="row">
+        <div class="col-md-3 col-xs-12">
+            <p class="text-xs-center">نام : @Model.InsuredName @Model.InsuredFamily</p>
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <p class="text-xs-center">سن : @Model.InsuredAge</p>
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">تصویر کارت ملی</div>
+                <div class="col-xs-12 text-xs-center mb-2 ">
+                    <img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/travel/@Model.InsuredNCImage" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">تصویر گذرنامه</div>
+                <div class="col-xs-12 text-xs-center mb-2 ">
+                    <img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/travel/@Model.InsuredPassportImage" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-3 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/travel/@Model.SuggestionFormImage" />
+        </div>
+    </div>
+</div>
+<div class="col-md-3 col-xs-12">
+    @if (Model.InsCo != null)
+    {
+        var insCo = await _genericInsService.GetTravelInsCoByIdAsync(Model.InsCo.Value);
+        <p>بیمه گر : @insCo.Title </p>
+    }
+    else
+    {
+        <p>بیمه گر : - </p>
+    }
+
+</div>
+<div class="col-md-3 col-xs-12">
+
+    @if (Model.InsClass != null)
+    {
+        var insClass = await _genericInsService.GetTravelInsClassByIdAsync(Model.InsClass.Value);
+        <p>کلاس سفر : @insClass.Title </p>
+    }
+    else
+    {
+        <p>کلاس سفر : - </p>
+    }
+</div>
+<div class="col-md-3 col-xs-12">
+
+    @if (Model.TravelZoom != null)
+    {
+        var zoom = await _genericInsService.GetTravelZoomByIdAsync(Model.TravelZoom.Value);
+        <p>منطقه سفر : @zoom.Title </p>
+    }
+    else
+    {
+        <p>منطقه سفر : - </p>
+    }
+
+</div>
+<div class="col-md-3 col-xs-12">
+    <p>پوشش کرونا دارد؟ @((Model.HasCrona.GetValueOrDefault())? "بله":"خیر")</p>
+</div>
+<div class="col-md-3 col-xs-12">
+    <p>مدت سفر : @Model.TravelPeriod.GetValueOrDefault() روز</p>
+</div>
+
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            
+            document.getElementById("close-modal").click();
+        }
+    }
+</script> 

@@ -1,0 +1,127 @@
+﻿@model Core.DTOs.SiteGeneric.Liability.UpdateLiaInsDocsStepVM
+
+<div class="container-fluid">
+    <div class="row">
+        <form method="post" asp-action="UpdateLiaDocsState" asp-controller="UpdateLiabilityIns" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+              data-ajax-update="#liaDocs" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="guid" />
+            <input type="hidden" asp-for="Str_BuildingManagerNCImage" />
+            <input type="hidden" asp-for="Str_SuggestionFormPage1" />
+            <input type="hidden" asp-for="Str_SuggestionFormPage2" />
+            <input type="hidden" asp-for="Str_NoDamageHistoryImage" />
+            <input type="hidden" asp-for="Str_PreviousInsuranceImage" />
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group ">
+                    <label asp-for="InsuranceType" class="control-label"></label>
+                    <select asp-for="InsuranceType" id="insType" class="custom-select w-100">
+                        <option value="" selected="selected">نوع بیمه نامه را انتخاب کنید</option>
+                        <option value="1">مدیران (مجتمع های مسکونی)</option>
+                        <option value="2">حرفه ای (پزشکان)</option>
+                        <option value="3">حرفه ای (پیرا پزشکان)</option>
+                        <option value="4">حرفه ای (نظام مهندسی ساختمان)</option>
+                        <option value="5">حرفه ای (باشگاه های ورزشی)</option>
+                        <option value="6">کارفرما (کارگران ساختمانی و عمرانی)</option>
+                        <option value="7">کارفرما (صنعتی، بازرگانی،خدماتی)</option>
+                        <option value="8">آسانسور (دارندگان، نصابان، شرکت ها)</option>
+                    </select>
+                    <span asp-validation-for="InsuranceType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group @((Model.InsuranceType.GetValueOrDefault() == 1)? "":"no-display")" id="bmncimg">
+                    <label asp-for="BuildingManagerNCImage" class="control-label"></label><img width="30" height="30" class="zoom" src="~/images/Ins/lia/@Model.Str_BuildingManagerNCImage" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="BuildingManagerNCImage">
+                    <span asp-validation-for="BuildingManagerNCImage" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group" id="sfp1img">
+                    <label asp-for="SuggestionFormPage1" class="control-label"></label><img width="30" height="30" class="zoom" src="~/images/Ins/lia/@Model.Str_SuggestionFormPage1" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="SuggestionFormPage1">
+                    <span asp-validation-for="SuggestionFormPage1" class="text-danger"></span>
+                </div>
+
+                <div class="form-group @((Model.InsuranceType.GetValueOrDefault() != 3)? "":"no-display")" id="sfp2img">
+                    <label asp-for="SuggestionFormPage2" class="control-label"></label><img width="30" height="30" class="zoom" src="~/images/Ins/lia/@Model.Str_SuggestionFormPage2" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="SuggestionFormPage2">
+                    <span asp-validation-for="SuggestionFormPage2" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group ">
+                    <label asp-for="HasPreviousYearInsurance" class="control-label"></label>
+                    <Select asp-for="HasPreviousYearInsurance" id="haspervins" class="custom-select w-100">
+                        <option selected="selected" value="">انتخاب کنید</option>
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </Select>
+                    <span asp-validation-for="HasPreviousYearInsurance" class="text-danger"></span>
+                </div>
+                <div class="form-group @((Model.HasPreviousYearInsurance.GetValueOrDefault())? "":"no-display")" id="piiimg">
+                    <label asp-for="PreviousInsuranceImage" class="control-label"></label><img width="30" height="30" class="zoom" src="~/images/Ins/lia/@Model.Str_PreviousInsuranceImage" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="PreviousInsuranceImage">
+                    <span asp-validation-for="PreviousInsuranceImage" class="text-danger"></span>
+                </div>
+                <div class="form-group " id="hasnodamageDiv">
+                    <label asp-for="HasNoDamageHistory" class="control-label"></label>
+                    <Select asp-for="HasNoDamageHistory" id="hasnodamage" class="custom-select w-100">
+                        <option selected="selected" value="">انتخاب کنید</option>
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </Select>
+                    <span asp-validation-for="HasNoDamageHistory" class="text-danger"></span>
+                </div>
+                <div class="form-group @((Model.HasNoDamageHistory.GetValueOrDefault())? "":"no-display")" id="ndhimgDiv">
+                    <label asp-for="NoDamageHistoryImage" class="control-label"></label><img width="30" height="30" class="zoom" src="~/images/Ins/lia/@Model.Str_NoDamageHistoryImage" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="NoDamageHistoryImage">
+                    <span asp-validation-for="NoDamageHistoryImage" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#insType").change(function() {
+            var vl = $(this).val();
+            if (vl === "1") {
+                $("#bmncimg").show();
+            }
+            else {
+                $("#bmncimg").hide();
+            }
+            if (vl !== "3") {
+                $("#sfp2img").show();
+            }
+            else {
+                $("#sfp2img").hide();
+            }
+        });
+        $("#haspervins").change(function() {
+            var vl = $(this).val();
+            if (vl === "true") {
+                $("#piiimg").show();
+            } else {
+                $("#piiimg").hide();
+            }
+        });
+        $("#hasnodamage").change(function() {
+            var vl = $(this).val();
+            if (vl === "true") {
+                $("#ndhimgDiv").show();
+            } else {
+                $("#ndhimgDiv").hide();
+            }
+        });
+    });
+</script>

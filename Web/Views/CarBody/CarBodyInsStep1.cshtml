@@ -1,0 +1,635 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBodyInsStep1VM
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="col-xs-12 w-100 p-2 zsteps" data-step="1">
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/CarBody/RefreshForm" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    @*<h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault(0).ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="CarBodyInsurance" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center">مرحله اول - وضعیت</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form id="Step1Form" method="post" asp-action="CarBodyInsStep1" asp-controller="CarBody" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#cbform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrInsurerNCImage" />
+        <input type="hidden" asp-for="StrAttributedLetterImage" />
+        <input type="hidden" asp-for="StrPayrollDeductionImage" />
+        <input type="hidden" asp-for="StrSuggestionFormImage" />
+        <input type="hidden" asp-for="StrCarCardBackImage" />
+        <input type="hidden" asp-for="StrCarCardFrontImage" />
+        <input type="hidden" asp-for="StrDrivingPermitBackImage" />
+        <input type="hidden" asp-for="StrDrivingPermitFrontImage" />
+        <input type="hidden" asp-for="StrNoDamageCertificateImage" />
+        <input type="hidden" asp-for="StrPreviousInsImage" />
+        <div class="form-group">
+            @{
+                string SellerInfo = string.Empty;
+                if (!string.IsNullOrEmpty(Model.SellerFullName))
+                {
+                    SellerInfo = Model.SellerFullName + " | " + Model.SellerCellphone;
+                }
+            }
+            <label asp-for="SellerCode" id="mhand" class="control-label"></label><span class="float-left bg-info pr-1 shioSellerInfo pl-1 text-white cursor-pointer " id="sellerinfo">@SellerInfo</span>
+
+            <div class="input-group">
+                <input type="text" class="form-control" onkeypress="return checkNumber(event)" asp-for="SellerCode">
+                <span class="input-group-btn">
+                    <button type="button" id="btnViewSeller">
+                        مشاهده
+                    </button>
+                </span>
+            </div>
+            <span asp-validation-for="SellerCode" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsurerName" class="control-label required"></label>
+            <input asp-for="InsurerName" oninput="ClearNC()" class="form-control" />
+            <span asp-validation-for="InsurerName" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsurerFamily" class="control-label required"></label>
+            <input asp-for="InsurerFamily" oninput="ClearNC()" class="form-control" />
+            <span asp-validation-for="InsurerFamily" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label class="control-label required" asp-for="InsurerNC"></label>
+            <input class="form-control mb-3 NCField" oninput="ClearPhone()" onkeypress="return checkNumber(event)" autocomplete="off" asp-for="InsurerNC" />
+            <span asp-validation-for="InsurerNC" class="text-danger ncValid"></span>
+        </div>
+        <div class="form-group required">
+            <div id="inscellDiv" class="col-xs-12">
+                <label asp-for="InsurerCellphone" id="insCellLabel" class="control-label required"></label>
+            </div>
+            @{
+                string plc = "به این شکل وارد شود : " + "09xxxxxxxxx";
+            }
+            <input asp-for="InsurerCellphone" placeholder="@plc" autocomplete="off" onkeypress="return checkNumber(event)" class="form-control" />
+            <span asp-validation-for="InsurerCellphone" class="text-danger cellValid"></span>
+        </div>
+        <div class="form-group row required" id="cbinsurerncimg">
+            <div class="imgUp col-12">
+                <label asp-for="InsurerNCImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="cbnc-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('cbnc-image-upload','cbNCImageValid')" id="cbnc-image-upload" accept="image/*" asp-for="InsurerNCImage">
+                <br />
+                <span asp-validation-for="InsurerNCImage" id="cbNCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="fireinsurersugformp1img">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="sugformp1-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('sugformp1-image-upload','sugformp1ImageValid')" id="sugformp1-image-upload" accept="image/*" asp-for="SuggestionFormImage">
+                <br />
+                <span asp-validation-for="SuggestionFormImage" id="sugformp1ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsurerStatus" class="control-label required"></label>
+            <Select asp-for="InsurerStatus" id="insurerstatus" class="custom-select">
+                <option selected="selected" value="">وضعیت بیمه گذار را انتخاب کنید</option>
+                <option value="np" data-id="np">فرد عادی</option>
+                <option value="retired" data-id="retired">بازنشسته کشوری یا تامین اجتماعی</option>
+                <option value="related" data-id="related">منتسب بازنشسته</option>
+            </Select>
+            <span asp-validation-for="InsurerStatus" class="text-danger"></span>
+        </div>
+        <div class="form-group row @(!string.IsNullOrEmpty(Model.StrAttributedLetterImage) ? "":"no-display")" id="alimg">
+            <div class="imgUp col-12">
+                <label asp-for="AttributedLetterImage" class="control-label col-8 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="al-image"></div>
+                <input type="file" class="uploadFile img no-display" id="al-image-upload" asp-for="AttributedLetterImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="AttributedLetterImage" id="alImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group form-check @((Model.HasInstallmentRequest) ? "":"no-display")" id="picheckDiv">
+            <label class="form-check-label">
+                <input class="form-check-input" id="payininstallment" asp-for="HasInstallmentRequest" /> @Html.DisplayNameFor(model => model.HasInstallmentRequest)
+            </label>
+        </div>
+        <div class="form-group row @((Model.HasInstallmentRequest) ? "" : "no-display")" id="pdimg">
+            @{
+                string existsdimage = "no";
+                if (!string.IsNullOrEmpty(Model.StrPayrollDeductionImage))
+                {
+                    existsdimage = "yes";
+                }
+
+            }
+            <div class="imgUp col-12">
+                <label asp-for="PayrollDeductionImage" class="control-label col-8 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="pd-image"></div>
+                <input type="file" class="uploadFile img no-display" data-exist="@existsdimage" id="pd-image-upload" asp-for="PayrollDeductionImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="PayrollDeductionImage" id="pdimageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="carcardfrontimg">
+            <div class="imgUp col-12">
+                <label asp-for="CarCardFrontImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="carcardfront-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('carcardfront-image-upload','carcarfrontImageValid')" id="carcardfront-image-upload" accept="image/*" asp-for="CarCardFrontImage">
+                <br />
+                <span asp-validation-for="CarCardFrontImage" id="carcarfrontImageValid" class="text-danger valid"></span>
+
+            </div>
+        </div>
+        <div class="form-group row required" id="carcardbackimg">
+            <div class="imgUp col-12">
+                <label asp-for="CarCardBackImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="carcardback-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('carcardback-image-upload','carcarbackImageValid')" id="carcardback-image-upload" accept="image/*" asp-for="CarCardBackImage">
+                <br />
+                <span asp-validation-for="CarCardBackImage" id="carcarbackImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="drivingpermitfrontimg">
+            <div class="imgUp col-12">
+                <label asp-for="DrivingPermitFrontImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="drivingpermitfront-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('drivingpermitfront-image-upload','drivingpermitfrontImageValid')" id="drivingpermitfront-image-upload" accept="image/*" asp-for="DrivingPermitFrontImage">
+                <br />
+                <span asp-validation-for="DrivingPermitFrontImage" id="drivingpermitfrontImageValid" class="text-danger valid"></span>
+
+            </div>
+        </div>
+        <div class="form-group row required" id="drivingpermitbackimg">
+            <div class="imgUp col-12">
+                <label asp-for="DrivingPermitBackImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="drivingpermitback-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('drivingpermitback-image-upload','drivingpermitbackImageValid')" id="drivingpermitback-image-upload" accept="image/*" asp-for="DrivingPermitBackImage">
+                <br />
+                <span asp-validation-for="DrivingPermitBackImage" id="drivingpermitbackImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsuranceHistoryStatus" class="control-label "></label>
+            <Select asp-for="InsuranceHistoryStatus" onchange="InsHistory_StateChange()" id="insurancestatus" class="custom-select">
+                <option selected="selected" value="">وضعیت سابقه بیمه را انتخاب کنید</option>
+                <option value="1">بیمه بدنه ندارد</option>
+                <option value="2">بیمه از سایر شرکتها دارد</option>
+                <option value="3">بیمه بدنه از بیمه ملت دارد</option>
+            </Select>
+            <span asp-validation-for="InsuranceHistoryStatus" class="text-danger"></span>
+        </div>
+        <div class="form-group row required @((Model.InsuranceHistoryStatus == 2 || Model.InsuranceHistoryStatus == 3) ? "":"no-display")" id="piiDiv">
+            <div class="imgUp col-12 required">
+                <label asp-for="PreviousInsImage" class="control-label col-8 col-lg-4 required"></label><span>&lArr;</span>
+                <div class="imagePreview" id="pii-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('pii-image-upload','piiImageValid')" id="pii-image-upload" asp-for="PreviousInsImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="PreviousInsImage" id="piiImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.InsuranceHistoryStatus == 2 ? "":"no-display")" id="insHisst2">
+
+            <div class="form-group col-12 required">
+                <label asp-for="HasNoneDamageDiscount" class="control-label"></label>
+                <Select asp-for="HasNoneDamageDiscount" onchange="hasnonedamagediscount_selectChange()" id="hasnonedamagediscount_select" class="custom-select">
+                    <option selected value="">انتخاب کنید ...</option>
+                    <option value="false">خیر</option>
+                    <option value="true">بله</option>
+                </Select>
+                <span asp-validation-for="HasNoneDamageDiscount" class="text-danger"></span>
+            </div>
+            <div class="form-group imgUp col-12 required @((Model.HasNoneDamageDiscount.GetValueOrDefault(false) ? "":"no-display"))" id="ndci-imgDiv">
+                <label asp-for="NoDamageCertificateImage" class="control-label col-8 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="ndci-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('ndci-image-upload','ndciImageValid')" id="ndci-image-upload" asp-for="NoDamageCertificateImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="NoDamageCertificateImage" id="ndciImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.InsuranceHistoryStatus == 3 ? "":"no-display")" id="insHisst3">
+
+            <div class="form-group col-12 required">
+                <label asp-for="IsChangedHealthOfCar" class="control-label"></label>
+                <Select asp-for="IsChangedHealthOfCar" id="ischangehealth_slelect" class="custom-select">
+                    <option selected value="">انتخاب کنید ...</option>
+                    <option value=false>خیر</option>
+                    <option value=true>بله</option>
+                </Select>
+                <span asp-validation-for="IsChangedHealthOfCar" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 required">
+                <label asp-for="RecievedDamageLastYear" class="control-label"></label>
+                <Select asp-for="RecievedDamageLastYear" id="recieveddamagelastyear_slelect" class="custom-select">
+                    <option selected value="">انتخاب کنید ...</option>
+                    <option value=false>خیر</option>
+                    <option value=true>بله</option>
+                </Select>
+                <span asp-validation-for="RecievedDamageLastYear" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col-12">
+            <label asp-for="MobileImagesTraceCode" class="control-label"></label>&ensp;<span class="fa fa-question-circle mitc text-danger cursor-pointer"></span>
+            <input asp-for="MobileImagesTraceCode" class="form-control" />
+            <span asp-validation-for="MobileImagesTraceCode" class="text-danger"></span>
+        </div>
+        <div class="form-group text-center">
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" id="submit1" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+        $(".mitc").click(function () {
+            $("#myModal").modal('show');
+            $("#myModal .modal-dialog").addClass("modal-lg");
+            $("#myModal .modal-title").text("راهنمای بازدید خودرو و دریافت کد رهگیری")
+            var html = "<p class='text-justify'>" + "صدور بیمه بدنه نیاز به تصاویر بازدید خودرو دارد. این کار از دو روش قابل انجام است:" + "</p>";
+            html += "<p class='text-justify mb-3'>" + "1-	بازدید از طریق اپلیکیشن بازدید بیمه ملت: در این روش پس از نصب اپلیکیشن بازدید، مراحل عکس برداری از طریق برنامه انجام شده و در پایان کد رهگیری بازدید اعلام می شود. با ثبت کد رهگیری اعلام شده در این سایت، اقدامات لازم برای صدور بیمه نامه توسط واحد صدور انجام خواهد شد. " + "<span class='text-danger'>" + "( بازدید خودروهایی با ارزش بالاتر از 500 میلیون تومان الزاما باید از این روش انجام شود )" + "</span>" + "</p>";
+            html += "<div class='row'>";
+            html += "<div class='col-xs-12 col-md-6 text-center'>" + "<a href='https://melat.ir/upload/files/apps/mellat.insurance.agent.1.241.apk' target='_blank' class='col-6 btn btn-primary'>" + "دانلود اپلیکشن بازدید" + "</a>" + "</div>";
+            html += "<div class='col-xs-12 col-md-6 text-center'>" + "<a href='https://www.aparat.com/v/8fxoG' target='_blank' class='col-6 btn btn-success'>" + "دانلود فیلم آموزشی" + "</a>" + "</div>";
+            html += "</div>";
+            html += "<p class='text-justify mt-3'>" + "2-	بازدید از طریق ارسال عکس و فیلم: در این روش عکس و فیلم بازدید که توسط دوربین موبایل خود گرفته اید را در سیستم ارسال نموده و پس از تائید کارشناس بیمه کارشناس بیمه نسبت به صحت عکس و فیلم ارسالی نسبت به صدور بیمه نامه توسط واحد صدور اقدام خواهد شد. " + "<span class='text-danger'>" + "( این روش فقط برای خودروهایی با ارزش کمتر از 500 میلیون تومان قابل استفاده است )" + "</span>" + "</div>";
+            html += "<p class='mt-1 text-warning text-center'>" + "در صورتی که بازدید را به شیوه دوم انجام داده اید قسمت کد رهگیری را خالی بگذارید" + "</p>";
+            $("#myModal .modal-body").html(html);
+        });
+        $(function () {
+            $('#SellerCode').keyup(function (e) {
+                var ctrlKey = 67, vKey = 86;
+                if (e.keyCode != ctrlKey && e.keyCode != vKey) {
+                    $('#SellerCode').val(persianToEnglish($(this).val()));
+                }
+            });
+        });
+        $(function () {
+            $('#InsurerNC').keyup(function (e) {
+                var ctrlKey = 67, vKey = 86;
+                if (e.keyCode != ctrlKey && e.keyCode != vKey) {
+                    $('#InsurerNC').val(persianToEnglish($(this).val()));
+                }
+            });
+        });
+        $(function () {
+            $('#InsurerCellphone').keyup(function (e) {
+                var ctrlKey = 67, vKey = 86;
+                if (e.keyCode != ctrlKey && e.keyCode != vKey) {
+                    $('#InsurerCellphone').val(persianToEnglish($(this).val()));
+                }
+            });
+        });
+        
+        $("#InsurerCellphone").focusout(function () {
+            var vnc = $("#InsurerNC").val();
+            var insName = $("#InsurerName").val();
+            var insFamily = $("#InsurerFamily").val();
+            var inscell = $(this).val();
+            var validnc = "no";
+            if (insName == "") {
+                alert("نام بیمه گذار را وارد کنید !");
+                $("#InsurerName").focus();
+                return;
+            }
+            if (insFamily == "") {
+                alert("نام خانوادگی بیمه گذار را وارد کنید !");
+                $("#InsurerFamily").focus();
+                return;
+            }
+            if (vnc == "") {
+                alert("کد ملی وارد نشده است !");
+                $("#InsurerNC").focus();
+                return;
+            }
+            var vcell = $("#InsurerCellphone").val();
+            if (vcell == "") {
+                alert("تلفن همراه وارد نشده است !");
+                return;
+            }
+            if (vcell.length === 11) {
+                //$("#spanVal").removeClass("no-display");
+                $.ajax({
+                    url: "/SitePages/CheckCellphoneForSendCode",
+                    type: "POST",
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+
+                    complete: function () {
+                        $('#loader').addClass("no-display");
+                        if ($("#inscellDiv #spanconf").length !== 0) {
+                            $("#spanVal").remove();
+                            $("#spanconf").remove();
+                        }
+                    },
+
+                    data: { NC: vnc, Cellphone: vcell },
+                    success: function (result) {
+                        if (result.blnsend === true) {
+                            $("#spanconf").remove();
+                            var inpCode = "";
+                            Swal.fire({
+                                text: 'کد ارسال شده به تلفن همراه را وارد کنید',
+                                input: 'text',
+                                inputAttributes: {
+                                    autocapitalize: 'off'
+                                },
+                                showCancelButton: true,
+                                cancelButtonText: "انصراف",
+                                confirmButtonText: 'تایید',
+                                showLoaderOnConfirm: true,
+                                preConfirm: (login) => {
+                                    inpCode = login;
+                                }
+                            }).then((data) => {
+
+                                if (data.isConfirmed) {
+                                    var nc = $("#InsurerNC").val();
+                                    var cell = $("#InsurerCellphone").val();
+                                    var url2 = '/SitePages/ApplyValidation?NC=' + nc + '&Code=' + inpCode + '&Cell=' + cell;
+                                    return fetch(url2, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        }
+                                    }).then(response => {
+                                        return response.json()
+                                    }).then(data => {
+                                        if (data == true) {
+                                            $("#submit1").removeAttr("disabled");
+                                            $("#spanVal").remove();
+                                            $("#spanconf").remove()
+                                            $("#btnSend").remove();
+                                        }
+                                        else {
+                                            $("#submit1").attr("disabled", true);
+                                            Swal.fire({
+                                                title: 'کد وارد شده صحیح نمی باشد',
+                                                text: 'کد جدید را به درستی وارد کنید',
+                                                showDenyButton: true,
+                                                confirmButtonText: 'ارسال مجدد',
+                                                denyButtonText: `انصراف`,
+                                            }).then((result) => {
+                                                /* Read more about isConfirmed, isDenied below */
+                                                if (result.isConfirmed) {
+                                                    $("#InsurerCellphone").focusout();
+                                                } else if (result.isDenied) {
+
+                                                    var spanEl = "<span id='spanVal' class='text-danger  ml-2 mr-2'>شماره تلفن اعتبار سنجی نشده است !</span>";
+                                                    var btnVal = "<button type='button' class='mr-2 float-left btn btn-primary' id='btnSend'>" + "دریافت کد" + "</button>";
+                                                    if ($("#inscellDiv #spanVal").length === 0) {
+                                                        $("#spanconf").remove();
+                                                        $("#inscellDiv").append(btnVal);
+                                                        $("#inscellDiv").append(spanEl);
+                                                        $("#btnSend").click(function () {
+                                                            $("#InsurerCellphone").focusout();
+                                                        });
+                                                    }
+                                                    $("#submit1").attr("disabled", true);
+                                                }
+                                            });
+                                        }
+                                    })
+                                } else {
+                                    var spanEl = "<span id='spanVal' class='text-danger  ml-2 mr-2'>شماره تلفن اعتبار سنجی نشده است !</span>";
+                                    var btnVal = "<button type='button'  class='mr-2 float-left btn btn-primary' id='btnSend'>" + "دریافت کد" + "</button>";
+                                    if ($("#inscellDiv #spanVal").length === 0) {
+                                        $("#spanconf").remove();
+                                        $("#inscellDiv").append(btnVal);
+                                        $("#inscellDiv").append(spanEl);
+                                        $("#btnSend").click(function () {
+                                            $("#InsurerCellphone").focusout();
+                                        });
+                                    }
+                                    $("#submit1").attr("disabled", true);
+                                }
+                            })
+                        }
+                        else {
+                            $("#submit1").removeAttr("disabled");
+                        }
+                    }
+                })
+            }
+        })
+    });
+    var percent = parseFloat(100 / 8);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.add("active");
+    document.getElementById("exterior").classList.remove("active");
+    document.getElementById("internal").classList.remove("active");
+    document.getElementById("motor").classList.remove("active");
+    document.getElementById("accessories").classList.remove("active");
+    document.getElementById("bodystains").classList.remove("active");
+    document.getElementById("filmes").classList.remove("active");
+    document.getElementById("check").classList.remove("active");
+    function validate(elem, file) {
+        var idd = ($(elem).attr("id"));
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["jpg", "jpeg", "png", "gif"];
+
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            alert("پسوند فایل نادرست است! پسوند های درست عبارتند از  : " + arrayExtensions.join(', '));
+            $("#" + idd).val("");
+
+        }
+    }
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined") {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/carbody/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    ShowImage("StrInsurerNCImage", "cbnc-image");
+    ShowImage("StrSuggestionFormImage", "sugformp1-image");
+    ShowImage("StrCarCardFrontImage", "carcardfront-image");
+    ShowImage("StrCarCardBackImage", "carcardback-image");
+    ShowImage("StrDrivingPermitFrontImage", "drivingpermitfront-image");
+    ShowImage("StrDrivingPermitBackImage", "drivingpermitback-image");
+    ShowImage("StrPreviousInsImage", "pii-image");
+    ShowImage("StrNoDamageCertificateImage", "ndci-image");
+    ShowImage("StrPayrollDeductionImage", "pd-image");
+    function UpdateValidSpan(inputId, spanId) {
+        var inp = document.getElementById(inputId);
+        if (inp !== null && typeof (inp) !== "undefined") {
+            if (inp.value !== null) {
+                var sp = document.getElementById(spanId);
+                if (sp !== null && typeof (sp) !== "undefined") {
+                    sp.innerText = '';
+                }
+            }
+        }
+    }
+
+
+
+    var insurer_status_select = document.getElementById("insurerstatus");
+    insurer_status_select.addEventListener("change", function () {
+        sel_option_data_id = this.options[this.selectedIndex].dataset.id;
+        document.getElementById("pdimageValid").innerText = '';
+        document.getElementById("alImageValid").innerText = '';
+        if (sel_option_data_id === "np") {
+            document.getElementById("picheckDiv").classList.add("no-display");
+            payinstall.checked = false;
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("alimg").classList.add("no-display");
+        }
+        if (sel_option_data_id === "retired") {
+            document.getElementById("picheckDiv").classList.remove("no-display");
+            payinstall.checked = false;
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("alimg").classList.add("no-display");
+        }
+        if (sel_option_data_id === "related") {
+            document.getElementById("picheckDiv").classList.remove("no-display");
+            payinstall.checked = false;
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("alimg").classList.remove("no-display")
+        }
+    });
+    var payinstall = document.getElementById('payininstallment');
+    payinstall.addEventListener('change', function () {
+
+        if (payinstall.checked) {
+            document.getElementById("pdimg").classList.remove("no-display");
+        } else {
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("pd-image").style.background = "url('/images/icons/select-icon.png')";
+        }
+
+    });
+    async function fetchText(element) {
+        let response = await fetch('/ThirdParty/GetSalesExCodeUserInfo?code=' + sellercode_input.value);
+
+        console.log(response.status); // 200
+        console.log(response.statusText); // OK
+
+        if (response.status === 200) {
+
+            let data = await response.json();
+            element.innerText = data.info;
+            // handle data
+        }
+    }
+    var btnviewseller = document.getElementById("btnViewSeller");
+    var sellercode_input = document.getElementById("SellerCode");
+    btnviewseller.addEventListener("click", function () {
+        var sellerinfo_span = document.getElementById("sellerinfo");
+        sellerinfo_span.innerText = "";
+        fetchText(sellerinfo_span);
+    });
+
+    function InsHistory_StateChange() {
+        var select = document.getElementById("insurancestatus").value;
+
+        if (select === "2") {
+            document.getElementById("insHisst2").classList.remove("no-display");
+        }
+        else {
+            document.getElementById("insHisst2").classList.add("no-display");
+        }
+        if (select === "3") {
+            document.getElementById("insHisst3").classList.remove("no-display");
+        }
+        else {
+            document.getElementById("insHisst3").classList.add("no-display");
+        }
+        if (select === "1") {
+            document.getElementById("piiDiv").classList.add("no-display");
+        }
+        else {
+            document.getElementById("piiDiv").classList.remove("no-display");
+        }
+        //insHisst2
+
+    }
+    function hasnonedamagediscount_selectChange() {
+        var sel = document.getElementById("hasnonedamagediscount_select");
+        if (sel !== null && typeof (sel) !== "undefined") {
+            if (sel.value === "true") {
+                document.getElementById("ndci-imgDiv").classList.remove("no-display");
+            }
+            else {
+                document.getElementById("ndci-imgDiv").classList.add("no-display");
+            }
+
+        }
+    }
+    document.querySelectorAll('.imagePreview').forEach((el) => el.addEventListener("click", function () {
+        //click sibling .uploadFile
+        this.nextElementSibling.click();
+    }
+    ));
+    document.querySelectorAll('.uploadFile').forEach((el) => el.addEventListener("change", function () {
+        this.parentNode.lastElementChild.innerHTML = "";
+
+    }
+    ));
+    function ClearNC() {
+        document.getElementById("InsurerNC").value = '';
+        document.getElementById("InsurerCellphone").value = '';
+    }
+    function ClearPhone() {
+        document.getElementById("InsurerCellphone").value = '';
+        if ($("#inscellDiv #spanVal").length !== 0) {
+            $("#spanVal").remove();
+
+        }
+        if ($("#inscellDiv #btnSend").length !== 0) {
+            $("#btnSend").remove();
+        }
+    }
+    function persianToEnglish(input) {
+        var inputstring = input;
+        var persian = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"]
+        var english = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        for (var i = 0; i < 10; i++) {
+            inputstring = inputstring.toString().replace(persian[i], english[i]);
+        }
+        return inputstring;
+    }
+    function checkNumber(event) {
+
+        var aCode = event.which ? event.which : event.keyCode;
+
+        if (aCode > 31 && (aCode < 48 || aCode > 57)) return false;
+
+        return true;
+
+    }
+</script>

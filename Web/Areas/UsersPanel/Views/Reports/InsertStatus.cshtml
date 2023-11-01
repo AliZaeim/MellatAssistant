@@ -1,0 +1,142 @@
+﻿@model Core.DTOs.Admin.CreateStatusVM
+@{
+    //Submit_InsertInsSupp
+    string command = "Submit_InsertStatus('" + Model.RefreshDivId + "')";
+}
+<div class="row">
+    <div class="offset-md-2 col-md-8 col-xs-12">
+        <h4 class="text-xs-center alert alert-danger">در هنگام ثبت وضعیت دقت داشته باشید، چون وضعیت ثبت شده امکان حذف ندارد !</h4>
+        <form id="insertStatusForm" asp-area="UsersPanel" asp-controller="Reports" asp-action="InsertStatus" method="post" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.AntiForgeryToken()
+            <input hidden asp-for="InsId" />
+            <input hidden asp-for="InsType" />
+            <input hidden asp-for="IsPayed" />
+            <input hidden asp-for="RefreshDivId" />        
+            <input hidden asp-for="Location" />
+            <input hidden asp-for="Premium" id="premium" />
+            @if (!Model.IsPayed)
+            {
+                <div class="form-group">
+                    <p class="text-danger text-xs-center">
+                        پس از پرداخت حق بیمه، امکان ثبت وضعیت صادر شده وجود دارد
+                    </p>
+                </div>
+            }
+            <div class="form-group" id="inssel">
+                <label asp-for="InsStatusId" class="control-label"></label>
+                <select id="InsStId" asp-for="InsStatusId" class="form-control">
+                    <option value="">وضعیت را انتخاب کنید</option>
+                    @foreach (var st in Model.InsStatuses)
+                    {
+                        <option data-sys="@st.IsSystemic" data-end="@st.IsEndofProcess" data-getinsno = "@st.GetInsNo" data-getpayment = "@st.GetPeyment" value="@st.Id">@st.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="InsStatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <textarea asp-for="Comment" class="form-control"></textarea>
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="button" value="ثبت" onclick="@command" data-refId="@Model.RefreshDivId" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    var sel =document.getElementById("inssel");
+    var stid = document.getElementById("InsStId");
+    stid.addEventListener("change",function(){
+        var vl = stid.value;
+        var myoption = stid.options[stid.selectedIndex];
+        var issys = myoption.dataset.sys;
+        var isend = myoption.dataset.end; 
+        var getinsno = myoption.dataset.getinsno;
+        var getpayment = myoption.dataset.getpayment
+        if(getinsno == "True")
+        {
+            var divgroup = document.createElement("div");
+            divgroup.id = "InsDiv";
+            divgroup.classList.add("form-group");
+            var lbl = document.createElement("lable");
+            lbl.innerText = "شماره بیمه نامه صادر شده را وارد کنید";
+            lbl.classList.add("control-label");
+            var inp = document.createElement("input");
+            inp.setAttribute("name","InsNo");
+            inp.id="InsNo";            
+            inp.classList.add("form-control");
+            inp.classList.add("valid");
+            inp.setAttribute("required","true");
+            inp.setAttribute("data-val","true");
+            inp.setAttribute('data-error', 'این فیلد اجباری است');
+            var sp = document.createElement("span");
+            sp.id="insval";
+            sp.classList.add("text-danger");
+            sp.classList.add("field-validation-valid");
+            sp.setAttribute("data-valmsg-for","InsNo");
+            sp.setAttribute("data-valmsg-replace","true")
+            
+            divgroup.appendChild(lbl);
+            divgroup.appendChild(inp);
+            divgroup.appendChild(sp);
+            sel.parentNode.insertBefore(divgroup,sel.nextSibling);
+            inp.onchange = function(){
+                sp.innerText = " ";
+            };
+        }
+        else{
+            var elem = document.querySelector('#InsDiv');
+            if (elem != null && elem !="undefined")
+            {
+                elem.parentNode.removeChild(elem);
+            }
+        }
+        if(getpayment == "True")
+        {
+            var pre = document.getElementById("premium").value;
+            var divgroup = document.createElement("div");
+            divgroup.id = "PayDiv";
+            divgroup.classList.add("form-group");
+            var lbl = document.createElement("lable");
+            lbl.innerText = "مبلغ حق بیمه را وارد کنید";
+            lbl.classList.add("control-label");
+            var inp = document.createElement("input");
+            inp.setAttribute("name","PayVal");
+            inp.value = pre;
+            inp.id="PayVal";            
+            inp.classList.add("form-control");
+            inp.classList.add("valid");
+            inp.setAttribute("required","true");
+            inp.setAttribute("data-val","true");
+            inp.setAttribute('data-error', 'این فیلد اجباری است');
+            var sp = document.createElement("span");
+            sp.id="sppayval";
+            sp.classList.add("text-danger");
+            sp.classList.add("field-validation-valid");
+            sp.setAttribute("data-valmsg-for","PayVal");
+            sp.setAttribute("data-valmsg-replace","true")
+            
+            divgroup.appendChild(lbl);
+            divgroup.appendChild(inp);
+            divgroup.appendChild(sp);
+            sel.parentNode.insertBefore(divgroup,sel.nextSibling);
+            inp.onchange = function(){
+                sp.innerText = " ";
+            };
+            
+        }
+        else{
+            var elem = document.querySelector('#PayDiv');
+            if (elem != null && elem !="undefined")
+            {
+                elem.parentNode.removeChild(elem);
+            }
+        }
+    });
+</script>

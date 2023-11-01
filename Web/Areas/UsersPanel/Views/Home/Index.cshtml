@@ -1,0 +1,264 @@
+﻿@model Core.DTOs.Admin.UsersPanelIndexModel
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "پنل کاربری بیمه یار ملت";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    Model.AdminSliders = Model.AdminSliders.Where(w => w.IsActive).ToList();
+}
+<script src="~/lib/jquery/dist/jquery-3.6.0.min.js"></script>
+<!-- stats -->
+<input value="@TempData["Addrole"]" id="addrole" type="hidden" />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-3 col-lg-6 col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div class="media">
+                            <div class="media-body text-xs-left">
+                                <h3 class="pink">@Model.LifeInsCount</h3>
+                                <span>بیمه های زندگی</span>
+                            </div>
+                            <div class="media-right media-middle">
+                                <i class="icon-ios-heart-outline pink font-large-2 float-xs-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div class="media">
+                            <div class="media-body text-xs-left">
+                                <h3 class="teal">@Model.LifeInsPremium.ToString("N0")</h3>
+                                <span>حق بیمه زندگی</span>
+                            </div>
+                            <div class="media-right media-middle">
+                                <i class="icon-social-usd-outline teal font-large-2 float-xs-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div class="media">
+                            <div class="media-body text-xs-left">
+                                <h3 class="deep-orange">@Model.NonLifeInsCount</h3>
+                                <span>بیمه های غیر زندگی</span>
+                            </div>
+                            <div class="media-right media-middle">
+                                <i class="icon-fire3 deep-orange font-large-2 float-xs-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div class="media">
+                            <div class="media-body text-xs-left">
+                                <h3 class="cyan">@Model.NonLifeInsPremium.ToString("N0")</h3>
+                                <span>حق بیمه غیر زندگی</span>
+                            </div>
+                            <div class="media-right media-middle">
+                                <i class="icon-banknote cyan font-large-2 float-xs-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ stats -->
+    <!--/ project charts -->
+    <div class="row">
+        <div class="col-xl-8 col-md-6 col-lg-12">
+            <div class="card" style="height: 440px;">
+                <div class="card-body">
+                    <div class="card-block">
+                        <h4 class="card-title">اخبار و اطلاعیه ها</h4>
+                    </div>
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            @for (var sl = 0; sl < Model.AdminSliders.Count; sl++)
+                            {
+                                <li data-target="#carousel-example-generic" data-slide-to="@sl" class="@((sl== 0)? "active":"")"></li>
+                            }
+                        </ol>
+                        <div class="carousel-inner" role="listbox">
+                            @foreach (var item in Model.AdminSliders.OrderByDescending(x => x.RegDate).ToList())
+                            {
+                                <div class="carousel-item @((item == Model.AdminSliders.LastOrDefault())? "active":"")">
+                                    <img src="/images/AdminSliders/@item.Image" class="zw100 zheight-300">
+                                    <a href="@item.Link" class="col-xs-12 text-xs-center">@item.Comment</a>
+                                </div>
+                            }
+                        </div>
+                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                            <span class="icon-prev" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                            <span class="icon-next" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card" style="height: 440px;">
+                <div class="card-body">
+                    <div class="card-block">
+                        <h4 class="card-title">پیشنهادات ویژه</h4>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @{
+                            int index = 1;
+                        }
+                        @foreach (var offer in Model.AdminSpecialOffers)
+                        {
+                            <li class="list-group-item">
+                                <span class="tag tag-default tag-pill bg-primary">@index</span> <a class="offers" href="javascript:void(0)" data-desc="@offer.Description" data-title="@offer.Title">@offer.Title</a>
+                            </li>
+                            index++;
+                        }
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ project charts -->
+    <!-- Recent invoice with Statistics -->
+    <div class="row match-height">
+        <div class="col-xl-4 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="p-2 text-xs-center bg-deep-orange media-left media-middle">
+                            <i class="icon-user1 font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 media-body">
+                            <h5 class="deep-orange">آخرین کارمزد زندگی</h5>
+                            <h5 class="text-bold-400">@Model.LastLifeCommission.ToString("N0")</h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="p-2 text-xs-center bg-cyan media-left media-middle">
+                            <i class="icon-camera7 font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 media-body">
+                            <h5>آخرین کارمزد غیر زندگی</h5>
+                            <h5 class="text-bold-400">@Model.LastNoneLifeCommission.ToString("N0")</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+
+                        <div class="p-2 text-xs-center bg-teal media-left media-middle">
+                            <i class="icon-user1 font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 media-body">
+                            @{
+                                string txt = "مجموع کارمزد";
+                                if (Model.IsAdmin)
+                                {
+                                    txt += " پرداختی";
+                                }
+                                else
+                                {
+                                    txt += " دریافتی";
+                                }
+
+                            }
+                            <h5>@txt</h5>
+                            <h5 class="text-bold-400">@Model.UserTotalCommission.ToString("N0")</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">آخرین درخواست ها</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-block">
+                        <p>صادر شده : @Model.InsIssuedCount, صادر نشده : @Model.InsNoneIssuredCount <span class="float-xs-left"><a class="btn btn-info" href="/UsersPanel/Reports/MyRegisterdReqs">درخواست ها</a></span></p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-xs-center align-middle p-0">کد پیگیری</th>
+                                    <th class="text-xs-center align-middle p-0">نوع</th>
+                                    <th class="text-xs-center align-middle p-0">بیمه گذار</th>
+                                    <th class="text-xs-center align-middle p-0">وضعیت</th>
+                                    <th class="text-xs-center align-middle p-0">تاریخ</th>
+                                    <th class="text-xs-center align-middle p-0">حق بیمه</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in Model.UserRequests.OrderByDescending(x => x.RegDate).Take(5).ToList())
+                                    {
+                                        <tr>
+                                            <td class="text-xs-center align-middle">@item.TraceCode</td>
+                                            <td class="text-xs-center align-middle">@item.FaInsType</td>
+                                            <td class="text-xs-center align-middle">@item.InsurerFullName</td>
+                                            <td class="text-xs-center align-middle">@item.LastIssueStatusVM?.InsStatusText</td>
+                                            <td class="text-xs-center align-middle">@item.RegDate.ToShamsiN()</td>
+                                            <td class="text-xs-center align-middle">@item.Premium.GetValueOrDefault().ToString("N0")</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    var x = document.getElementById("addrole").value;
+    if (x !== null && x !== "undefined") {
+        if (x === "yes") {
+            alert("عملیات با موفقیت انجام شد !")
+        }
+    }
+    $(document).ready(function () {
+    });
+</script>
+
+

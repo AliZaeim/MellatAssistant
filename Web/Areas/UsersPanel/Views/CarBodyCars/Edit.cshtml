@@ -1,0 +1,135 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBadyCarVM
+
+@{
+    ViewData["Title"] = "ویرایش خودرو";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش خودرو</h1>
+<p>
+        <a asp-action="Index" asp-controller="CarBodyCarGroups" asp-area="UsersPanel" class="btn btn-success">گروه های خودرو</a>  
+         <a asp-action="Index" asp-controller="CarBodyCars" asp-area="UsersPanel" asp-route-gId="@Model.CarBodyCarGroupId" class="btn btn-info">خودروها</a>
+</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <form asp-action="Edit" class="form-inline" id="CarsForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CarBodyCarGroupId" />
+                
+                    <div class=" col-xs-12 mt-1">
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Title" autofocus placeholder="عنوان" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Price" onkeyup="format(this)"  placeholder="قیمت مجاز" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="ConsYear" placeholder="سال ساخت مجاز" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="ConsYear" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="BasePremium" onkeyup="format(this)" placeholder="حق بیمه پایه" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="BasePremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Second2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال دوم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Second2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Third2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال سوم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Third2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Fourth2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال چهارم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Fourth2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Fifth2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال پنجم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Fifth2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Sixth2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال ششم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Sixth2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Seventh2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال هفتم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Seventh2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <div class="form-group w-100">
+                                <input asp-for="Eighth2YearsPremium" onkeyup="format(this)" placeholder="حق بیمه دو سال هشتم" class="form-control text-xs-center w-100" />
+                                <span asp-validation-for="Eighth2YearsPremium" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+               
+                <div class="form-group offset-md-4 col-md-4 col-xs-12 mt-2 text-xs-center">
+                    <input type="submit" value="ثبت " class="btn btn-primary col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index" asp-route-gId="@Model.CarBodyCarGroupId.Value" >بازگشت</a>
+</div>
+
+@section Scripts
+{
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+
+       function format(input) {
+          var nStr = input.value + '';
+          nStr = nStr.replace(/\,/g, "");
+          x = nStr.split('.');
+          x1 = x[0];
+          x2 = x.length > 1 ? '.' + x[1] : '';
+          var rgx = /(\d+)(\d{3})/;
+          while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+          }
+          input.value = x1 + x2;
+    }
+        function thousands_separators(num)
+          {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return num_parts.join(".");
+          }
+
+</script>
+}

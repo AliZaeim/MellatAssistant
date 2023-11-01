@@ -1,0 +1,70 @@
+﻿@model DataLayer.Entities.Supplementary.ContactMessage
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "جزئیات پیام";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">جزئیات پیام</h1>
+
+<div class="container-fluid">
+    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Cellphone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Cellphone)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+        <dd class = "col-sm-10">
+           @foreach (var item in Model.MessageLines)
+           {
+               <p>@item</p>
+           }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.CreatedDate.ToShamsiWithTime()
+        </dd>
+        <dt class = "col-sm-2">
+            وضعیت
+        </dt>
+        <dd class = "col-sm-10">
+            @if(Model.Read)
+            {
+                <span class="text-success">خوانده شده</span>
+            }
+            else
+            {
+                <span class="text-danger">خوانده نشده</span>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    
+    <a asp-action="Index">بازگشت</a>
+</div>

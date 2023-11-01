@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.ThirdParty.InsurerType>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "انواع بیمه گذار";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">انواع بیمه گذار</h1>
+@if (_userService.CheckPermissionByName("addtpit", User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت نوع جدید</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RemovePickupLimit)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RemoveTheYearLimit)
+            </th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.DiscountPercent)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.RemovePickupLimit)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.RemoveTheYearLimit)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("edittpit", User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletetpit", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    }                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

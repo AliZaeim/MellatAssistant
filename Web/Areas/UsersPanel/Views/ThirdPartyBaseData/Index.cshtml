@@ -1,0 +1,85 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.ThirdParty.ThirdPartyBaseData>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userservice
+@{
+    ViewData["Title"] = "اطلاعات پایه بیمه ثالث";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">اطلاعات پایه بیمه ثالث</h1>
+@if (_userservice.CheckPermissionByName("addtbi", User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت اطلاعات جدید</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.DriverAccidentPremium)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.LegalDiscounts)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.LegalDiscountPermit)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.VAT)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.RegDate)
+                </th>
+                <th class="text-xs-center align-middle p-0">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.DriverAccidentPremium.Value.ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.LegalDiscounts.Value.ToString("N1")
+                    </td>
+
+                    <td class="text-xs-center align-middle p-0">
+                        @if (item.LegalDiscountPermit)
+                        {
+                            <span>بله</span>
+                        }
+                        else
+                        {
+                            <span>خیر</span>
+                        }
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.VAT
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.RegDate.ToShamsiN()
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @if (_userservice.CheckPermissionByName("edittbi", User.Identity.Name))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                        }
+
+                        <a asp-action="Details" asp-route-id="@item.Id">جزئیات</a> <span>|</span>
+                        @if (_userservice.CheckPermissionByName("deletetbi", User.Identity.Name))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

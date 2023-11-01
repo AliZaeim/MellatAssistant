@@ -1,0 +1,38 @@
+﻿
+@if (User.Identity.IsAuthenticated)
+{
+    var us = User.Claims?.FirstOrDefault(x => x.Type.Equals("fullname", StringComparison.OrdinalIgnoreCase))?.Value;
+    <div class="extension-nav">
+        <ul class="pt-3">
+            <li>
+                <a href="/UsersPanel/Home/Index" class="btn loginbtn btn-link p-1 ml-2" title="@us">
+                    <img src="/Images/Svg/user.svg" width="24" height="24" /> <span>دفتر کار | @us</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Logout" class="btn loginbtn btn-link p-1 ml-2">
+                    <img src="/Images/icons/log-out.webp" width="24" height="24" /> <span class="text-danger">خروج</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+}
+else
+{
+    <div class="extension-nav">
+        <ul class="pt-3">
+            <li>
+                <a href="/Login" class="btn loginbtn btn-link p-1 ml-2">
+                    <img src="/Images/Svg/login.svg" width="24" height="24" /> <span>ورود</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Register" class="btn loginbtn btn-link p-1 ml-2">
+                    <img src="/Images/Svg/user.svg" width="24" height="24" /> <span>ثبت نام</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+}

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Fire.FireBaseInfo>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "اطلاعات پایه بیمه زندگی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">اطلاعات پایه بیمه زندگی</h1>
+@if (_userService.CheckPermissionByName("addfbi",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت اطلاعات</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.StolenRate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.GlassRate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.PressureTankRate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CashDiscount)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.FestivalDiscount)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Vat)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.NoDamageDiscount)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.StolenRate)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.GlassRate)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.PressureTankRate)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.CashDiscount)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.FestivalDiscount)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Vat)
+                </td>
+                 <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.NoDamageDiscount)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editfbi",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletefbi", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

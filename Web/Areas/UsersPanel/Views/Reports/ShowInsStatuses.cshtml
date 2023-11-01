@@ -1,0 +1,166 @@
+﻿@model Core.DTOs.Admin.ShowInsStatusesVM;
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+<input type="hidden" id="insstscc" value="@Model.Result" />
+<input type="hidden" id="typ" value="@Model.InsType" />
+
+
+<table class="table table-bordered font-small-2">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle p-0 width-50">#</th>
+            <th class="text-xs-center align-middle p-0 width-10-per">وضعیت</th>
+            <th class="text-xs-center align-middle p-0 width-15-per">تاریخ</th>
+            <th class="text-xs-center align-middle p-0 width-10-per">توسط</th>
+            <th class="text-xs-center align-middle p-0">یادداشتها</th>
+            <th class="text-xs-center align-middle p-0 width-10-per">عملیات</th>
+            <th class="text-xs-center align-middle p-0 width-50">یادداشت</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rad = 1;
+        }
+        @foreach (var item in Model.GeneralInsStatusVMs?.OrderByDescending(x => x.RegDate))
+        {
+            bool AllowOp = false;
+            string disCalss = "grey";
+            if (item == Model.GeneralInsStatusVMs.OrderByDescending(x => x.RegDate).FirstOrDefault())
+            {
+                AllowOp = true;
+                disCalss = string.Empty;
+            }
+            <tr>
+                <td class="text-xs-center align-middle p-0 @disCalss">@rad</td>
+                <td class="text-xs-center align-middle p-0 @disCalss">@item.InsStatus.Text</td>
+
+                <td class="text-xs-center align-middle p-0 @disCalss">@item.RegDate.ToShamsiN_WithTime()</td>
+                <td class="text-xs-center align-middle p-0 @disCalss">
+                    @item.InsUser?.FullName
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (item.AnyStatusComments != null)
+                    {
+                        <table class="table table-bordered m-0 p-0">
+                            <tbody>
+                                @foreach (var com in item.AnyStatusComments.OrderByDescending(x => x.RegDate).ToList())
+                                {
+                                    <tr>
+                                        @{
+                                            string cls = "text-xs-center";
+                                            if (item.Amount != 0)
+                                            {
+                                                cls += " text-danger";
+                                            }
+
+                                        }
+                                        <td class="@cls align-middle p-0 width-50-per @disCalss">
+
+                                            @foreach (var co in com.CommentList)
+                                            {
+                                                if (co != com.CommentList.LastOrDefault())
+                                                {
+                                                    <span class="text-danger">@co</span>
+                                                    <br />
+                                                }
+                                                else
+                                                {
+                                                    <span>@co</span>
+                                                }
+                                            }
+
+                                        </td>
+                                        <td class="text-xs-center align-middle p-0 width-15-per @disCalss">@com.RegDate.ToShamsiN_WithTime()</td>
+                                        <td class="text-xs-center align-middle p-0 width-20-per @disCalss">
+                                            @{
+                                                DataLayer.Entities.User.User stcomUser = await _genericInsService.GetUserByNameAsync(com.UserName);
+                                            }
+                                            @stcomUser?.FullName
+                                        </td>
+                                        <td class="text-xs-center align-middle p-0 width-15-per @disCalss">
+                                            @if (AllowOp)
+                                            {
+                                                @if (_genericInsService.CheckPermissionByName(Model.PermissionNames.GetValueOrDefault("ویرایش یادداشت وضعیت صدور"), User.Identity.Name))
+                                                {
+                                                    <a href="javascript:void(0)" class="btnEditStatusCom" data-scid="@com.Id" data-refreshid="@Model.RefreshElemanId" data-instype="@Model.InsType" data-sttype="ins" data-status-text="@item.InsStatus.Text" data-radif="@rad" data-loc="@Model.Location">ویرایش</a> <span>|</span>
+                                                }
+
+                                                @if (_genericInsService.CheckPermissionByName(Model.PermissionNames.GetValueOrDefault("حذف یادداشت وضعیت صدور"), User.Identity.Name))
+                                                {
+                                                    <a href="javascript:void(0)" class="btnRemoveStatusCom text-danger" data-scid="@com.Id" data-refreshid="@Model.RefreshElemanId" data-instype="@Model.InsType" data-sttype="ins" data-com-text="@com.Comment" data-loc="@Model.Location">حذف</a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>----</span>
+                                            }
+
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </td>
+                <td class="text-xs-center align-middle p-0 @disCalss">
+                    @if (!await _genericInsService.CkeckInsLastFinancialHasAmount(Model.InsType, Model.InsId))
+                    {
+                        @if (item == Model.GeneralInsStatusVMs.LastOrDefault())
+                        {
+                            @if (item.Premium != null)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissionNames.GetValueOrDefault("عملیات پرداخت"), User.Identity.Name))
+                                {
+                                    bool isPaid = await _genericInsService.CheckInsPayedAync(Model.InsId, Model.InsType);
+
+                                    if (!isPaid)
+                                    {
+                                        if (Model.BPremium.GetValueOrDefault() != 0)
+                                        {
+                                            <form asp-controller="SitePages" asp-action="GoToPayment" method="post" class="d-inline-flex p-1">
+                                                <input type="hidden" name="siteloc" id="sloc" />
+                                                <input type="hidden" name="InsId" value="@Model.InsId" />
+                                                <input type="hidden" name="InsType" value="@Model.InsType" />
+                                                <input type="hidden" name="BackUrl" value="https://melatins.com/PaymentResult" />
+                                                <input type="hidden" name="Currency" value="IRT" />
+                                                <input type="submit" class="btn btn-primary" value="پرداخت (@Model.BPremium تومان)" />
+                                            </form>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <span>----</span>
+                        }
+                    }
+                </td>
+                <td class="text-xs-center align-middle p-0 @disCalss">
+                    @if (AllowOp)
+                    {
+                        @if (_genericInsService.CheckPermissionByName(Model.PermissionNames.GetValueOrDefault("ثبت یادداشت وضعیت صدور"), User.Identity.Name))
+                        {
+                            <span data-insstid="@item.InsStatusId" data-insid="@Model.InsId.ToString()" data-refreshid="@Model.RefreshElemanId" data-sttype="ins" data-instype="@Model.InsType" data-status-text="@item.InsStatus.Text" data-loc="@Model.Location" data-radif="@rad" class="fa fa-plus-circle text-success fa-2x cursor-pointer btnInsertStatusComment" title="ثبت یادداشت برای وضعیت"></span>
+
+                        }
+                        <span data-insstid="@item.InsStatusId" data-insid="@Model.InsId.ToString()" data-refreshid="divSupp" data-sttype="ins" data-instype="@Model.InsType" data-status-text="@item.InsStatus.Text" data-loc="@Model.Location" data-radif="@rad" class="fa fa-cloud-upload text-danger fa-2x cursor-pointer btnAttachFile" title="پیوست فایل"></span>
+                    }
+                    else
+                    {
+                        <span>----</span>
+                    }
+
+
+                </td>
+                @{
+                    rad++;
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+

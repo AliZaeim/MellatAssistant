@@ -1,0 +1,55 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+<div class="col-xs-12 col-lg-4 mb-1 text-xs-center">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">فیلم کوتاه از بدنه بیرونی</div>
+        <div class="col-xs-12 text-xs-center">
+            <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                <source src="/images/Ins/carbody/@Model.OuterBodyFilm" />
+            </video>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1 text-xs-center">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">فیلم کوتاه از فضای داخلی</div>
+        <div class="col-xs-12 text-xs-center">
+            <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                <source src="/images/Ins/carbody/@Model.CarInteriorFilm" />
+            </video>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1 text-xs-center">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">فیلم کوتاه از فضای موتور</div>
+        <div class="col-xs-12 text-xs-center">
+            <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                <source src="/images/Ins/carbody/@Model.EngineSpaceFilm" />
+            </video>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="inpSuccFilms" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccFilms").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });            
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

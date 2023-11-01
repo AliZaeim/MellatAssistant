@@ -1,0 +1,39 @@
+﻿@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "بیمه زندگی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info mb-5">بیمه زندگی</h1>
+<div class="container">
+
+    <div class="row">
+        @if (_userService.CheckPermissionByName("paymentmethods", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/PaymentMethods/Index" class="round-button"><span class="mb-1 col-xs-12">روش پرداخت</span> <span class="col-xs-12 icon-credit-card-alt fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("lifeplans", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/Plans/Index" class="round-button"><span class="mb-1 col-xs-12">طرحهای بیمه</span> <span class="col-xs-12 icon-leaf3 fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        
+
+
+    </div>
+
+</div>
+

@@ -1,0 +1,120 @@
+﻿@using Core.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "بیمه شخص ثالث";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info mb-5">بیمه شخص ثالث</h1>
+<div class="container">
+
+    <div class="row">
+        @if (_userService.CheckPermissionByName("tpbaseinfo", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/ThirdPartyBaseData/Index" class="round-button"><span class="mb-1 col-xs-12">اطلاعات پایه</span> <span class="col-xs-12 icon-gear fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("financialdamges", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FinancialDamages/Index" class="round-button"><span class="mb-1 col-xs-12">جریمه خسارت مالی</span> <span class="col-xs-12 icon-calculator2 fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("financialpremiums", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FinancialPremiumes/Index" class="round-button"><span class="mb-1 col-xs-12">پوشش مالی</span> <span class="col-xs-12 icon-money fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("incidentcovers", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/IncidentCovers/Index" class="round-button"><span class="mb-1 col-xs-12">پوششهای حوادث</span> <span class="col-xs-12 icon-ambulance fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row zmargin_top10mm">
+        @if (_userService.CheckPermissionByName("legaldiscounts", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6 mb-5">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/LegalDiscounts/Index" class="round-button"><span class="mb-1 col-xs-12">تخفیفات و اضافات قانونی</span> <span class="col-xs-12 icon-gift fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("looslifedamges", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6 mb-5">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/LoosLifeDamages/Index" class="round-button"><span class="mb-1 col-xs-12">جرایم خسارت جانی</span> <span class="col-xs-12 icon-balance-scale fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("vehicleusages", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6 mb-5">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/VehicleUsages/Index" class="round-button"><span class="mb-1 col-xs-12">کاربری های خودرو</span> <span class="col-xs-12 icon-taxi fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("vehiclegroups", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6 mb-5">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/VehicleGroups/Index" class="round-button"><span class="mb-1 col-xs-12">گروه های خودرو</span> <span class="col-xs-12 icon-th-large fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        
+    </div>
+    <div class="row zmargin_top10mm">
+        @if (_userService.CheckPermissionByName("loosdrivedamages", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6 mb-5">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/LoosDriverDamages/Index" class="round-button"><span class="mb-1 col-xs-12">جرایم خسارت حوادث راننده </span> <span class="col-xs-12 icon-close-circled fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }        
+        @if (_userService.CheckPermissionByName("tpinsurertypes", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6 mb-5">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/InsurerTypes/Index" class="round-button"><span class="mb-1 col-xs-12">انواع بیمه گذار </span> <span class="col-xs-12 icon-gear-a fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+       
+    </div>
+</div>
+

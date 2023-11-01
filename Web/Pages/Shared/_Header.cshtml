@@ -1,0 +1,36 @@
+﻿@using Core.Services.Interfaces;
+@inject IBlogService _blogService;
+@{
+    var bloggroups = await _blogService.GetblogGroups();
+    bloggroups = bloggroups.Where(w => w.IsActive && w.ShowinMenu).ToList();
+}
+<header class="nav-container">
+    <nav class="sina-nav mobile-sidebar navbar-fixed" data-top="40">
+        <div class="container-fluid">
+            <div class="sina-nav-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="sina-brand pl-4" href="/">
+                    <img src="/images/icons/HLogo.webp" alt="بیمه ملت" width="150" height="150" class="img-fluid" />
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-menu">
+                <ul class="sina-menu sina-menu-center IRANSansWeb">
+                    <li><a href="/Blogs">مجله بیمه</a></li>
+                    @foreach (var bg in bloggroups)
+                    {
+                        <li><a href="/blogs/?gName=@bg.BlogGroupEnTitle">@bg.TitleinMenu</a></li>                    
+                    }
+                    <li><a href="/Products">محصولات بیمه ای</a></li>                    
+                    <li><a href="/Faq">پرسش و پاسخ</a></li>
+                    <li><a href="/About">درباره ما</a></li>
+                    <li><a href="/Contact">ارتباط با ما</a></li>
+                    <li><a href="/Cooperation">درخواست همکاری</a></li>
+                    <li><a href="/FollowupRequest">پیگیری درخواست</a></li>
+                </ul>
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,74 @@
+﻿@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "بیمه آتش سوزی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info mb-5">بیمه آتش سوزی</h1>
+<div class="container">    
+    <div class="row">
+        @if (_userService.CheckPermissionByName("fbaseinfo", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FireBaseInfos/Index" class="round-button"><span class="mb-1 col-xs-12">اطلاعات پایه</span> <span class="col-xs-12 icon-office fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("buildingusage", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/BuildingUsages/Index" class="round-button"><span class="mb-1 col-xs-12">کاربری ملک</span> <span class="col-xs-12 icon-office fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("firecovers", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FireInsCoverages/Index" class="round-button"><span class="mb-1 col-xs-12">پوشش های بیمه آتش سوزی</span> <span class="col-xs-12 icon-umbrella fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("fireinsurertypes", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FireInsurerTypes/Index" class="round-button"><span class="mb-1 col-xs-12">انواع بیمه گذار</span> <span class="col-xs-12 icon-gear-a fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row zmargin_top10mm">
+        @if (_userService.CheckPermissionByName("firelegaldiscount", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FireLegalDiscounts/Index" class="round-button"><span class="mb-1 col-xs-12">تخفیفات و اضافات</span> <span class="col-xs-12 icon-gift fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("firestructuretypes", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/FireStructureTypes/Index" class="round-button"><span class="mb-1 col-xs-12">نوع سازه</span> <span class="col-xs-12 icon-library fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }          
+    </div>   
+</div>

@@ -1,0 +1,58 @@
+﻿@model Core.DTOs.Admin.AddVehicleGroupUsageVM
+@{
+    ViewData["Title"] = "کاربری های گروه وسیله نقلیه" +" " + Model.VehicleGroup.GroupTitle;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    bool ExistAll = false;
+    ExistAll = Model.VehicleUsages.Select(x => x.Id).All(x => Model.SelectedUsages.Contains(x));
+
+
+}
+<h1 class="text-xs-center alert alert-info">@Model.Title <span class="tag tag-square tag-warning">@Model.SelectedUsages.Count()</span> عدد</h1>
+
+<div id="wrapper">
+    <ul class="list-unstyled p-r-5">
+        <li class="mr-2">
+            <input type="checkbox" checked="@ExistAll" name="all" id="all" />
+            <label for="all">همه</label>
+            <form method="post">
+                <ul class="list-unstyled">
+
+                    @foreach (var per1 in Model.VehicleUsages.ToList())
+                    {
+                        string inpId1 = "title1_" + per1.Id.ToString();
+
+                        <li class="mr-1">
+                            <input type="checkbox" name="SelectedUsages" value="@per1.Id" class="chktitle" id="@inpId1" @((Model.SelectedUsages.Any(a => a == per1.Id) ? "checked" : "")) />
+                            <label for="@inpId1">@per1.Usage</label>
+                        </li>
+                    }
+                </ul>
+
+                <div class="form-group">
+                    <input type="hidden" asp-for="groupId" />
+                    <input type="submit" value="ثــبت" class="btn btn-success" />
+                </div>
+
+
+
+            </form>
+
+        </li>
+    </ul>
+</div>
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+{
+    <script type="text/javascript">
+        document.getElementById('all').onclick = function () {
+            var checkboxes = document.getElementsByName('SelectedUsages');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        }
+        
+    </script>
+
+}

@@ -1,0 +1,234 @@
+﻿@model Core.DTOs.SiteGeneric.Travel.TravelInsuranceStep2VM
+<div class="col-xs-12 p-2 zsteps" data-step="2">
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <a href="/TravelIns/RefreshForm" class="btn btn-danger  text-white col-xs-12 col-md-6">خالی کردن فرم</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله دوم - پرسشنامه</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form method="post" asp-action="TravelInsStep2" asp-controller="TravelIns" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#travelform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrInsuredNCImage" />
+        <input type="hidden" asp-for="StrInsuredPassportImage" />
+        <input type="hidden" asp-for="StrSuggestionFormImage" />
+        <div class="form-group required">
+            <label asp-for="InsuredName" class="control-label required"></label>
+            <input asp-for="InsuredName" class="form-control" />
+            <span asp-validation-for="InsuredName" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsuredFamily" class="control-label required"></label>
+            <input asp-for="InsuredFamily" class="form-control" />
+            <span asp-validation-for="InsuredFamily" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsuredAge" class="control-label required"></label>
+            <input asp-for="InsuredAge" class="form-control" />
+            <span asp-validation-for="InsuredAge" class="text-danger"></span>
+        </div>
+        <div class="form-group row required" id="ncimg">
+            <div class="imgUp col-12">
+                <label asp-for="InsuredNCImage" class="control-label"></label>
+                <div class="imagePreview" id="insurednc-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="insurednc-image-upload" asp-for="InsuredNCImage">
+                <br />
+                <span asp-validation-for="InsuredNCImage" id="insuredNCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="passportimg">
+            <div class="imgUp col-12">
+                <label asp-for="InsuredPassportImage" class="control-label"></label>
+                <div class="imagePreview" id="passport-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="passport-image-upload" asp-for="InsuredPassportImage">
+                <br />
+                <span asp-validation-for="InsuredPassportImage" id="insuredNCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="suggimg">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormImage" class="control-label"></label>
+                <div class="imagePreview" id="sugg-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="sugg-image-upload" asp-for="SuggestionFormImage">
+                <br />
+                <span asp-validation-for="SuggestionFormImage" id="insuredNCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsCo" class="control-label required"></label>
+            <select asp-for="InsCo" id="insType" class="custom-select">
+                <option value="" selected="selected"> بیمه گر را انتخاب کنید</option>
+                @foreach (var co in Model.TravelInsCos.Where(w => w.IsActive).ToList())
+                {
+                    <option value="@co.Id">@co.Title</option>
+                }
+            </select>
+            <span asp-validation-for="InsCo" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsClass" class="control-label required"></label>
+            <select asp-for="InsClass" id="insClass" class="custom-select">
+                <option value="" selected="selected"> کلاس بیمه نامه را انتخاب کنید</option>
+                @foreach (var cls in Model.TravelInsClasses.Where(w => w.IsActive).ToList())
+                {
+                    <option value="@cls.Id">@cls.Title</option>
+                }
+            </select>
+            <span asp-validation-for="InsClass" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="HasCrona" class="control-label required"></label>
+            <select asp-for="HasCrona" id="hascrona" class="custom-select">
+                <option value="" selected="selected">انتخاب کنید</option>
+                <option value="true">بله</option>
+                <option value="false">خیر</option>
+            </select>
+            <span asp-validation-for="HasCrona" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="TravelZoom" class="control-label required"></label>
+            <select asp-for="TravelZoom" id="insZooms" class="custom-select zfontsize-10">
+                <option value="" selected="selected"> منطقه را انتخاب کنید</option>
+                @foreach (var zoom in Model.TravelZooms)
+                {
+                    <option value="@zoom.Id">@zoom.Title</option>
+                }
+            </select>
+            <span asp-validation-for="TravelZoom" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="TravelPeriod" class="control-label required"></label>
+            <input asp-for="TravelPeriod" class="form-control" />
+            <span asp-validation-for="TravelPeriod" class="text-danger"></span>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/TravelIns/TravelInsStep1" data-ajax-update="#travelform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" id="submit2" />
+        </div>
+
+    </form>
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+                
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+        $("html, body").animate({ scrollTop: 0 }, "slow");       
+    });
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+    var percent = parseFloat(100/2);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.add("active");
+    document.getElementById("check").classList.remove("active");
+    var imgpreviews = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgpreviews.length; l++) {
+        imgpreviews[l].addEventListener("click", function () {
+            var nextEl = this.nextElementSibling;
+            var elem = document.getElementById(nextEl.id);
+            elem.click();
+        });
+    }
+    document.querySelectorAll('.uploadFile').forEach(function (el) {
+        el.addEventListener('change', function () {
+            var parent = this.parentElement;
+            parent.querySelector('.valid').innerText = '';
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function () { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+    function validate(elem, file) {
+        var idd = ($(elem).attr("id"));
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["jpg", "jpeg", "png", "gif"];
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            alert("پسوند فایل نادرست است! پسوند های درست عبارتند از  : " + arrayExtensions.join(', '));
+            $("#" + idd).val("");
+
+        }
+    }
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined")
+        {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/travel/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    ShowImage("StrInsuredNCImage", "insurednc-image");
+    ShowImage("StrInsuredPassportImage", "passport-image");
+    ShowImage("StrSuggestionFormImage", "sugg-image");
+
+    var clsSel = document.getElementById("insClass");    
+    clsSel.addEventListener("change", function () {
+        var url = "/TravelIns/GetZoomsofClass?cId=" + this.value ;
+            fetch(url, {
+                method: "Get",
+                headers:{"Content-type":"json/application"},
+            }).then(function (response) {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            })
+            .then((content) => {
+                var tsel = document.getElementById("insZooms");
+                
+                for (let i = tsel.options.length - 1; i >= 1; i--) {
+                    tsel.removeChild(tsel.options[i])
+                }
+                
+                for (var i = 0; i < content.length; i++) {
+                    var opt = document.createElement("option");
+                    opt.text = content[i].title;
+                    opt.value = content[i].id;
+                    tsel.add(opt);
+                }
+            }).catch(error => (console.log(error)));
+    });
+
+
+
+
+
+</script>
+
+
+
+
+

@@ -1,0 +1,88 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.UpdateCarBodyCorrissionStepVM
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateCBIns" asp-action="UpdateCarBodyCorrisionImages" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#cbCorrissionImages">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="guid" />
+            <input type="hidden" asp-for="Str_Corrison10Image" />
+            <input type="hidden" asp-for="Str_Corrison1Image" />
+            <input type="hidden" asp-for="Str_Corrison2Image" />
+            <input type="hidden" asp-for="Str_Corrison3Image" />
+            <input type="hidden" asp-for="Str_Corrison4Image" />
+            <input type="hidden" asp-for="Str_Corrison5Image" />
+            <input type="hidden" asp-for="Str_Corrison6Image" />
+            <input type="hidden" asp-for="Str_Corrison7Image" />
+            <input type="hidden" asp-for="Str_Corrison8Image" />
+            <input type="hidden" asp-for="Str_Corrison9Image" />
+            
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="Corrison1Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison1Image" />
+                    <input asp-for="Corrison1Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison1Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison2Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison2Image" />
+                    <input asp-for="Corrison2Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison2Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison3Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison3Image" />
+                    <input asp-for="Corrison3Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison3Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison4Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison4Image" />
+                    <input asp-for="Corrison4Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison4Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison5Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison5Image" />
+                    <input asp-for="Corrison5Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison5Image" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">                
+                <div class="form-group">
+                    <label asp-for="Corrison6Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison6Image" />
+                    <input asp-for="Corrison6Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison6Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison7Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison7Image" />
+                    <input asp-for="Corrison7Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison7Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison8Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison8Image" />
+                    <input asp-for="Corrison8Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison8Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison9Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison9Image" />
+                    <input asp-for="Corrison9Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison9Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Corrison10Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Corrison10Image" />
+                    <input asp-for="Corrison10Image" type="file" class="form-control" />
+                    <span asp-validation-for="Corrison10Image" class="text-danger"></span>
+                </div>          
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+

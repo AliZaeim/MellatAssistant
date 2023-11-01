@@ -1,0 +1,1135 @@
+﻿@model Core.DTOs.Admin.InsDetailsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+@{
+    ViewData["Title"] = "جزئیات بیمه یدنه";
+
+}
+<style>
+    .colored-toast .swal2-html-container {
+        color: white;
+    }
+
+    .no-display {
+        display: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row alert alert-info">
+        <div class="col-xs-10">
+            @{
+                string title = "جزئیات درخواست بیمه بدنه " + " | کد پیگیری : " + Model.CarBodyInsurance.TraceCode + " | شماره بیمه نامه : " + Model.CarBodyInsurance.IssuedInsNo + " | حق بیمه: " + Model.CarBodyInsurance.Premium.GetValueOrDefault().ToString("N0") + " تومان";
+
+            }
+            <h4 class="text-xs-right pt-1 pb-1">
+                @title
+                @if (Model.CarBodyInsurance.Canceled)
+                {
+                    <span class="bg bg-danger text-white pr-1 pl-1 rounded mr-1">انصراف</span>
+                }
+            </h4>
+        </div>
+
+        <div class="col-xs-2 text-xs-left">
+            <div class="row">
+                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود مدارک"), User.Identity.Name))
+                {
+                    <form method="post" class="d-inline-block" asp-action="DownloadZipDouments" asp-controller="Reports" asp-area="UsersPanel">
+                        <input type="hidden" name="insId" value="@Model.CarBodyInsurance.Id" />
+                        <input type="hidden" name="type" value="cb" />
+                        <button type="submit" class="btn btn-primary rounded"><span class="fa fa-download" title="دانلود مدارک"></span></button>
+                        <p class="p-0 m-0 text-xs-center">دانلود مدارک</p>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<section class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="hidden" id="insid" value="@Model.CarBodyInsurance.Id" />
+            <div class="row">
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                مشخصات
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.CarBodyInsurance.Id, "cb") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_cb_state" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+                <section id="cbState">
+                    <div class="col-xs-12  text-xs-center">
+
+                        <h6 class="text-xs-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+                        @{
+                            DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.CarBodyInsurance.SellerCode);
+                            var role = await _genericInsService.GetLastActiveRoleAsync(Model.CarBodyInsurance.SellerRoleId.Value);
+                        }
+                        <div class="row">
+                            <p class="col-md-3 col-xs-12">نام : @seller?.FullName</p>
+                            <p class="col-md-3 col-xs-12">تلفن : @seller?.Cellphone</p>
+                            <p class="col-md-3 col-xs-12">کد : @Model.CarBodyInsurance.SellerCode</p>
+                            <p class="col-md-3 col-xs-12">مسئولیت : @role?.RoleTitle</p>
+                        </div>
+
+                        <div class="col-xs-12 text-xs-center mt-2">
+                            @{
+                                string state = "فرد عادی";
+                                if (Model.CarBodyInsurance.InsurerStatus == "retired")
+                                {
+                                    state = "بازنشته کشوری یا تامین اجتماعی";
+                                }
+                                if (Model.CarBodyInsurance.InsurerStatus == "related")
+                                {
+                                    state = "منتسب بازنشسته";
+                                }
+                            }
+                            <h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-md-3 col-xs-12">
+                                            <p>نام : @Model.CarBodyInsurance.InsurerName @Model.CarBodyInsurance.InsurerFamily</p>
+                                        </div>
+                                        <div class="col-md-3 col-xs-12">
+                                            <p>تلفن : @Model.CarBodyInsurance.InsurerCellphone</p>
+                                        </div>
+                                        <div class="col-md-3 col-xs-12">
+                                            <p>وضعیت : @state</p>
+                                        </div>
+                                        <div class="col-md-3 col-xs-12">
+                                            @if (Model.CarBodyInsurance.HasInstallmentRequest)
+                                            {
+                                                <p>پرداخت به صورت اقساط : بله</p>
+                                            }
+                                            else
+                                            {
+                                                <p>پرداخت به صورت اقساط : خیر</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-md-4 col-xs-12">
+                                            @if (Model.CarBodyInsurance.HasInstallmentRequest)
+                                            {
+                                                <div class="w-100 text-xs-center">تصویر رضایت کسر از حقوق</div>
+                                                <div class="w-100 text-xs-center mb-2">
+                                                    <a href="/images/Ins/carbody/@Model.CarBodyInsurance.PayrollDeductionImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.PayrollDeductionImage" /></a>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="col-md-4 col-xs-12">
+                                            <span class="w-100">تصویر کارت ملی</span>
+                                            <div class="w-100 text-xs-center mb-2 ">
+                                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.InsurerNCImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.InsurerNCImage" /></a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12">
+                                            @if (Model.CarBodyInsurance.InsurerStatus == "related")
+                                            {
+                                                <div class="w-100 text-xs-center">تصویر معرفی نامه منتسب</div>
+                                                <div class="w-100 text-xs-center">
+                                                    <a href="/images/Ins/carbody/@Model.CarBodyInsurance.AttributedLetterImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.AttributedLetterImage" /></a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                مدارک
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.CarBodyInsurance.Id, "cb") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_cb_docs" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <section id="cbDocuments">
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد</div>
+                        <div class="col-xs-12 text-xs-center">
+                            <a href="/images/Ins/carbody/@Model.CarBodyInsurance.SuggestionFormImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.SuggestionFormImage" /></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="col-xs-12 text-xs-center">تصویر روی کارت خودرو</div>
+                        <div class="col-xs-12 text-xs-center">
+                            <a href="/images/Ins/carbody/@Model.CarBodyInsurance.CarCardFrontImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.CarCardFrontImage" /></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="col-xs-12 text-xs-center">تصویر پشت کارت خودرو</div>
+                        <div class="col-xs-12 text-xs-center">
+                            <a href="/images/Ins/cb/@Model.CarBodyInsurance.CarCardBackImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.CarCardBackImage" /></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="col-xs-12 text-xs-center">تصویر روی گواهینامه</div>
+                        <div class="col-xs-12 text-xs-center">
+                            <a href="/images/Ins/carbody/@Model.CarBodyInsurance.DrivingPermitFrontImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.DrivingPermitFrontImage" /></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="col-xs-12 text-xs-center">تصویر پشت گواهینامه</div>
+                        <div class="col-xs-12 text-xs-center">
+                            <a href="/images/Ins/carbody/@Model.CarBodyInsurance.DrivingPermitBackImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.DrivingPermitBackImage" /></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="col-xs-12 text-xs-center">تصویر بیمه نامه قبلی</div>
+                        <div class="col-xs-12 text-xs-center">
+                            <a href="/images/Ins/carbody/@Model.CarBodyInsurance.PreviousInsImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.PreviousInsImage" /></a>
+                        </div>
+                    </div>
+                    @{
+                        string InsHis = "بیمه بدنه ندارد";
+                        switch (Model.CarBodyInsurance.InsuranceHistoryStatus.GetValueOrDefault())
+                        {
+                            case 1:
+                                InsHis = "بیمه بدنه ندارد";
+                                break;
+                            case 2:
+                                InsHis = "بیمه از سایر شرکت ها دارد";
+                                break;
+                            case 3:
+                                InsHis = "بیمه بدنه از بیمه ملت دارد";
+                                break;
+                            default:
+                                InsHis = "بیمه بدنه ندارد";
+                                break;
+                        }
+
+                    }
+                    <div class="col-xs-12 text-xs-center">
+                        <p>
+                            وضعیت سابقه بیمه : @InsHis
+                        </p>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">آیا تخفیف عدم خسارت دارد؟ @((Model.CarBodyInsurance.HasNoneDamageDiscount) ? "بله" : "خیر")</div>
+                            <div class="col-xs-12 text-xs-center">تصویر گواهینامه عدم خسارت</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.NoDamageCertificateImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.NoDamageCertificateImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">آیا سلامت خودرو تغییر کرده است؟ @((Model.CarBodyInsurance.IsChangedHealthOfCar) ? "بله" : "خیر")</div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">آیا سال قبل خسارت گرفته اید؟ @((Model.CarBodyInsurance.RecievedDamageLastYear) ? "بله" : "خیر")</div>
+                        </div>
+                    </div>
+                </section>
+                @{
+                    bool hasUserUp = false;
+                    if (Model.CarBodyInsurance.CarBodySupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).Any())
+                    {
+                        hasUserUp = true;
+                    }
+                }
+                @if (hasUserUp)
+                {
+                    <div class="col-lg-12">
+                        <h5 class="text-xs-center text-danger">فایلهای آپلود شده جدید </h5>
+                        <table class="table table-bordered font-small-2">
+                            <thead>
+                                <tr>
+                                    <th class="text-xs-center align-middle p-0 width-50">#</th>
+                                    <th class="text-xs-center align-middle p-0 width-10-per">عنوان</th>
+                                    <th class="text-xs-center align-middle p-0 width-15-per">تاریخ</th>
+                                    <th class="text-xs-center align-middle p-0 width-10-per">توسط</th>
+                                    <th class="text-xs-center align-middle p-0 width-10-per">فایل</th>
+                                    <th class="text-xs-center align-middle p-0 ">پیام</th>
+                                    <th class="text-xs-center align-middle p-0">دانلود</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int rad = 1;
+                                }
+                                @foreach (var item in Model.CarBodyInsurance.CarBodySupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).OrderByDescending(x => x.RegDate).ToList())
+                                {
+                                    <tr>
+                                        <td class="text-xs-center align-middle p-0">@rad</td>
+                                        <td class="text-xs-center align-middle p-0">@item.Title</td>
+                                        <td class="text-xs-center align-middle p-0">@item.RegDate.ToShamsiN()</td>
+                                        <td class="text-xs-center align-middle p-0">
+                                            @{
+                                                var user = await _genericInsService.GetUserByNameAsync(item.UserName);
+                                                string userFullName = user?.FullName ?? "-";
+                                            }
+                                            @userFullName
+                                        </td>
+                                        <td class="text-xs-center align-middle p-0">
+                                            @if (!string.IsNullOrEmpty(item.File))
+                                            {
+                                                @if (Core.Utility.Applications.IsImage(item.File))
+                                                {
+                                                    <img src="~/Supp/carbody/@item.File" class="rounded mx-auto zoom" with=50 height=50>
+                                                }
+                                                @if (item.File.EndsWith(".pdf"))
+                                                {
+                                                    <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                                                }
+                                            }
+                                        </td>
+                                        <td class="text-xs-center align-middle">
+                                            @foreach (string ml in item.MessageLines)
+                                            {
+                                                if (ml != item.MessageLines.LastOrDefault())
+                                                {
+                                                    <span class="w-100">@ml.Replace("fu"," ")</span>
+
+                                                    <br />
+                                                }
+                                                else
+                                                {
+                                                    <span class="w-100">@ml.Replace("fu"," ")</span>
+                                                }
+
+                                            }
+                                        </td>
+                                        <td class="text-xs-center align-middle">
+                                            <form asp-area="UsersPanel" asp-controller="Reports" asp-action="DownloadFile" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="filename" value="@item.File">
+                                                <input type="hidden" name="insType" value="cb">
+                                                <button type="submit" title="دانلود" class="text-success cursor-pointer font-size-large"><span class="icon-download"></span></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    rad++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs">
+                        </div>
+                        <div class="col-md-8 col-xs-12">
+                            <h4 class="text-xs-center ">
+                                تصاویر بیرونی
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs">
+                            <a class="float-lg-left font-medium-1" id="btnUpdate_cb_outerImages" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                        </div>
+                    </div>
+                </div>
+                <section id="cbOuterImages">
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس جلوی ماشین</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.CarFrontImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.CarFrontImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس پشت ماشین</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.CarBehindImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.CarBehindImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس سمت راننده</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.DriverSideImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.DriverSideImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس سمت شاگرد</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/cb/@Model.CarBodyInsurance.ApprenticeSideImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.ApprenticeSideImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس زاویه 1</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Angle1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Angle1Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس زاویه 2</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Angle2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Angle2Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس زاویه 3</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Angle3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Angle3Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس زاویه 4</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Angle4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Angle4Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس کاپوت</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.HoodImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.HoodImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس صندوق عقب</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.TrunkImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.TrunkImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس سقف ماشین</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.RoofImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.RoofImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                تصاویر داخلی
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.CarBodyInsurance.Id, "cb") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_cb_innerImages" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <section id="cbInnerImages">
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس نمای کامل داشبورد</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.DashboardFullViewImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.DashboardFullViewImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس ضبط صوت</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.TapeRecorderImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.TapeRecorderImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس کیلومتر کارکرد</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.KilometersImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.KilometersImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه جلو</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.FrontWindShieldImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.FrontWindShieldImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه عقب</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.RearWindowImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.RearWindowImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه راننده</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.DriverGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.DriverGlassImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه شاگرد</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.ApprenticeGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.ApprenticeGlassImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه عقب راننده</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.DriverGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.DriverRearGlassImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه عقب شاگرد</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.ApprenticeRearGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.ApprenticeRearGlassImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس شیشه سانروف</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.SunRoofGlassImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.SunRoofGlassImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                تصاویر موتور
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.CarBodyInsurance.Id, "cb") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_cb_engineImages" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <section id="cbEngineImages">
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس نمای کامل موتور</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.EngineFullViewImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.EngineFullViewImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس پلاک موتور</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.EngineLicensePlate"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.EngineLicensePlate" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس حک شاسی</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.ChassisEngravingImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.ChassisEngravingImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                تصاویر لاستیک ها و لوازم اضافه
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            <a class="float-lg-left font-medium-1" id="btnUpdate_cb_TiresImages" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                        </div>
+                    </div>
+                </div>
+                <section id="cbTiresExImages">
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس رینگ و لاستیک 1</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires1Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس رینگ و لاستیک 2</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires2Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس رینگ و لاستیک 3</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires3Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس رینگ و لاستیک 4</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.RimsandTires4Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس باندها از داخل اتاق</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.InsideBandsImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.InsideBandsImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس سیستم صوتی از صندوق عقب</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.AudioSystemFromTrunkImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.AudioSystemFromTrunkImage" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                تصاویر خوردگی ها و لکه های بدنه
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.CarBodyInsurance.Id, "cb") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_cb_CorrissionImages" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <section id="cbCorrissionImages">
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 1</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison1Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 2</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison2Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 3</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison3Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 4</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison4Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 5</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison5Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison5Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 6</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison6Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison6Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 7</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison7Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison7Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 8</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison8Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison8Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 9</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison9Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison9Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">عکس خوردگی و لکه بدنه 10</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <a href="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison10Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarBodyInsurance.Corrison10Image" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                فیلم ها
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.CarBodyInsurance.Id, "cb") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_cb_Films" data-insid="@Model.CarBodyInsurance.Id" data-insissueno="@Model.CarBodyInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <section id="cbFilms">
+                    <div class="col-xs-12 col-lg-4 mb-1 text-xs-center">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">فیلم کوتاه از بدنه بیرونی</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                                    <source src="/images/Ins/carbody/@Model.CarBodyInsurance.OuterBodyFilm" />
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1 text-xs-center">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">فیلم کوتاه از فضای داخلی</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                                    <source src="/images/Ins/carbody/@Model.CarBodyInsurance.CarInteriorFilm" />
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-4 mb-1 text-xs-center">
+                        <div class="row">
+                            <div class="col-xs-12 text-xs-center">فیلم کوتاه از فضای موتور</div>
+                            <div class="col-xs-12 text-xs-center">
+                                <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                                    <source src="/images/Ins/carbody/@Model.CarBodyInsurance.EngineSpaceFilm" />
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-xs-12 mt-1">
+                <div class="row">
+                    <div class="col-xs-12 alert alert-success">
+                        <div class="row">
+                            <div class="col-md-2 col-xs-3">
+                            </div>
+                            <div class="col-md-8 col-xs-6">
+                                <h4 class="text-xs-right text-md-center">
+                                    وضعیت مالی
+                                </h4>
+                            </div>
+                            <div class="col-md-2 col-xs-3">
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت مالی"), User.Identity.Name))
+                                {
+                                    <button data-insid="@Model.CarBodyInsurance.Id" data-instype="cb" data-refreshid="FindivStatus" data-loc="@Model.Location" class="btn btn-primary float-xs-left FinbtnInsertState">ثبت وضعیت </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div id="FindivStatus" class="col-xs-12 table-responsive mt-2">
+                        @{
+                            Core.DTOs.Admin.ShowFinancialStatusesVM showFinancialStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedFinancialStatusesAsync(Model.CarBodyInsurance.Id, "cb", "FindivStatus", "false", User.Identity.Name);
+                            showFinancialStatusesVM.Location = Model.Location;
+                            showFinancialStatusesVM.PermissionNames = Model.PermissinKeys;
+                        }
+                        <partial name="ShowInsFinanceStatus" model="@showFinancialStatusesVM" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 mt-1">
+                <div class="row">
+                    <div class="col-xs-12 alert alert-success">
+                        <div class="row">
+                            <div class="col-md-2 col-xs-3">
+                                @if (string.IsNullOrEmpty(Model.CarBodyInsurance.IssuedInsNo))
+                                {
+                                    @if (!Model.CarBodyInsurance.Canceled)
+                                    {
+                                        <button data-insid="@Model.CarBodyInsurance.Id" data-instype="cb" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-danger float-xs-right" id="btnCanceled">اعلام انصراف</button>
+                                    }
+                                }
+
+                                @if (Model.CarBodyInsurance.Canceled)
+                                {
+                                    <span class="text-danger">انصراف داده شده است !</span>
+                                }
+
+                            </div>
+                            <div class="col-md-8 col-xs-6">
+                                <h4 class="text-xs-right text-md-center">وضعیت صدور</h4>
+                            </div>
+                            <div class="col-md-2 col-xs-3">
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت صدور"), User.Identity.Name))
+                                {
+                                    <button data-insid="@Model.CarBodyInsurance.Id" data-instype="cb" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertState">ثبت وضعیت</button>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divStatus" class="col-xs-12 table-responsive mt-2">
+                        @{
+                            Core.DTOs.Admin.ShowInsStatusesVM showInsStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedStatus(Model.CarBodyInsurance.Id, "cb", "divStatus", "false", User.Identity.Name);
+                            showInsStatusesVM.Location = Model.Location;
+                            showInsStatusesVM.PermissionNames = Model.PermissinKeys;
+                        }
+                        <partial name="ShowInsStatuses" model="@showInsStatusesVM" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 mt-1">
+                <div class="row">
+                    <div class="col-xs-12 alert alert-success">
+                        <div class="row">
+                            <div class="col-md-3 col-xs-3"></div>
+                            <div class="col-md-6 col-xs-6">
+                                <h4 class="text-xs-right text-md-center">بیمه نامه</h4>
+                            </div>
+                            <div class="col-md-3 col-xs-3">
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("پیوست فایل"), User.Identity.Name))
+                                {
+                                    <button data-insid="@Model.CarBodyInsurance.Id" data-refreshid="divSupp" data-instype="cb" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertSupp">پیوست فایل</button>
+                                }
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود تمام فایلهای پیوست شده"), User.Identity.Name))
+                                {
+                                    @if (Model.CarBodyInsurance.CarBodySupplements.Any(z => string.IsNullOrEmpty(z.Message) || (!string.IsNullOrEmpty(z.Message) && !z.Message.Contains("fu"))))
+                                    {
+                                        <form method="post" class="d-inline-block" asp-action="DownloadZipSupps" asp-controller="Reports" asp-area="UsersPanel">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="insId" value="@Model.CarBodyInsurance.Id" />
+                                            <input type="hidden" name="type" value="cb" />
+                                            <button type="submit" class="btn btn-warning rounded">دانلود پیوست ها</button>
+                                        </form>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divSupp" class="col-xs-12 table-responsive mt-2">
+                        @{
+                            Core.DTOs.Admin.ShowInsuranceSupplementsData showInsuranceSupplementsData = await
+                            _genericInsService.PreparationDataForShowInsSupplementsAsync(Model.CarBodyInsurance.Id, "cb", "divSupp", "false", User.Identity.Name);
+                            showInsuranceSupplementsData.Location = Model.Location;
+                            showInsuranceSupplementsData.PermissionNames = Model.PermissinKeys;
+                        }
+                        <partial name="ShowInsSupplements" model="@showInsuranceSupplementsData" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="position:fixed;bottom :10mm;left:2mm">
+        @if (!string.IsNullOrEmpty(Model.CarBodyInsurance.IssuedInsNo))
+        {
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+        else
+        {
+
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+    </div>
+</section>
+@section Scripts {
+    <script src="~/AdminLayout/app-assets/js/scripts/InsDetails.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#btnUpdate_cb_state", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyStateSection",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت وضعیت بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_docs
+            $(document).on("click", "#btnUpdate_cb_docs", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyDocsSection",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت مدارک بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_outerImages
+            $(document).on("click", "#btnUpdate_cb_outerImages", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyOuterImages",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت تصاویر بیرونی بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_innerImages
+            $(document).on("click", "#btnUpdate_cb_innerImages", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyInnerImages",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت تصاویر داخلی بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_engineImages
+            $(document).on("click", "#btnUpdate_cb_engineImages", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyEngineImages",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت تصاویر موتور بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_TiresImages
+            $(document).on("click", "#btnUpdate_cb_TiresImages", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyTireExImages",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت تصاویر لاستیک ها و لوازم اضافه بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_CorrissionImages
+            $(document).on("click", "#btnUpdate_cb_CorrissionImages", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyCorrisionImages",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت تصاویر خوردگی ها و لکه های بدنه بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            //btnUpdate_cb_Films
+            $(document).on("click", "#btnUpdate_cb_Films", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateCBIns/UpdateCarBodyFilms",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").removeClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت فیلم ها بیمه نامه بدنه با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            $(document).on("click", "#btnCanceled", function () {
+                var id = $(this).attr("data-insid");
+                var instype = $(this).attr("data-instype");
+                if (confirm('آیا مطمئن به لغو درخواست خود هستید ؟')) {
+                    $.ajax({
+                        url: "/UsersPanel/Reports/CancelRequest",
+                        data: { insId: id, type: instype },
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN",
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        },
+                        type: "POST",
+
+                        async: true,
+
+                    }).done(function (result) {
+                        if (result == true) {
+                            window.location.reload();
+                        }
+                    });
+                }
+
+            });
+            var loc = window.location.href;
+            $("#sloc").val(loc);
+        });
+
+    </script>
+}

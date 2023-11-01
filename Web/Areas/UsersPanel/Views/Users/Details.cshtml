@@ -1,0 +1,324 @@
+﻿@model DataLayer.Entities.User.User
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService;
+
+@{
+    ViewData["Title"] = "جزئیات اطلاعات کاربر" + " " + Model.FullName;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">جزئیات اطلاعات کاربر @Model.FullName</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-xs-12">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.FullName)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.FullName)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.NC)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.NC)
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.NCImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="~/images/users/@Model.NCImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Father)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Father)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Password)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Password)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.BirthDate)
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.BirthDate.ToShamsiN()
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.IdNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IdNumber)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.IssuePlace)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IssuePlace)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Cellphone)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Cellphone)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.ReferralCode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.ReferralCode)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.SalesExCode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.SalesExCode)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.AgentCode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.AgentCode)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    استان
+                </dt>
+                <dd class="col-sm-8">
+                    @if (Model.County != null)
+                    {
+                        @Html.DisplayFor(model => model.County.State.StateName)
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+
+                </dd>
+                <dt class="col-sm-4">
+                    شهرستان
+                </dt>
+                <dd class="col-sm-8">
+                    @if (Model.County != null)
+                    {
+                        @Html.DisplayFor(model => model.County.CountyName)
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.PostalCode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.PostalCode)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Phone)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.FieldofStudy)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.FieldofStudy)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.LevelofStudy)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.LevelofStudy)
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.GraduationDate)
+                </dt>
+                <dd class="col-sm-6">
+                    @Model.GraduationDate.ToShamsiN()
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.EducationDegreeImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.EducationDegreeImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UniversityName)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.UniversityName)
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.InsWokHistory)
+                </dt>
+                <dd class="col-sm-6">
+                    @Html.DisplayFor(model => model.InsWokHistory)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.PortalPassword)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.PortalPassword)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <dl class="row">
+                <dt class="col-sm-4 p-0">
+                    @Html.DisplayNameFor(model => model.UserCreditCardNumber)
+                </dt>
+                <dd class="col-sm-8 p-0">
+                    @Html.DisplayFor(model => model.UserCreditCardNumber)
+                </dd>
+                <dt class="col-sm-4 p-0">
+                    @Html.DisplayNameFor(model => model.UserBankAccountNumber)
+                </dt>
+                <dd class="col-sm-8 p-0">
+                    @Html.DisplayFor(model => model.UserBankAccountNumber)
+                </dd>
+                <dt class="col-sm-3 p-0">
+                    @Html.DisplayNameFor(model => model.ShebaNumber)
+                </dt>
+                <dd class="col-sm-9 p-0">
+                    @Html.DisplayFor(model => model.ShebaNumber)
+                </dd>
+                <dt class="col-sm-4 p-0">
+                    @Html.DisplayNameFor(model => model.SHEBAImage)
+                </dt>
+                <dd class="col-sm-8 p-0">
+                    <img src="/images/users/@Model.SHEBAImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-4 p-0">
+                    @Html.DisplayNameFor(model => model.DemandNo)
+                </dt>
+                <dd class="col-sm-8 p-0">
+                    @Html.DisplayFor(model => model.DemandNo)
+                </dd>
+                <dt class="col-sm-4 p-0">
+                    @Html.DisplayNameFor(model => model.DemandValue)
+                </dt>
+                <dd class="col-sm-8 p-0">
+                    @Html.DisplayFor(model => model.DemandValue)
+                </dd>
+                <dt class="col-sm-6 p-0">
+                    @Html.DisplayNameFor(model => model.DemandFrontImage)
+                </dt>
+                <dd class="col-sm-6 p-0">
+                    <img src="/images/users/@Model.DemandFrontImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6 p-0">
+                    @Html.DisplayNameFor(model => model.DemandBackImage)
+                </dt>
+                <dd class="col-sm-6 p-0">
+                    <img src="/images/users/@Model.DemandBackImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6 p-0">
+                    @Html.DisplayNameFor(model => model.EducationDegreeImage)
+                </dt>
+                <dd class="col-sm-6 p-0">
+                    <img src="/images/users/@Model.EducationDegreeImage" width="100" height="50" />
+                </dd>
+
+                <dt class="col-sm-8 p-0">
+                    @Html.DisplayNameFor(model => model.PortalIsActive)
+                </dt>
+                <dd class="col-sm-4 p-0">
+                    @((Model.PortalIsActive) ? "فعال" : "غیرفعال")
+                </dd>
+
+
+            </dl>
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <dl class="row">
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.PersonalImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.PersonalImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.EndofServiceImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.EndofServiceImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.Exam96Image)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.Exam96Image" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.NoAddictionImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.NoAddictionImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.AgentRequestImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.AgentRequestImage" width="100" height="50" />
+                </dd>
+                <dt class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.SignImage)
+                </dt>
+                <dd class="col-sm-6">
+                    <img src="/images/users/@Model.SignImage" width="100" height="50" />
+                </dd>
+
+
+            </dl>
+        </div>
+        <div class="col-xs-12 mt-2 mb-2">
+            @{
+                var roles = await _userService.GetRolesOfUserAsync(Model.Id);
+            }
+            نقش ها :
+            @foreach (var item in roles)
+            {
+                if (item != roles.LastOrDefault())
+                {
+                    <span>@item.RoleTitle - </span>
+                }
+                else
+                {
+                    <span>@item.RoleTitle</span>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div >
+    @if (_userService.CheckPermissionByName("edituser",User.Identity.Name))
+    {
+        <a asp-action="EditUser" asp-route-id="@Model.Id">ویرایش</a> <span>|</span>
+    }
+    
+    <a asp-action="Index">بازگشت</a>
+</div>

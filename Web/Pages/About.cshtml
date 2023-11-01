@@ -1,0 +1,71 @@
+﻿@page
+@model Web.Pages.AboutModel
+@{
+    ViewData["Title"] = "درباره بیمه ملت";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="اطلاعات کافی در مورد  بیمه ملت." />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="canonical" href="https://metainsur.ir/About" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+    <section class="container-fluid intro-section text-white">
+        <div class="container p-md-5 p-4">
+            <div class="row">
+                <div class="col-lg-9 text-justify">
+                    <h5 class="mb-4 bt-color IRANSansWeb_Medium text-center">@Model?.About?.Title</h5>
+                    @Html.Raw(Model?.About?.Text)
+
+                </div>
+                <div class="col-lg-3 pt-4">
+                    <img src="/images/about/@Model?.About?.Image" class="float-lg-left d-none d-lg-block img-fluid" style="width:250px;height:auto" />
+                </div>
+            </div>
+        </div>
+        <object class="d-none d-xl-block" type="image/svg+xml" data="Images/Svg/desktop-wave.svg"></object>
+    </section>
+    <section id="reason" class="container py-3 py-sm-3 ">
+        <div class="row  mt-4 mx-1">
+            @foreach (var item in Model?.CoWorkers.ToList())
+           {
+                <div class="col-lg-4  mb-3">
+                    <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                        <div class="mt-4">
+                            <img src="/images/coworkers/@item.Image" />
+                        </div>
+                        <div class="p-3">
+                            <h6 class="IRANSansWeb_Medium">@item.FullName</h6>
+                            <p class="text-justify">@item.Comment </p>
+                        </div>
+                    </div>
+                </div>
+            }
+           
+
+        </div>
+    </section>
+    @section Footer
+    {
+        <partial name="_Footer" />
+    }
+@section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+}

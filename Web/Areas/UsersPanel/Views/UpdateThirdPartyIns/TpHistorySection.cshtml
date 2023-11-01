@@ -1,0 +1,77 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.ThirdParty
+<div class="col-xs-12 mb-1">کیلومتر کارکرد : @Model.VehicleOperationKilometers.GetValueOrDefault().ToString("N0")</div>
+@if (Model.LicensePlateChanged)
+{
+    <div class="col-md-6 col-xs-12 ">آیا پلاک خودرو نسبت به بیمه نامه سال قبل تغییر کرده است؟ بله</div>
+    <div class="col-md-6 col-xs-12 text-xs-center mb-1">
+        <div class="row">
+            <p class="text-xs-center">تصویر کارت سبز خودرو</p>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.CarGreenPaperImage" />
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="col-xs-12">آیا پلاک خودرو نسبت به بیمه نامه سال قبل تغییر کرده است؟ خیر</div>
+}
+@if (Model.ExistPrevInsurancePolicy)
+{
+    <div class="col-md-6 col-xs-12">آیا بیمه نامه ای از قبل برای انتقال تخفیف به بیمه نامه جدید دارید؟ بله</div>
+    <div class="col-md-6 col-xs-12 text-xs-center mb-1">
+        <div class="row">
+            <p class="text-xs-center">تصویر بیمه نامه انتقالی</p>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.PrevInsurancePolicyImage" />
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-xs-12">آیا بیمه نامه ای از قبل برای انتقال تخفیف به بیمه نامه جدید دارید؟ خیر</div>
+}
+
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined") {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes") {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "") {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

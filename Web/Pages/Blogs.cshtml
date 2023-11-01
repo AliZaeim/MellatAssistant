@@ -1,0 +1,332 @@
+﻿@page "{gName?}/{Tag?}/{search?}/{pageId:int?}"
+@model Web.Pages.BlogsModel
+@using Core.Services.Interfaces;
+@inject IBlogService _blogService
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "مجله بیمه ملت";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="اطلاعات کافی در مورد بیمه ملت." />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="canonical" href="https://metainsur.ir/Blogs" />
+}
+    @section Header{
+    <partial name="_Header" />
+}
+    <section id="above-page" class="container-fluid mb-sm-5 mb-3 ">
+        <div class="above-page-img">
+            <img src="/images/bg1.jpg" alt="" title="backgroung image" class="d-lg-block d-none">
+        </div>
+        <div class="container border">
+            <div class="row d-block">
+                <div class="above-page-content col-12">
+                    <div class="above-page-tagline ">
+                        <h1 class="main-tagline IRANSansWeb_Medium">جدیدترین اخبار صنعت بیمه</h1>
+                        <h6 class="IRANSansWeb_Medium text-white text-shadow text-center"> به دنیای بیمه سفر کنید</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container quickico">
+        <h4 class="text-info text-center">گروه های خبری</h4>
+        <div class="row value-body m-3  text-center">
+        @foreach (var bg in Model.BlogGroups.Where(w => w.IsActive).ToList())
+        {
+            <a href="/blogs/?gname=@bg.BlogGroupEnTitle" class="col-sm-2 col-4">
+                <img src="/images/icons/bloggroup/@bg.BlogGroupIcon" width="48" height="48" />
+                <p>@bg.BlogGroupTitle</p>
+            </a>
+        }
+
+    </div>
+
+</section>
+<section class="container mt-5">
+    <div class="row">
+        <h5 class="IRANSansWeb_Medium col-12 text-center bt-color">@Model.Title</h5>
+        <p class="text-center col-12">@Model.SubTitle</p>
+    </div>
+    <div class="row">
+        @{
+            List<DataLayer.Entities.Blogs.Blog> blogs = Model.Blogs.Where(w => w.BlogIsActive).ToList();
+            if (!string.IsNullOrEmpty(Model.GroupName))
+            {
+                blogs = blogs.Where(w => w.BlogGroup.BlogGroupEnTitle == Model.GroupName).ToList();
+            }
+            if (!string.IsNullOrEmpty(Model.BSearch))
+            {
+                if (Model.BSearch == "voice")
+                {
+                    blogs = blogs.Where(w => w.HasVoice).ToList();
+                }
+                if (Model.BSearch == "video")
+                {
+                    blogs = blogs.Where(w => w.HasVideo).ToList();
+                }
+            }
+            if (!string.IsNullOrEmpty(Model.BTag))
+            {
+                blogs = blogs.Where(w => w.TagsList.Any(z => z.Trim() == Model.BTag.Trim())).ToList();
+            }
+
+
+        }
+        @{
+            int tCount = blogs.Count();
+            int rpp = 12;
+            int pageCount = 1;
+            if (tCount % rpp == 0)
+            {
+                pageCount = tCount / rpp;
+            }
+            else
+            {
+                pageCount = (tCount / rpp) + 1;
+            }
+            int curp = Model.CurrentPage;
+            int pp = curp - 1;
+            int np = curp + 1;
+        }
+        @foreach (var blg in blogs.OrderByDescending(x => x.BlogDate).Skip((curp - 1) * rpp).Take(rpp).ToList())
+        {
+            var user = await _blogService.GetUserByIdAsync(blg.AuthorId.Value);
+            string authrAv = "/images/icons/avatar128.png";
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(user.PersonalImage))
+                {
+                    authrAv = "/images/users/" + user.PersonalImage;
+                }
+            }
+            <a href="/blog/d/@blg.BlogUrl" class="col-lg-4 col-12 mb-5">
+                <img class="card-img-top" src="/Images/blogs/@blg.BlogImageInBlog" alt="@blg.BlogTitle">
+                <div class="border p-1">
+                    <div class="col-12 pt-3">
+                        <span class="zfontsize-10">
+                            <i class="fas fa-history pl-1"></i><time datetime="@blg.BlogDate.Value">@blg.BlogDate.Value.ToShamsi()</time> <span class="pr-1 pl-1">|</span>
+                        </span>
+                        <span class="zfontsize-10">
+                            <i class="fas fa-user pl-1"></i>@blg.Author <span class="pr-1 pl-1">|</span>
+                        </span>
+                        <span class="zfontsize-10">
+                            <i class="fas fa-object-group pl-1"></i>@blg.BlogGroup.BlogGroupTitle <span class="pr-1 pl-1">|</span>
+                        </span>
+                        <span class="zfontsize-10">
+                            <i class="fas fa-eye pl-1"></i>@blg.BlogViewsCount
+                        </span>
+                    </div>
+                    <div class="card-body pr-0 pl-0 ">
+                        <h6 class="IRANSansWeb_Medium">@blg.BlogTitle</h6>
+                        <p class="text-justify">@blg.BlogSummary.Get_Nth_Character(200) ...</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex flex-row">
+                            <img src="@authrAv" class="img-fluid rounded-circle ml-3 pic55" />
+                            <div>
+                                <p class="text-dark IRANSansWeb_Medium bottom_p">@blg.Author</p>
+                                <span class="IRANSansWeb_Medium text-dark">
+                                    @{
+                                        var LastRole = await _blogService.GetUserLastActiveRoleAsync(blg.AuthorId.Value);
+                                    }
+                                    @if (LastRole != null)
+                                    {
+                                        @LastRole.RoleTitle
+                                    }
+                                    else
+                                    {
+                                        <span>--</span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+    <div class="d-flex justify-content-center">
+
+        <ul class="pagination">
+            @if (curp - 1 > 0)
+            {
+                <li class="page-item"><a class="page-link" href="/blogs/?pageId=@pp">قبلی</a></li>
+            }
+            @for (var p = 1; p <= pageCount; p++)
+            {
+                if (p == Model.CurrentPage)
+                {
+                    <li class="page-item active"><a class="page-link" href="/blogs/?pageId=@p">@p</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" href="/blogs/?pageId=@p">@p</a></li>
+                }
+
+            }
+            @if (curp + 1 <= pageCount)
+            {
+                <li class="page-item"><a class="page-link" href="/blogs/?pageId=@np">بعدی</a></li>
+            }
+        </ul>
+    </div>
+</section>
+<section class="container mt-5">
+    <div id="owl-topblog" class="owl-carousel owl-theme text-right ">
+        @foreach (var item in Model.Blogs.Where(w => w.BlogIsActive).OrderByDescending(x => x.BlogViewsCount).ToList())
+        {
+            <div class="mx-2">
+                <a href="/blog/d/@item.BlogUrl">
+                    <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rad25 bigpic" />
+                    <div class="d-flex flex-column blogdiv">
+                        <div>
+                            <h6 class="IRANSansWeb_Medium text-white text-shadow">@item.BlogTitle</h6>
+                        </div>
+                        <div class="d-flex flex-row">
+                            @{
+                                var user = await _blogService.GetUserByIdAsync(item.AuthorId.Value);
+                                string authrAv = "/images/icons/avatar128.png";
+                                if (user != null)
+                                {
+                                    if (!string.IsNullOrEmpty(user.PersonalImage))
+                                    {
+                                        authrAv = "/images/users/" + user.PersonalImage;
+                                    }
+                                }
+                            }
+                            <img src="@authrAv" class="img-fluid rounded-circle ml-3 pic55" />
+
+                            <div>
+                                <p class="text-white IRANSansWeb_Medium text-shadow bottom_p"> @user.FullName</p>
+                                <span class="IRANSansWeb_Medium text-shadow text-white"><i class="fas fa-ticket-alt"></i> @item.BlogDate.ToShamsiN()</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+</section>
+<section class="container mt-5 grad-bg px-md-5 pt-3 pb-5 rad25">
+    <h5 class="IRANSansWeb_Medium  text-white pb-3">مطالب آموزشی</h5>
+
+    <div id="owl-secondevent" class="owl-carousel owl-theme text-right ">
+        @foreach (var item in Model.Blogs.Where(w => w.BlogGroup.BlogGroupEnTitle == "insurance-learning").ToList())
+        {
+            <div class="mx-2">
+                <a href="/blog/d/@item.BlogUrl">
+                    <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rad25 bigpic " />
+                    <div class="blogdiv">
+                        <h6 class="IRANSansWeb_Medium text-white text-shadow">@item.BlogTitle</h6>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+
+</section>
+<section id="bloglist" class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 blogpost">
+            <h5 class="IRANSansWeb_Medium pb-2 text-center">پـادکست ها</h5>
+            <ul class="box pt-3">
+                @foreach (var item in Model.Blogs.Where(w => w.BlogIsActive && w.HasVoice).OrderByDescending(x => x.BlogDate).Take(3).ToList())
+                {
+                    <li>
+                        <div class="px-3 d-flex flex-row">
+                            <a href="/blog/d/@item.BlogUrl" class="bg-red rounded">
+                                <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rounded " style="" />
+                            </a>
+                            <a href="/blog/d/@item.BlogUrl" class="pr-3 flex-fill">
+                                <h3 class="IRANSansWeb_Medium blog-item-title"><i class="fas fa-microphone-alt fa-2x text-danger ml-2"></i> @item.BlogTitle</h3>
+                                <span class="float-right gray11">@item.Author</span>
+                                <span class="float-left gray11"><i class="fas fa-clock ml-1"></i>@item.BlogDate.ToShamsiN()</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+                <li class="border-bottom-0">
+                    <a href="/blogs?search=voice" class="text-danger  IRANSansWeb_Medium px-4">بیشتر ..</a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-md-4 blogpost">
+            <h5 class="IRANSansWeb_Medium pb-2 text-center">ویدئوها</h5>
+            <ul class="box pt-3">
+                @foreach (var item in Model.Blogs.Where(w => w.BlogIsActive && w.HasVideo).ToList().OrderByDescending(x => x.BlogDate).Take(3).ToList())
+                {
+                    <li>
+                        <div class="px-3 d-flex flex-row">
+                            <a href="/blog/d/@item.BlogUrl" class="bg-red rounded">
+                                <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rounded" style="" />
+                            </a>
+                            <a href="/blog/d/@item.BlogUrl" class="pr-3 flex-fill">
+                                <h3 class="IRANSansWeb_Medium blog-item-title"><i class="fas fa-video fa-2x text-danger ml-2"></i>@item.BlogTitle</h3>
+                                <span class="float-right gray11">@item.Author</span>
+                                <span class="float-left gray11"><i class="fas fa-clock ml-1"></i>@item.BlogDate.ToShamsiN()</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+
+                <li class="border-bottom-0">
+                    <a href="/blogs?search=video" class="text-danger IRANSansWeb_Medium px-4">بیشتر ..</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4 blogpost">
+            <h5 class="IRANSansWeb_Medium pb-2 text-center">ناشرین</h5>
+            <ul class="box pt-3">
+                @foreach (var item in Model.Blogs.Where(w => w.BlogIsActive).OrderByDescending(r => r.BlogDate).Take(3).ToList())
+                {
+                    <li>
+                        <div class="px-3 d-flex flex-row">
+                            <a href="/blog/d/@item.BlogUrl" class="bg-red rounded">
+                                <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rounded" style="" />
+                            </a>
+                            <a href="/blog/d/@item.BlogUrl" class="pr-3 flex-fill">
+                                <h3 class="IRANSansWeb_Medium blog-item-title"><i class="fas fa-file-alt fa-2x text-danger ml-2"></i>@item.BlogTitle </h3>
+                                <span class="float-right gray11">@item.Author</span>
+                                <span class="float-left gray11"><i class="fas fa-clock ml-1"></i>@item.BlogDate.ToShamsiN()</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+
+                <li class="border-bottom-0">
+                    <a href="/blogs" class="text-danger IRANSansWeb_Medium px-4">بیشتر ..</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</section>
+@section Footer{
+    <partial name="_Footer" />
+}
+    @section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
+}

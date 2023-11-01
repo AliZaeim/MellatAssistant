@@ -1,0 +1,143 @@
+﻿@model DataLayer.Entities.Supplementary.Conversation
+@using Core.Services.Interfaces;
+@inject ICompService _compService
+@{
+    ViewData["Title"] = "پیام ها";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    List<DataLayer.Entities.Supplementary.Conversation> chConversations = null;
+    if (Model.ParentId == null)
+    {
+        chConversations = await _compService.GetConversationsByParentIdAsync((int)Model.Id);
+        if (User.Identity.Name != "0000000000")
+        {
+            chConversations = chConversations.Where(w => w.SenderNC == User.Identity.Name || w.SenderNC == "0000000000").ToList();
+        }
+    }
+}
+@(await Component.InvokeAsync("Talk",Model.Id))
+<div id="@Model.Id">
+    @foreach (var item in chConversations)
+    {
+        <div id="@item.Id">@(await Component.InvokeAsync("Talk",item.Id))</div>
+
+        List<DataLayer.Entities.Supplementary.Conversation> ch2Conversations = await _compService.GetConversationsByParentIdAsync(item.Id);
+        foreach (var ch2 in ch2Conversations)
+        {
+            <div id="@ch2.Id">
+                @(await Component.InvokeAsync("Talk",ch2.Id))
+            </div>
+        }
+    }
+    @if(Model.GetReply)
+    {
+        <a href="/UsersPanel/Conversations/Create?pId=@Model.Id" class="btn btn-success float-xs-left mt-1">ثبت پاسخ</a>
+    }
+    
+</div>
+<script src="~/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        //btnZ
+        $(".WantToRead").click(function() {
+            var thid = $(this).attr("data-id");
+            $.ajax({
+                url: "/UsersPanel/Conversations/AddReaderToConv",
+                data: { id: thid },
+                success: function(result) {
+                    if (result == true) {
+                        ch = true;
+                        $("#Noti" + thid).remove();
+                        $("#mess" + thid).removeClass("hidden");
+                        $.ajax({
+                            url: "/UsersPanel/Conversations/GetUnreadConvCount",
+                            async: true,
+                            type: "GET"
+                        }).done(function(data) {
+                            $("#HConvCount").text(data);
+                            $("#HConvCountNoti").text(data);
+                            $.ajax({
+                                url: "/UsersPanel/Conversations/GetConversation",
+                                data: { Id: thid },
+                                async: true,
+                                success: function(result) {
+                                    $("#" + thid).html(result);
+                                },
+                                error: function() {
+                                    alert("error");
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+        });
+        $(".btnZ").click(function() {
+            var thid = $(this).attr("data-id");
+           
+            $.ajax({
+                url: "/UsersPanel/Conversations/GetConversation",
+                data: { Id: thid },
+                async: true,
+                success: function(result) {
+                    $("#" + thid).html(result);
+                },
+                error: function() {
+                    alert("error");
+                }
+
+            });
+
+
+        });
+        $(".btn-zRemove").click(function() {
+
+            var pr = "آیا مطمئن به حذف پیام می باشید؟";
+            Swal.fire({
+                title: 'حــذف پیام',
+                text: pr,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'بله هستم',
+                cancelButtonText: "انصراف"
+            }).then((result) => {
+                if (result.value) {
+                    var thid = $(this).attr("data-id");
+                    $.ajax({
+                        url: "/UsersPanel/Conversations/RemoveConv",
+                        data: { id: thid },
+                        async: true,
+                        type: "POST",
+                        success: function(result) {
+                            if (result == true) {
+                                $("#" + thid).remove();
+                                Swal.fire({
+                                    title: 'پایان عملیات',
+                                    text: 'عملیات با موفقیت انجام شد',
+                                    icon: 'success',
+                                    confirmButtonText: 'متشکرم',
+                                    showCloseButton: true
+                                });
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'پایان عملیات',
+                                    text: 'عملیات با موفقیت انجام نشد',
+                                    icon: 'danger',
+                                    confirmButtonText: 'متاسفم',
+                                    showCloseButton: true
+                                });
+                            }
+
+                        },
+                        error: function() {
+                            alert("error");
+                        }
+
+                    });
+                }
+            });
+        })
+    });
+</script>

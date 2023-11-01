@@ -1,0 +1,91 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.InsStatus>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "وضعیت های فرآیند صدور بیمه نامه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">وضعیت های فرآیند صدور بیمه نامه</h1>
+@if (_userService.CheckPermissionByName("addissuestate", User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت وضعیت</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Text)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsEndofProcess)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsDefault)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsSystemic)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.GetInsNo)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.GetPeyment)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Imperfect)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Text)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.IsEndofProcess)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.IsDefault)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.IsSystemic)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.GetInsNo)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.GetPeyment)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Imperfect)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (!item.IsSystemic)
+                    {
+                        @if (_userService.CheckPermissionByName("editissuestate", User.Identity.Name))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermissionByName("deleteissuestate", User.Identity.Name))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id"> حذف </a>
+                        }                        
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

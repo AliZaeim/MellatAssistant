@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Fire.FireStructureType>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "نوع سازه بیمه آتش سوزی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">نوع سازه بیمه آتش سوزی</h1>
+@if (_userService.CheckPermissionByName("addfsty",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت نوع سازه</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.OverChargePercent)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.HasCoverageLimit)
+            </th>
+            
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.DiscountPercent)
+                </td>                
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.OverChargePercent)
+                </td>
+               <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.HasCoverageLimit)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editfsty",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletefsty", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حـذف</a>
+                    }
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

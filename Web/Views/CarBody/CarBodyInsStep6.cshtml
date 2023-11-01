@@ -1,0 +1,213 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBodyInsStep6VM
+
+<div class="col-xs-12 offset-lg-3 col-lg-6 p-2 zsteps" data-step="1">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Car-Body-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    @*<h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault(0).ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="CarBodyInsurance" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-center text-white pl-1 pr-1 col-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center">مرحله ششم - تصاویر خوردگیها و لکه ها</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form id="Step6Form" method="post" asp-action="CarBodyInsStep6" asp-controller="CarBody" asp-antiforgery="true" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#cbform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrCorrison1Image" />
+        <input type="hidden" asp-for="StrCorrison2Image" />
+        <input type="hidden" asp-for="StrCorrison3Image" />
+        <input type="hidden" asp-for="StrCorrison4Image" />
+        <input type="hidden" asp-for="StrCorrison5Image" />
+        <input type="hidden" asp-for="StrCorrison6Image" />
+        <input type="hidden" asp-for="StrCorrison7Image" />
+        <input type="hidden" asp-for="StrCorrison8Image" />
+        <input type="hidden" asp-for="StrCorrison9Image" />
+        <input type="hidden" asp-for="StrCorrison10Image" />
+        
+        <div class="form-group row" id="corrison1img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison1Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison1-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison1-image-upload','corrison1ImageValid')" id="corrison1-image-upload" accept="image/*" asp-for="Corrison1Image">
+                <br />
+                <span asp-validation-for="Corrison1Image" id="corrison1ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison2img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison2Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison2-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison2-image-upload','corrison2ImageValid')" id="corrison2-image-upload" accept="image/*" asp-for="Corrison2Image">
+                <br />
+                <span asp-validation-for="Corrison2Image" id="corrison2ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison3img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison3Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison3-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison3-image-upload','corrison3ImageValid')" id="corrison3-image-upload" accept="image/*" asp-for="Corrison3Image">
+                <br />
+                <span asp-validation-for="Corrison3Image" id="corrison3ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison4img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison4Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison4-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison4-image-upload','corrison4ImageValid')" id="corrison4-image-upload" accept="image/*" asp-for="Corrison4Image">
+                <br />
+                <span asp-validation-for="Corrison4Image" id="corrison4ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison5img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison5Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison5-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison5-image-upload','corrison5ImageValid')" id="corrison5-image-upload" accept="image/*" asp-for="Corrison5Image">
+                <br />
+                <span asp-validation-for="Corrison5Image" id="corrison5ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison6img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison6Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison6-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison6-image-upload','corrison6ImageValid')" id="corrison6-image-upload" accept="image/*" asp-for="Corrison6Image">
+                <br />
+                <span asp-validation-for="Corrison6Image" id="corrison6ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison7img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison7Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison7-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison7-image-upload','corrison7ImageValid')" id="corrison7-image-upload" accept="image/*" asp-for="Corrison7Image">
+                <br />
+                <span asp-validation-for="Corrison7Image" id="corrison7ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison8img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison8Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison8-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison8-image-upload','corrison8ImageValid')" id="corrison8-image-upload" accept="image/*" asp-for="Corrison8Image">
+                <br />
+                <span asp-validation-for="Corrison8Image" id="corrison8ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison9img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison9Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison9-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison9-image-upload','corrison9ImageValid')" id="corrison9-image-upload" accept="image/*" asp-for="Corrison9Image">
+                <br />
+                <span asp-validation-for="Corrison9Image" id="corrison9ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="corrison10img">
+            <div class="imgUp col-12">
+                <label asp-for="Corrison10Image" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="corrison10-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('corrison10-image-upload','corrison10ImageValid')" id="corrison10-image-upload" accept="image/*" asp-for="Corrison10Image">
+                <br />
+                <span asp-validation-for="Corrison10Image" id="corrison10ImageValid" class="text-danger"></span>
+            </div>
+        </div>      
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep5" data-ajax-update="#cbform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+    </form>
+    
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>        
+        var percent = parseFloat((100 / 8)*6);
+        percent = percent.toFixed();
+        document.getElementById("prog-bar").style.width = percent + "%";
+        document.getElementById("properties").classList.remove("active");
+        document.getElementById("exterior").classList.remove("active");
+        document.getElementById("internal").classList.remove("active");
+        document.getElementById("motor").classList.remove("active");
+        document.getElementById("accessories").classList.remove("active");
+        document.getElementById("bodystains").classList.add("active");
+        document.getElementById("filmes").classList.remove("active");
+        document.getElementById("check").classList.remove("active");
+        function ShowImage(src_el_id, show_el_id) {
+            var img_el = document.getElementById(src_el_id);
+            if (img_el !== null && img_el !== "undefined")
+            {
+                var imgname = img_el.value;
+                var src = "/images/icons/select-icon.png";
+                if (imgname !== "") {
+                    src = "/images/Ins/carBody/" + imgname;
+                }
+                document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+            }
+        }
+        ShowImage("StrCorrison1Image","corrison1-image");
+        ShowImage("StrCorrison2Image","corrison2-image");
+        ShowImage("StrCorrison3Image","corrison3-image");
+        ShowImage("StrCorrison4Image","corrison4-image");
+        ShowImage("StrCorrison5Image","corrison5-image");
+        ShowImage("StrCorrison6Image","corrison6-image");
+        ShowImage("StrCorrison7Image","corrison7-image");
+        ShowImage("StrCorrison8Image","corrison8-image");
+        ShowImage("StrCorrison9Image","corrison9-image");
+        ShowImage("StrCorrison10Image","corrison10-image");
+        function UpdateValidSpan(inputId,spanId)
+        {
+            var inp = document.getElementById(inputId);
+            if (inp !== null && typeof(inp) !== "undefined")
+            {
+                if (inp.value !== null)
+                {
+                    var sp = document.getElementById(spanId);
+                    if (sp !== null && typeof(sp) !== "undefined")
+                    {
+                        sp.innerText = '';
+                    }
+                }
+
+            }
+        }
+        document.querySelectorAll('.imagePreview').forEach((el) => el.addEventListener("click", function()
+                {
+                    //click sibling .uploadFile
+                    this.nextElementSibling.click();
+                }
+            ));
+        document.querySelectorAll('.uploadFile').forEach((el) => el.addEventListener("change", function()
+            {
+                this.parentNode.lastElementChild.innerHTML="";                
+                
+            }
+        ));
+
+       
+  
+
+    
+</script>

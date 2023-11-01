@@ -1,0 +1,224 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBodyInsStep3VM
+
+<div class="col-xs-12 offset-lg-3 col-lg-6 p-2 zsteps" data-step="1">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Car-Body-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                   @* <h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault(0).ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="CarBodyInsurance" method="post">
+                    <input type="hidden" name="Premium" value="@Model.Premium" />
+                    <input type="hidden" name="Clear" value="true" />
+                    <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-center text-white pl-1 pr-1 col-12 col-md-6">
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center">مرحله سوم - تصاویر داخلی</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form id="Step1Form" method="post" asp-action="CarBodyInsStep3" asp-controller="CarBody" asp-antiforgery="true" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#cbform-card"  enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrApprenticeGlassImage" />
+        <input type="hidden" asp-for="StrApprenticeRearGlassImage" />
+        <input type="hidden" asp-for="StrDashboardFullViewImage" />
+        <input type="hidden" asp-for="StrDriverGlassImage" />
+        <input type="hidden" asp-for="StrDriverRearGlassImage" />
+        <input type="hidden" asp-for="StrFrontWindShieldImage" />
+        <input type="hidden" asp-for="StrKilometersImage" />
+        <input type="hidden" asp-for="StrRearWindowImage" />
+        <input type="hidden" asp-for="StrTapeRecorderImage" />
+        <input type="hidden" asp-for="StrSunRoofGlassImage" />
+        <div class="form-group row required" id="dashboardimg">
+            <div class="imgUp col-12">
+                <label asp-for="DashboardFullViewImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="dashboard-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('dashboard-image-upload','dashboardImageValid')" id="dashboard-image-upload" accept="image/*" asp-for="DashboardFullViewImage">
+
+                <br />
+                <span asp-validation-for="DashboardFullViewImage" id="dashboardImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="taprimg">
+            <div class="imgUp col-12">
+                <label asp-for="TapeRecorderImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="tapr-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('tapr-image-upload','carbehindImageValid')" id="tapr-image-upload" accept="image/*" asp-for="TapeRecorderImage">
+                <br />
+                <span asp-validation-for="TapeRecorderImage" id="taprImageValid" class="text-danger"></span>
+            </div>
+        </div>
+       <div class="form-group row required" id="kilometersimg">
+            <div class="imgUp col-12">
+                <label asp-for="KilometersImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="kilometers-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('kilometers-image-upload','kilometersImageValid')" id="kilometers-image-upload" accept="image/*" asp-for="KilometersImage">
+                <br />
+                <span asp-validation-for="KilometersImage" id="kilometersImageValid" class="text-danger"></span>
+
+            </div>
+        </div>
+        <div class="form-group row required" id="fwsiimg">
+            <div class="imgUp col-12">
+                <label asp-for="FrontWindShieldImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="fwsi-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('fwsi-image-upload','fwsiImageValid')" id="fwsi-image-upload" accept="image/*" asp-for="FrontWindShieldImage">
+                <br />
+                <span asp-validation-for="FrontWindShieldImage" id="fwsiImageValid" class="text-danger"></span>
+
+            </div>
+        </div>
+        <div class="form-group row required" id="rearwimg">
+            <div class="imgUp col-12">
+                <label asp-for="RearWindowImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="rearw-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('rearw-image-upload','rearwImageValid')" id="rearw-image-upload" accept="image/*" asp-for="RearWindowImage">
+                <br />
+                <span asp-validation-for="RearWindowImage" id="rearwImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="driverGimg">
+            <div class="imgUp col-12">
+                <label asp-for="DriverGlassImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="driverG-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('driverG-image-upload','driverGImageValid')" id="driverG-image-upload" accept="image/*" asp-for="DriverGlassImage">
+                <br />
+                <span asp-validation-for="DriverGlassImage" id="driverGImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="apprenticeGimg">
+            <div class="imgUp col-12">
+                <label asp-for="ApprenticeGlassImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="apprenticeG-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('apprenticeG-image-upload','apprenticeGImageValid')" id="apprenticeG-image-upload" accept="image/*" asp-for="ApprenticeGlassImage">
+                <br />
+                <span asp-validation-for="ApprenticeGlassImage" id="apprenticeGImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="driverRimg">
+            <div class="imgUp col-12">
+                <label asp-for="DriverRearGlassImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="driverR-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('driverR-image-upload','driverRImageValid')" id="driverR-image-upload" accept="image/*" asp-for="DriverRearGlassImage">
+                <br />
+                <span asp-validation-for="DriverRearGlassImage" id="driverRImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="apprenticeRimg">
+            <div class="imgUp col-12">
+                <label asp-for="ApprenticeRearGlassImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="apprenticeR-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('apprenticeR-image-upload','apprenticeRImageValid')" id="apprenticeR-image-upload" accept="image/*" asp-for="ApprenticeRearGlassImage">
+                <br />
+                <span asp-validation-for="ApprenticeRearGlassImage" id="apprenticeRImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="sunroofimg">
+            <div class="imgUp col-12">
+                <label asp-for="SunRoofGlassImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="sunroof-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('sunroof-image-upload','sunroofImageValid')" id="sunroof-image-upload" accept="image/*" asp-for="SunRoofGlassImage">
+                <br />
+                <span asp-validation-for="SunRoofGlassImage" id="sunroofImageValid" class="text-danger"></span>
+            </div>
+        </div>
+         
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep2" data-ajax-update="#cbform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+    </form>
+    
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+
+
+<script>
+        debugger;
+        var percent = parseFloat((100 / 8)*3);
+        percent = percent.toFixed();
+        document.getElementById("prog-bar").style.width = percent + "%";
+        document.getElementById("properties").classList.remove("active");
+        document.getElementById("exterior").classList.remove("active");
+        document.getElementById("internal").classList.add("active");
+        document.getElementById("motor").classList.remove("active");
+        document.getElementById("accessories").classList.remove("active");
+        document.getElementById("bodystains").classList.remove("active");
+        document.getElementById("filmes").classList.remove("active");
+        document.getElementById("check").classList.remove("active");
+        
+
+        function ShowImage(src_el_id, show_el_id) {
+            var img_el = document.getElementById(src_el_id);
+            if (img_el !== null && img_el !== "undefined")
+            {
+                var imgname = img_el.value;
+                var src = "/images/icons/select-icon.png";
+                if (imgname !== "") {
+                    src = "/images/Ins/carBody/" + imgname;
+                }
+                document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+            }
+        }
+        ShowImage("StrDashboardFullViewImage","dashboard-image");
+        ShowImage("StrTapeRecorderImage", "tapr-image");
+        ShowImage("StrKilometersImage", "kilometers-image");
+        ShowImage("StrFrontWindShieldImage", "fwsi-image");
+        ShowImage("StrRearWindowImage", "rearw-image");
+        ShowImage("StrDriverGlassImage", "driverG-image");
+        ShowImage("StrApprenticeGlassImage", "apprenticeG-image");
+        ShowImage("StrDriverRearGlassImage", "driverR-image");
+        ShowImage("StrApprenticeRearGlassImage", "apprenticeR-image");
+        ShowImage("StrSunRoofGlassImage", "sunroof-image");
+        
+
+        function UpdateValidSpan(inputId,spanId)
+        {
+            var inp = document.getElementById(inputId);
+            if (inp !== null && typeof(inp) !== "undefined")
+            {
+                if (inp.value !== null)
+                {
+                    var sp = document.getElementById(spanId);
+                    if (sp !== null && typeof(sp) !== "undefined")
+                    {
+                        sp.innerText = '';
+                    }
+                }
+
+            }
+        }
+
+        document.querySelectorAll('.imagePreview').forEach((el) => el.addEventListener("click", function()
+              {
+                  //click sibling .uploadFile
+                  this.nextElementSibling.click();
+              }
+        ));
+        document.querySelectorAll('.uploadFile').forEach((el) => el.addEventListener("change", function()
+          {
+              this.parentNode.lastElementChild.innerHTML="";
+
+          }
+        ));
+
+       
+  
+
+    
+</script>

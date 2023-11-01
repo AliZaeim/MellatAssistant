@@ -1,0 +1,69 @@
+﻿@page "/Login/{ReturnUrl?}"
+@model Web.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "بیمه ملت - ورود به پنل کاربری";
+}
+@section Head{
+    <title>ورود به ناحیه کاربری</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ofoghata" />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+}
+
+
+    <section class="container-fluid pt-5 pb-4 pb-lg-0 intro-section">
+        <section class="m-3">
+            <div id="login" class="box border-top-0 p-lg-4 p-3">
+                <div class="col-xs-12 text-center">
+                    <img src="/Images/Svg/login.svg" width="45" alt="login image" />
+                    <h2 class="text-dark my-3">ورود به ناحیه کاربری</h2>
+                </div>
+                <form method="post">
+                    <div class="form-group">
+                        <label class="label-control" asp-for="loginVM.Cellphone"></label>
+                        <input class="form-control" autofocus autocomplete="off" type="text" asp-for="loginVM.Cellphone" autocomplete="off" placeholder="09121546985" />
+                        <span asp-validation-for="loginVM.Cellphone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-control" asp-for="loginVM.Password"></label>
+                        <input class="form-control mb-3" autocomplete="off" asp-for="loginVM.Password" type="password" />
+                        <span asp-validation-for="loginVM.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" asp-for="loginVM.Remember" id="remember">
+                        <label asp-for="loginVM.Remember" class="control-label"></label>
+                    </div>
+                    <button class="btn btn-success btn-block mb-3 py-3" type="submit">ورود به سایت<i class="fa fa-chevron-left mr-2"></i></button>
+                </form>
+                <div class="col-xs-12 text-center">
+                    <a href="/">صفحه اصلی</a> &ensp; | &ensp;
+                    <a href="/Register">ثبت نام</a><br />
+                    <a href="/ForgotPassword">رمز عبور را فراموش کرده ام !</a>
+                </div>
+            </div>
+        </section>
+        <object class="d-none d-xl-block" type="image/svg+xml" data="Images/Svg/desktop-wave.svg"></object>
+
+    </section>
+    @section Scripts{
+    <script src="~/lib/jquery/dist/jquery-3.3.1.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+    }
+

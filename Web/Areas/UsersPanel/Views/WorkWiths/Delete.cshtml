@@ -1,0 +1,30 @@
+﻿@model DataLayer.Entities.Supplementary.WorkWith
+
+@{
+    ViewData["Title"] = "حــذف همکاری با ما";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-danger">حــذف همکاری با ما</h1>
+
+<h3 class="text-xs-center text-warning">آیا مطمئن به حــذف همکاری با ما هستید؟</h3>
+<div class="container-fluid">
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PageMessage)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.Raw(Model.PageMessage)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="حــذف" class="btn btn-danger" /> |
+            <a asp-action="Index">بازگشــت</a>
+        </form>
+    </div>
+</div>
+

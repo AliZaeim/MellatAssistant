@@ -1,0 +1,246 @@
+﻿@model Core.DTOs.SiteGeneric.Liability.LiabilityInsStep2VM
+<div class="col-xs-12 p-2 zsteps" data-step="2">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <a href="/Liability/RefreshForm" class="btn btn-danger  text-white col-xs-12 col-md-6">خالی کردن فرم</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله دوم - پرسشنامه</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form method="post" asp-action="LiabilityInsStep2" asp-controller="Liability" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#liaform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="Str_BuildingManagerNCImage" />
+        <input type="hidden" asp-for="Str_SuggestionFormPage1" />
+        <input type="hidden" asp-for="Str_SuggestionFormPage2" />
+        <input type="hidden" asp-for="Str_NoDamageHistoryImage" />
+        <input type="hidden" asp-for="Str_PreviousInsuranceImage" />
+        <div class="form-group required">
+            <label asp-for="InsuranceType" class="control-label required"></label>
+            <select asp-for="InsuranceType" id="insType" class="custom-select">
+                <option value="" selected="selected">نوع بیمه نامه را انتخاب کنید</option>
+                <option value="1">مدیران (مجتمع های مسکونی)</option>
+                <option value="2">حرفه ای (پزشکان)</option>
+                <option value="3">حرفه ای (پیرا پزشکان)</option>
+                <option value="4">حرفه ای (نظام مهندسی ساختمان)</option>
+                <option value="5">حرفه ای (باشگاه های ورزشی)</option>
+                <option value="6">کارفرما (کارگران ساختمانی و عمرانی)</option>
+                <option value="7">کارفرما (صنعتی، بازرگانی،خدماتی)</option>
+                <option value="8">آسانسور (دارندگان، نصابان، شرکت ها)</option>
+                <option value="9">طرح جامع مجتمع های مسکونی</option>
+            </select>
+            <span asp-validation-for="InsuranceType" id="insType_span" class="text-danger"></span>
+        </div>
+        <div class="form-group row required @((Model.InsuranceType == 1)? "":"no-display")" id="bmncimg">
+            <div class="imgUp col-12">
+                <label asp-for="BuildingManagerNCImage" class="control-label"></label>
+                <div class="imagePreview" id="bmnc-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="bmnc-image-upload" asp-for="BuildingManagerNCImage">
+                <br />
+                <span asp-validation-for="BuildingManagerNCImage" id="bmNCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="sfp1img">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormPage1" class="control-label"></label>
+                <div class="imagePreview" id="sfp1-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="sfp1-image-upload" asp-for="SuggestionFormPage1">
+                <br />
+                <span asp-validation-for="SuggestionFormPage1" id="sfp1ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required @((Model.InsuranceType == 3)? "no-display":"")" id="sfp2img">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormPage2" class="control-label"></label>
+                <div class="imagePreview" id="sfp2-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="sfp2-image-upload" asp-for="SuggestionFormPage2">
+                <br />
+                <span asp-validation-for="SuggestionFormPage2" id="sfp2ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required">
+            <label asp-for="HasPreviousYearInsurance" class="control-label required"></label>
+            <Select asp-for="HasPreviousYearInsurance" id="haspervins" class="custom-select">
+                <option selected="selected" value="">انتخاب کنید</option>
+                <option value="true">بله</option>
+                <option value="false">خیر</option>
+            </Select>
+            <span asp-validation-for="HasPreviousYearInsurance" class="text-danger"></span>
+        </div>
+        <div class="form-group row required @((Model.HasPreviousYearInsurance.GetValueOrDefault())? "":"no-display")" id="piiimg">
+            <div class="imgUp col-12">
+                <label asp-for="PreviousInsuranceImage" class="control-label"></label>
+                <div class="imagePreview" id="pii-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="pii-image-upload" asp-for="PreviousInsuranceImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="PreviousInsuranceImage" id="piiImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required @((Model.HasPreviousYearInsurance.GetValueOrDefault())? "":"no-display")" id="hasnodamageDiv">
+            <label asp-for="HasNoDamageHistory" class="control-label required"></label>
+            <Select asp-for="HasNoDamageHistory" id="hasnodamage" class="custom-select">
+                <option selected="selected" value="">انتخاب کنید</option>
+                <option value="true">بله</option>
+                <option value="false">خیر</option>
+            </Select>
+            <span asp-validation-for="HasNoDamageHistory" class="text-danger"></span>
+        </div>
+        <div class="form-group row @((Model.HasNoDamageHistory.GetValueOrDefault())? "":"no-display")" id="ndhimgDiv">
+            <div class="imgUp col-12">
+                <label asp-for="NoDamageHistoryImage" class="control-label"></label>
+                <div class="imagePreview" id="ndh-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="ndh-image-upload" asp-for="NoDamageHistoryImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="NoDamageHistoryImage" id="ndhImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/Liability/LiabilityInsStep1" data-ajax-update="#liaform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" id="submit2" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+</div>
+<script src="~/lib/jquery/dist/jquery-3.2.1.min.js"></script>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document).ready(function(){
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    var percent = parseFloat(100/2);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.add("active");
+    document.getElementById("check").classList.remove("active");
+    function validate(elem, file) {
+        var idd = ($(elem).attr("id"));
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["jpg", "jpeg", "png", "gif"];
+
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            alert("پسوند فایل نادرست است! پسوند های درست عبارتند از  : " + arrayExtensions.join(', '));
+            $("#" + idd).val("");
+
+        }
+    }
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined")
+        {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/lia/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    ShowImage("Str_BuildingManagerNCImage", "bmnc-image");
+    ShowImage("Str_SuggestionFormPage1", "sfp1-image");
+    ShowImage("Str_SuggestionFormPage2", "sfp2-image");
+    ShowImage("Str_NoDamageHistoryImage", "ndh-image");
+    ShowImage("Str_PreviousInsuranceImage", "pii-image");
+
+   var imgpreviews = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgpreviews.length; l++) {
+        imgpreviews[l].addEventListener("click", function () {
+            var nextEl = this.nextElementSibling;
+            var elem = document.getElementById(nextEl.id);
+            elem.click();
+        });
+    }
+    var insurerType = document.getElementById("insType");
+    insurerType.addEventListener("change",function(){
+        var selVal = this.value;
+        if(selVal === "1")
+        {
+            document.getElementById("bmncimg").classList.remove("no-display");
+        }
+        else
+        {
+
+            document.getElementById("bmnc-image").style.backgroundImage = '';
+            document.getElementById("bmncimg").classList.add("no-display");
+
+            //
+        }
+        if(selVal !== "3")
+        {
+            document.getElementById("sfp2img").classList.remove("no-display");
+        }
+        else
+        {
+            document.getElementById("sfp2img").classList.add("no-display");
+        }
+    });
+    var hasprevins = document.getElementById("haspervins");
+    hasprevins.addEventListener("change",function(){
+        var selVal = this.value;
+        if(selVal === "true")
+        {
+            document.getElementById("piiimg").classList.remove("no-display");
+            document.getElementById("hasnodamageDiv").classList.remove("no-display");
+        }
+        else
+        {
+            document.getElementById("piiimg").classList.add("no-display");
+            document.getElementById("hasnodamageDiv").classList.add("no-display");
+            document.getElementById("ndhimgDiv").classList.add("no-display");
+        }
+
+    });
+    var hasnodamage= document.getElementById("hasnodamage");
+    hasnodamage.addEventListener("change",function(){
+        var selVal = this.value;
+        if(selVal === "true")
+        {
+            document.getElementById("ndhimgDiv").classList.remove("no-display");
+        }
+        else
+        {
+            document.getElementById("ndhimgDiv").classList.add("no-display");
+        }
+    });
+    document.querySelectorAll('.uploadFile').forEach(function (el) {
+        el.addEventListener('change', function () {
+            var parent = this.parentElement;
+            parent.querySelector('.valid').innerText = '';
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function () { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+
+
+</script>
+
+
+
+
+

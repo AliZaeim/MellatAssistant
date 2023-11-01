@@ -1,0 +1,79 @@
+﻿@model Core.DTOs.SiteGeneric.LifeIns.LifeInsVM
+@{
+    ViewData["Title"] = "درخواست بیمه زندگی - بیمه ملت";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="ثبت درخواست برای بیمه زندگی در بیمه ملت" />
+    <link href="~/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="~/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="~/Layout/Css/LifeInsStyle.css" rel="stylesheet" />
+    <link href="~/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    
+    <link rel="canonical" href="https://melatins.com/Life-Insurance" />
+
+}
+@section Header{
+    <partial name="_Header" />
+}
+<div class="container-fluid p-0" >
+    <div class="row w-100 p-0 m-0 justify-content-center" >
+        <div class="col-12 col-sm-9 col-md-7 col-lg-6  text-center p-0 mt-3 mb-2" >
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3" >
+                <h2 id="heading" class="zHeaderfont-size">ثبت درخواست بیمه زندگی</h2>
+                <p>در ثبت و بارگذاری مدارک دقت فرمائید، ملاک صدور بیمه نامه اطلاعات ثبت شده توسط شما خواهد بود</p>
+                <div id="msform" >
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active" id="properties"><strong>مشخصات</strong></li>
+                        <li id="questionnaire"><strong>پرسشنامه</strong></li>
+                        <li id="check"><strong>کنترل اطلاعات</strong></li>
+                    </ul>
+                    <div class="progress">
+                        <div id="prog-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div> <br>
+                    <fieldset >
+                        <script src="~/lib/jquery/dist/jquery-3.2.1.min.js"></script>
+                        <div class="form-card m-1" id="form-card" >
+                            @await Html.PartialAsync("/Views/LifeInsurance/LifeInsStep1.cshtml", Model.LifeInsuranceStep1)
+                        </div>
+                    </fieldset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+
+@section Footer{
+    <partial name="_Footer" />
+    }
+
+@section Scripts{
+    
+    <script src="~/Layout/Js/bootstrap.min.js"></script>
+    <script src="~/Layout/Js/owl.carousel.js"></script>
+    <script src="~/Layout/Js/custom.js"></script>
+    <script src="~/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
+    
+    }
+
+
+

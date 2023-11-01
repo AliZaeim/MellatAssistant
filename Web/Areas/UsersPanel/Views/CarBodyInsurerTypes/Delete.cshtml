@@ -1,0 +1,36 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurerType
+
+@{
+    ViewData["Title"] = "حذف نوع بیمه گذار بیمه بدنه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">حذف نوع بیمه گذار بیمه بدنه</h1>
+
+<h3>آیا مطمئن به حذف نوع بیمه گذار هستید ؟</h3>
+<div class="container-fluid">
+    <div>
+
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DiscountPercent)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="حــذف" class="btn btn-danger" /> |
+            <a asp-action="Index">بازگشت</a>
+        </form>
+    </div>
+</div>
+

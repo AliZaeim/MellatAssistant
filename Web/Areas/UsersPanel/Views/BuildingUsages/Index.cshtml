@@ -1,0 +1,95 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Fire.BuildingUsage>
+@using Core.Services.Interfaces;
+@inject IFireInsService _fireInsService
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "کاربری های واحد بیمه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">کاربری های واحد بیمه</h1>
+@if (_userService.CheckPermissionByName("addbu",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت کاربری</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.UsageRate)
+            </th>
+            <th class="text-xs-center align-middle">
+                پوشش ها
+            </th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.UsageRate)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @{
+                        List<DataLayer.Entities.InsPolicy.Fire.FireInsCoverage> fireInsCoverages = await _fireInsService.GetCoveragesofUsage(item.Id);
+                    }
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="text-xs-center align-middle">
+                                پوشش
+                            </th>                            
+                            <th class="text-xs-center align-middle">
+                                عملیات
+                            </th>
+                        </tr>
+                        @foreach (var fcov in fireInsCoverages)
+                        {
+                            <tr>
+                                <td class="text-xs-center align-middle">
+                                    @fcov.Title
+                                </td>                                
+                                <td class="text-xs-center align-middle">
+                                    @if (_userService.CheckPermissionByName("staterates", User.Identity.Name))
+                                    {
+                                        <a asp-action="ShowStateRates" asp-route-usageId="@item.Id" asp-route-coverId="@fcov.Id">مشاهده نرخهای استانی</a>
+                                    }
+                                    
+                                </td>
+                            </tr>
+                        }
+                    </table>
+
+                </td>
+
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editbu",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span> | </span> 
+                    }
+                    @if (_userService.CheckPermissionByName("deletebu", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" class="text-danger" asp-route-id="@item.Id">حــذف</a> <span> | </span> 
+                    }
+                    @if (_userService.CheckPermissionByName("managecovers", User.Identity.Name))
+                    {
+                        <a asp-action="AddCoversToUsage" asp-route-usageId="@item.Id">مدیریت پوششها</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

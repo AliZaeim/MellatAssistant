@@ -1,0 +1,483 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.FireInsStep1VM
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="col-xs-12 p-2 zsteps">
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Fire-Insurance-Price-Inquiry/?ClearCookie=true" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") تومان</h5>
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="FireInsuranceIndex" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله اول - وضعیت</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form method="post" asp-action="FireInsStep1" asp-controller="FireInsurance" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#fireform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="StrInsurerNCImage" />
+        <input type="hidden" asp-for="StrAttributedLetterImage" />
+        <input type="hidden" asp-for="StrPayrollDeductionImage" />
+        <input type="hidden" asp-for="StrSuggestionFormPage1Image" />
+        <input type="hidden" asp-for="StrSuggestionFormPage2Image" />
+        <input type="hidden" asp-for="Premium" />
+        <div class="form-group">
+            @{
+                string SellerInfo = string.Empty;
+                if (!string.IsNullOrEmpty(Model.SellerFullName))
+                {
+                    SellerInfo = Model.SellerFullName + " | " + Model.SellerCellphone;
+                }
+            }
+            <label asp-for="SellerCode" id="mhand" class="control-label"></label><span class="float-left bg-info pr-1 shioSellerInfo pl-1 text-white cursor-pointer " id="sellerinfo">@SellerInfo</span>
+
+            <div class="input-group">
+                <input type="text" class="form-control" onkeypress="return checkNumber(event)" asp-for="SellerCode">
+                <span class="input-group-btn">
+                    <button type="button" id="btnViewSeller">
+                        مشاهده
+                    </button>
+                </span>
+            </div>
+            <span asp-validation-for="SellerCode" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsurerName" class="control-label required"></label>
+            <input asp-for="InsurerName" oninput="ClearNC()" class="form-control" />
+            <span asp-validation-for="InsurerName" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label asp-for="InsurerFamily" class="control-label required"></label>
+            <input asp-for="InsurerFamily" oninput="ClearNC()" class="form-control" />
+            <span asp-validation-for="InsurerFamily" class="text-danger"></span>
+        </div>
+        <div class="form-group required">
+            <label class="control-label required" asp-for="InsurerNC"></label>
+            <input class="form-control mb-3 NCField" oninput="ClearPhone()" onkeypress="return checkNumber(event)" autocomplete="off" asp-for="InsurerNC" />
+            <span asp-validation-for="InsurerNC" class="text-danger ncValid"></span>
+        </div>
+        <div class="form-group required">
+            <div id="inscellDiv" class="col-xs-12">
+                <label asp-for="InsurerCellphone" id="insCellLabel" class="control-label required"></label>
+            </div>
+            @{
+                string plc = "به این شکل وارد شود : " + "09xxxxxxxxx";
+            }
+            <input asp-for="InsurerCellphone" placeholder="@plc" autocomplete="off" onkeypress="return checkNumber(event)" class="form-control" />
+            <span asp-validation-for="InsurerCellphone" class="text-danger cellValid"></span>
+        </div>
+        <div class="form-group row required" id="insurerncimg">
+            <div class="imgUp col-12">
+                <label asp-for="InsurerNCImage" class="control-label"></label>
+                <div class="imagePreview" id="insurernc-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="insurernc-image-upload" asp-for="InsurerNCImage">
+                <br />
+                <span asp-validation-for="InsurerNCImage" id="insurerNCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required">
+            <label asp-for="InsurerStatus" class="control-label required"></label>
+            <Select asp-for="InsurerStatus" id="insurerstatus" class="custom-select">
+                <option selected="selected" value="">وضعیت بیمه گذار را انتخاب کنید</option>
+                <option value="np" data-id="np">فرد عادی</option>
+                <option value="retired" data-id="retired">بازنشسته کشوری یا تامین اجتماعی</option>
+                <option value="related" data-id="related">منتسب بازنشسته</option>
+            </Select>
+            <span asp-validation-for="InsurerStatus" class="text-danger"></span>
+        </div>
+        <div class="form-group row @((Model.InsurerStatus == "related") ? "":"no-display")" id="alimg">
+            <div class="imgUp col-12">
+                <label asp-for="AttributedLetterImage" class="control-label"></label>
+                <div class="imagePreview" id="al-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="al-image-upload" asp-for="AttributedLetterImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="AttributedLetterImage" id="alImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row form-check @((Model.PayinInstallment) ? "":"no-display")" id="picheckDiv">
+            <label class="form-check-label">
+                <input class="form-check-input" id="payininstallment" asp-for="PayinInstallment" /> @Html.DisplayNameFor(model => model.PayinInstallment)
+            </label>
+        </div>
+        <div class="form-group row @((Model.PayinInstallment) ? "" : "no-display")" id="pdimg">
+            @{
+                string existsdimage = "no";
+                if (!string.IsNullOrEmpty(Model.StrPayrollDeductionImage))
+                {
+                    existsdimage = "yes";
+                }
+
+            }
+
+            <div class="imgUp col-12">
+                <label asp-for="PayrollDeductionImage" class="control-label"></label>
+                <div class="imagePreview" id="pd-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" data-exist="@existsdimage" id="pd-image-upload" asp-for="PayrollDeductionImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="PayrollDeductionImage" id="pdimageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="fireinsurersugformp1img">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormPage1Image" class="control-label"></label>
+                <div class="imagePreview" id="sugformp1-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="sugformp1-image-upload" asp-for="SuggestionFormPage1Image">
+                <br />
+                <span asp-validation-for="SuggestionFormPage1Image" id="sugformp1ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="fireinsurersugformp2img">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormPage2Image" class="control-label"></label>
+                <div class="imagePreview" id="sugformp2-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="sugformp2-image-upload" asp-for="SuggestionFormPage2Image">
+                <br />
+                <span asp-validation-for="SuggestionFormPage2Image" id="sugformp2NCImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" id="submit1" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+
+</div>
+
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+        //SellerCode
+        $(function () {
+            $('#SellerCode').keyup(function (e) {
+                var ctrlKey = 67, vKey = 86;
+                if (e.keyCode != ctrlKey && e.keyCode != vKey) {
+                    $('#SellerCode').val(persianToEnglish($(this).val()));
+                }
+            });
+        });
+        $(function () {
+            $('#InsurerNC').keyup(function (e) {
+                var ctrlKey = 67, vKey = 86;
+                if (e.keyCode != ctrlKey && e.keyCode != vKey) {
+                    $('#InsurerNC').val(persianToEnglish($(this).val()));
+                }
+            });
+        });
+        $(function () {
+            $('#InsurerCellphone').keyup(function (e) {
+                var ctrlKey = 67, vKey = 86;
+                if (e.keyCode != ctrlKey && e.keyCode != vKey) {
+                    $('#InsurerCellphone').val(persianToEnglish($(this).val()));
+                }
+            });
+        });
+        $("#InsurerCellphone").focusout(function () {
+            var vnc = $("#InsurerNC").val();
+            var insName = $("#InsurerName").val();
+            var insFamily = $("#InsurerFamily").val();
+            var inscell = $(this).val();
+            var validnc = "no";
+            if (insName == "") {
+                alert("نام بیمه گذار را وارد کنید !");
+                $("#InsurerName").focus();
+                return;
+            }
+            if (insFamily == "") {
+                alert("نام خانوادگی بیمه گذار را وارد کنید !");
+                $("#InsurerFamily").focus();
+                return;
+            }
+            if (vnc == "") {
+                alert("کد ملی وارد نشده است !");
+                $("#InsurerNC").focus();
+                return;
+            }
+            var vcell = $("#InsurerCellphone").val();
+            if (vcell == "") {
+                alert("تلفن همراه وارد نشده است !");
+                return;
+            }
+            if (vcell.length === 11) {
+                //$("#spanVal").removeClass("no-display");
+                $.ajax({
+                    url: "/SitePages/CheckCellphoneForSendCode",
+                    type: "POST",
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+
+                    complete: function () {
+                        $('#loader').addClass("no-display");
+                        if ($("#inscellDiv #spanconf").length !== 0) {
+                            $("#spanVal").remove();
+                            $("#spanconf").remove();
+                        }
+                    },
+
+                    data: { NC: vnc, Cellphone: vcell },
+                    success: function (result) {
+                        if (result.blnsend === true) {
+                            $("#spanconf").remove();
+                            var inpCode = "";
+                            Swal.fire({
+                                text: 'کد ارسال شده به تلفن همراه را وارد کنید',
+                                input: 'text',
+                                inputAttributes: {
+                                    autocapitalize: 'off'
+                                },
+                                showCancelButton: true,
+                                cancelButtonText: "انصراف",
+                                confirmButtonText: 'تایید',
+                                showLoaderOnConfirm: true,
+                                preConfirm: (login) => {
+                                    inpCode = login;
+                                }
+                            }).then((data) => {
+
+                                if (data.isConfirmed) {
+                                    var nc = $("#InsurerNC").val();
+                                    var cell = $("#InsurerCellphone").val();
+                                    var url2 = '/SitePages/ApplyValidation?NC=' + nc + '&Code=' + inpCode + '&Cell=' + cell;
+                                    return fetch(url2, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        }
+                                    }).then(response => {
+                                        return response.json()
+                                    }).then(data => {
+                                        if (data == true) {
+                                            $("#submit1").removeAttr("disabled");
+                                            $("#spanVal").remove();
+                                            $("#spanconf").remove()
+                                            $("#btnSend").remove();
+                                        }
+                                        else {
+                                            $("#submit1").attr("disabled", true);
+                                            Swal.fire({
+                                                title: 'کد وارد شده صحیح نمی باشد',
+                                                text: 'کد جدید را به درستی وارد کنید',
+                                                showDenyButton: true,
+                                                confirmButtonText: 'ارسال مجدد',
+                                                denyButtonText: `انصراف`,
+                                            }).then((result) => {
+                                                /* Read more about isConfirmed, isDenied below */
+                                                if (result.isConfirmed) {
+                                                    $("#InsurerCellphone").focusout();
+                                                } else if (result.isDenied) {
+
+                                                    var spanEl = "<span id='spanVal' class='text-danger  ml-2 mr-2'>شماره تلفن اعتبار سنجی نشده است !</span>";
+                                                    var btnVal = "<button type='button' class='mr-2 float-left btn btn-primary' id='btnSend'>" + "دریافت کد" + "</button>";
+                                                    if ($("#inscellDiv #spanVal").length === 0) {
+                                                        $("#spanconf").remove();
+                                                        $("#inscellDiv").append(btnVal);
+                                                        $("#inscellDiv").append(spanEl);
+                                                        $("#btnSend").click(function () {
+                                                            $("#InsurerCellphone").focusout();
+                                                        });
+                                                    }
+                                                    $("#submit1").attr("disabled", true);
+                                                }
+                                            });
+                                        }
+                                    })
+                                } else {
+                                    var spanEl = "<span id='spanVal' class='text-danger  ml-2 mr-2'>شماره تلفن اعتبار سنجی نشده است !</span>";
+                                    var btnVal = "<button type='button'  class='mr-2 float-left btn btn-primary' id='btnSend'>" + "دریافت کد" + "</button>";
+                                    if ($("#inscellDiv #spanVal").length === 0) {
+                                        $("#spanconf").remove();
+                                        $("#inscellDiv").append(btnVal);
+                                        $("#inscellDiv").append(spanEl);
+                                        $("#btnSend").click(function () {
+                                            $("#InsurerCellphone").focusout();
+                                        });
+                                    }
+                                    $("#submit1").attr("disabled", true);
+                                }
+                            })
+                        }
+                        else {
+                            $("#submit1").removeAttr("disabled");
+                        }
+                    }
+                })
+            }
+        })
+    })
+    var percent = parseFloat(100 / 4);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.add("active");
+    document.getElementById("questionnaire").classList.remove("active");
+    document.getElementById("records").classList.remove("active");
+    document.getElementById("check").classList.remove("active");
+    var btnviewseller = document.getElementById("btnViewSeller");
+    var sellercode_input = document.getElementById("SellerCode");
+    btnviewseller.addEventListener("click", function () {
+        var sellerinfo_span = document.getElementById("sellerinfo");
+        sellerinfo_span.innerText = "";
+        fetchText(sellerinfo_span);
+    });
+
+    function validate(elem, file) {
+        var idd = ($(elem).attr("id"));
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["jpg", "jpeg", "png", "gif"];
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            alert("پسوند فایل نادرست است! پسوند های درست عبارتند از  : " + arrayExtensions.join(', '));
+            $("#" + idd).val("");
+        }
+    }
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined") {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/fire/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    //1- hidden file Input /InsurerNCImage
+    // 2- Div for imagePreview fireinsurernc-image
+    ShowImage("StrInsurerNCImage", "fireinsurernc-image");
+    ShowImage("StrPayrollDeductionImage", "pd-image");
+    ShowImage("StrAttributedLetterImage", "al-image");
+    ShowImage("StrSuggestionFormPage1Image", "sugformp1-image");
+    ShowImage("StrSuggestionFormPage2Image", "sugformp2-image");
+
+    var payinstall = document.getElementById('payininstallment');
+    var selection = document.getElementById("insurerstatus");
+    var sel_option_data_id = selection.options[selection.selectedIndex].dataset.id;
+    var nc_image_el = document.getElementById("fireinsurernc-image");
+    var pd_image_el = document.getElementById("pd-image");
+    var al_image_el = document.getElementById("al-image");
+    var nc_image_upload_el = document.getElementById("nc-image-upload");
+    var pd_image_upload_el = document.getElementById("pd-image-upload");
+    var al_image_upload_el = document.getElementById("al-image-upload");
+    selection.addEventListener("change", function () {
+        sel_option_data_id = selection.options[selection.selectedIndex].dataset.id;
+        document.getElementById("pdimageValid").innerText = '';
+        document.getElementById("alImageValid").innerText = '';
+        if (sel_option_data_id === "np") {
+            document.getElementById("picheckDiv").classList.add("no-display");
+            payinstall.checked = false;
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("alimg").classList.add("no-display");
+        }
+        if (sel_option_data_id === "retired") {
+            document.getElementById("picheckDiv").classList.remove("no-display");
+            payinstall.checked = false;
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("alimg").classList.add("no-display");
+        }
+        if (sel_option_data_id === "related") {
+            document.getElementById("picheckDiv").classList.remove("no-display");
+            payinstall.checked = false;
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("alimg").classList.remove("no-display")
+        }
+
+    });
+    payinstall.addEventListener('change', function () {
+
+        if (payinstall.checked) {
+            document.getElementById("pdimg").classList.remove("no-display");
+        } else {
+            document.getElementById("pdimg").classList.add("no-display");
+            document.getElementById("pd-image").style.background = "url('/images/icons/select-icon.png')";
+        }
+
+    });
+
+    var imgpreviews = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgpreviews.length; l++) {
+        imgpreviews[l].addEventListener("click", function () {
+            var nextEl = this.nextElementSibling;
+            var elem = document.getElementById(nextEl.id);
+            elem.click();
+        });
+    };
+
+
+    document.querySelectorAll('.uploadFile').forEach(function (el) {
+        el.addEventListener('change', function () {
+            var parent = this.parentElement;
+            parent.querySelector('.valid').innerText = '';
+            //parent.querySelector('.valid').backgroundColor = "red";
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function () { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+    function ClearNC() {
+        document.getElementById("InsurerNC").value = '';
+        document.getElementById("InsurerCellphone").value = '';
+    }
+    function ClearPhone() {
+        document.getElementById("InsurerCellphone").value = '';
+        if ($("#inscellDiv #spanVal").length !== 0) {
+            $("#spanVal").remove();
+
+        }
+        if ($("#inscellDiv #btnSend").length !== 0) {
+            $("#btnSend").remove();
+        }
+    }
+    function persianToEnglish(input) {
+        var inputstring = input;
+        var persian = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"]
+        var english = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        for (var i = 0; i < 10; i++) {
+            inputstring = inputstring.toString().replace(persian[i], english[i]);
+        }
+        return inputstring;
+    }
+    function checkNumber(event) {
+
+        var aCode = event.which ? event.which : event.keyCode;
+
+        if (aCode > 31 && (aCode < 48 || aCode > 57)) return false;
+
+        return true;
+
+    }
+
+</script>
+
+
+
+

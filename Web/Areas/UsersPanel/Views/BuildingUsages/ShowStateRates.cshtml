@@ -1,0 +1,72 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Fire.FireInsStateRate>
+@using Core.Services.Interfaces;
+@inject IFireInsService _fireInsService
+@{
+    string title = "نرخ های استانی" + " ";
+    DataLayer.Entities.InsPolicy.Fire.BuildingUsage bu = null;
+    DataLayer.Entities.InsPolicy.Fire.FireInsCoverage fireInsCoverage = null;
+    int? BuFcId = null;
+    if (Model != null)
+    {
+        if (Model.Count() != 0)
+        {
+            BuFcId = Model.FirstOrDefault().BuildingUsageFireCoverageId;
+        }
+    }
+    if (ViewData["usage"] != null)
+    {
+        bu = ViewData["usage"] as DataLayer.Entities.InsPolicy.Fire.BuildingUsage;
+        title += "کاربری" + " " + bu.Title + " ";
+    }
+    if (ViewData["cover"] != null)
+    {
+        fireInsCoverage = ViewData["cover"] as DataLayer.Entities.InsPolicy.Fire.FireInsCoverage;
+        title += "و" + " " + "پوشش" + " " + fireInsCoverage.Title;
+    }
+
+
+    ViewData["Title"] = title;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<h1 class="text-xs-center alert alert-info">@title</h1>
+@if (bu != null && fireInsCoverage != null)
+{
+    @if (Model.Count() == 0)
+    {
+        <p>
+            <a asp-action="AddStatesRateToFireUsageCoverage" asp-route-BuildingUsageId="@bu.Id" asp-route-FireCoverageId="@fireInsCoverage.Id">افزودن نرخ استانی</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            <a asp-action="EditStatesRateToFireUsageCoverage" asp-route-BuFcId="@BuFcId" class="btn btn-success">ویرایش نرخهای استانی</a>
+        </p>
+    }
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                استان
+            </th>
+            <th class="text-xs-center align-middle">
+                نرخ
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @item.State.StateName
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.Rate
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

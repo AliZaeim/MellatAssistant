@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Travel.TravelInsClass>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "کلاسهای بیمه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">کلاسهای بیمه مسافرتی</h1>
+@if (_userService.CheckPermissionByName("addtc",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت کلاس</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th> 
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th> 
+            
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+               
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("edittc",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletetc", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

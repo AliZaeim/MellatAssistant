@@ -1,0 +1,38 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.RetiredVM
+<div class="form-group form-check" id="chk_installment">
+    <label class="form-check-label">
+        <input class="form-check-input" asp-for="PayinInstallment" /> @Html.DisplayNameFor(model => model.PayinInstallment)
+    </label>
+</div>
+
+<div class="form-group row no-display" id="ssdimg">
+
+    <div class="imgUp col-12">
+        <label asp-for="SatisfactionofsalarydeductionImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+        <div class="imagePreview" id="ssd-image"></div>
+        <input type="file" class="uploadFile img no-display" id="ssd-image-upload" asp-for="SatisfactionofsalarydeductionImage" value="Upload Photo">
+        <br />
+        <span asp-validation-for="SatisfactionofsalarydeductionImage" id="ssdimageValid" class="text-danger"></span>
+    </div>
+</div>
+<script>
+    
+    let el = document.getElementById('PayinInstallment');
+    el.addEventListener('change', function () {        
+        if (el.checked) {
+            document.querySelector("#ssdimg").classList.remove("no-display");
+        } else {
+            document.querySelector("#ssdimg").classList.add("no-display");
+        }
+        
+    });
+    document.getElementById("submit1").addEventListener('click', function (e) {
+        if (el.checked) {
+            if (document.getElementById("ssd-image-upload").files.length == 0) {
+                e.preventDefault();
+                document.getElementById("ssdimageValid").innerText = "لطفا تصویر رضایت کسر از حقوق را انتخاب کنید !";
+            }
+        }
+    });
+
+</script>

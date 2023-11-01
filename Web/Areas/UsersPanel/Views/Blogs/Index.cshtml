@@ -1,0 +1,129 @@
+﻿@model IEnumerable<DataLayer.Entities.Blogs.Blog>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "اخبار";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">اخبار</h1>
+@if (_userService.CheckPermissionByName("addblg",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">ثبت خــبر</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BlogTitle)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BlogDate)
+            </th>
+
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BlogIsActive)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BlogUrl)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BlogViewsCount)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.AuthorId)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BlogGroup)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.BlogTitle)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.BlogDate.ToShamsiN_WithTime()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (item.BlogIsActive)
+                    {
+                        <span class="fa fa-check-square cursor-pointer chk" data-id="@item.BlogId" data-status="0"></span>
+                    }
+                    else
+                    {
+                        <span class="fa fa-square-o cursor-pointer chk" data-id="@item.BlogId" data-status="1"></span>
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    <a href="/blog/d/@item.BlogUrl" target="_blank">لینک</a>
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.BlogViewsCount)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.BlogGroup.BlogGroupTitle)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editblg",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.BlogId">ویرایش</a> <span> | </span> 
+                    }
+                    @if (_userService.CheckPermissionByName("blogs",User.Identity.Name))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.BlogId">جزئیات</a> <span> | </span> 
+                    }
+                    @if (_userService.CheckPermissionByName("deleteblg",User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.BlogId">حــذف</a>
+                    }                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".chk").click(function () {
+                if (confirm("آیا مطمئن به تغییر وضعیت پست هستید؟")) {
+                    var idd = $(this).attr("data-id");
+                    var st = $(this).attr("data-status");
+                    var th = $(this);
+                    $.ajax({
+                        url: "/UsersPanel/Blogs/ChangeStatus",
+                        data: { id: idd, status: st },
+                        type: "GET",
+                        success: function (result) {
+                            if (result === true) {
+                                th.removeClass("fa-square-o").addClass("fa-check-square");
+                                th.attr("data-status", 0);
+                            }
+                            else {
+
+                                th.removeClass("fa-check-square").addClass("fa-square-o");
+                                th.attr("data-status", 1);
+                            }
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    })
+                }
+
+            });
+        });
+    </script>
+}

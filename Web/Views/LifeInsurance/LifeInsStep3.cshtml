@@ -1,0 +1,121 @@
+﻿@model Core.DTOs.SiteGeneric.LifeIns.LifeInsuranceStep3
+<section class="row">
+
+    <div class="col-12 p-3">
+        <h4 class="text-center alert alert-info">وضعیت</h4>
+        <div class="col-12 text-center">
+            <h6 class="text-center border-bottom border-top"><span class="text-primary">کارشناس فروش</span></h6>
+            <p>نام : @Model.SellerFullName</p>
+            <p>تلفن : @Model.SellerCellphone</p>
+            <p>کد : @Model.lifeInsurance.SellerCode</p>
+        </div>
+
+        <div class="col-12 text-center mt-2">
+            <div class="row">
+                <div class="col-6">
+                    <h6 class="text-center border-bottom border-top"><span class="text-primary">بیمه گذار</span></h6>
+                    <p>نام : @Model.lifeInsurance.InsurerName @Model.lifeInsurance.InsurerFamily</p>
+                    <p>تلفن : @Model.lifeInsurance.InsurerCellphone</p>
+                    <p>تصویر کارت ملی</p>
+                    <div class="col-12 text-center">
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/life/@Model.lifeInsurance.InsurerNCImage" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h6 class="text-center border-bottom border-top"><span class="text-primary">بیمه شده</span></h6>
+                    <p>نام : @Model.lifeInsurance.InsuredName @Model.lifeInsurance.InsuredFamily</p>
+                    <p>تلفن : -</p>
+                    <p>تصویر کارت ملی</p>
+                    <div class="col-12 text-center">
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/life/@Model.lifeInsurance.InsuredNCImage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-center mt-2">
+            <h6 class="text-center border-bottom border-top"><span class="text-primary">پرسشنامه</span></h6>
+            <div class="row">
+                <div class="col-6">                    
+                    <div class="col-12 text-center">
+                        <p>تصویر صفحه اول</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/life/@Model.lifeInsurance.QuestionnairePage1Image" />
+                    </div>
+                    
+                    <div class="col-12 text-center">
+                        <p>تصویر صفحه سوم</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/life/@Model.lifeInsurance.QuestionnairePage3Image" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    
+                    <div class="col-12 text-center">
+                        <p>تصویر صفحه دوم</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/life/@Model.lifeInsurance.QuestionnairePage2Image" />
+                    </div>
+                    
+                    <div class="col-12 text-center">
+                        <p>تصویر صفحه پهارم</p>
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/life/@Model.lifeInsurance.QuestionnairePage4Image" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-center mt-2">
+            <h6 class="text-center border-bottom border-top"><span class="text-primary">پرداخت</span></h6>
+            <p>طرح : @Model.lifeInsurance.Plan.Title</p>
+            <p>روش پرداخت : @Model.lifeInsurance.PaymentMethod.Title</p>
+            <p>حق بیمه سالانه : @Model.lifeInsurance.Price.ToString("N0") تومان</p>
+        </div>
+
+    </div>
+    <div class="col-12 p-3">
+        <div class="form-group text-center">
+            @{
+                int payalue =(int)(Model.lifeInsurance.Price / (Model.lifeInsurance.PaymentMethod.NumberofInstallments));
+            }
+            <a class="btn btn-danger text-white ml-2"  data-ajax="true" data-ajax-url="/LifeInsurance/LifeInsStep2" data-ajax-update="#form-card">مرحله قبل</a>
+            <form asp-controller="SitePages" asp-action="GoToPayment" method="post" class="d-inline-flex">
+                <input type="hidden" name="InsId" value="@Model.lifeInsurance.Id" />
+                <input type="hidden" name="InsType" value="life" />
+                <input type="hidden" name="BackUrl" value="https://melatins.com/PaymentResult" />
+                <input type="hidden" name="Currency" value="IRT" />
+                <input type="submit" class="btn btn-primary" value="پرداخت (@payalue.ToString("N0") تومان)" />
+            </form>
+            <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+                <img src="~/images/Spinner-3.gif" />
+            </div>
+            
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+        $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+
+    var percent = parseFloat(100 / 3) * 3;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.remove("active");
+    document.getElementById("check").classList.add("active");
+   
+    //var lpay = document.getElementById("lifepay");
+    //if (lpay !== null && lpay !== "undefined")
+    //{
+    //    lpay.addEventListener("click",function(){
+    //        document.cookie = "cookiename=tlcode ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    //        alert("farbod");
+    //    });
+       
+    //}
+    
+</script>

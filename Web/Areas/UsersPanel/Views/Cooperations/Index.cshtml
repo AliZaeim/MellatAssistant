@@ -1,0 +1,96 @@
+﻿@model IEnumerable<DataLayer.Entities.Supplementary.Cooperation>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "درخواست های همکاری";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">درخواست های همکاری</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle p-0">
+                #
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.Cellphone)
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.LevelOfEducation)
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                استان
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.County)
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.TodoComment)
+            </th>
+            <th class="text-xs-center align-middle p-0">
+                @Html.DisplayNameFor(model => model.RegDate)
+            </th>
+            <th class="text-xs-center align-middle p-0">ویرایش</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rad = 1;
+        }
+        @foreach (var item in Model.OrderByDescending(x => x.RegDate))
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @rad
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.FullName
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.Cellphone
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.LevelOfEducation
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.BirthDate
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @{
+                        var state = await _userService.GetStateByIdAsync(item.County.StateId);
+                        if (state != null)
+                        {
+                            <span>@state.StateName</span>
+                        }
+                    }
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.County.CountyName
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @foreach (var com in item.CommentList)
+                    {
+                        <p>@com</p>
+                    }
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.RegDate.ToShamsiN_WithTime()
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    <a asp-action="Edit" asp-route-id="@item.Id"><span title="افزودن یاداشت" class="fa fa-edit text-success"></span></a>
+                </td>
+                
+            </tr>
+            rad++;
+        }
+    </tbody>
+</table>

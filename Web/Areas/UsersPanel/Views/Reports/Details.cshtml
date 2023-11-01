@@ -1,0 +1,43 @@
+﻿@model Core.DTOs.General.InsDetails
+
+@{
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    string title = "جزئیات درخواست";
+    if (Model.InsType == "tp")
+    {
+        title += " " + "شخص ثالث";
+    }
+    if (Model.InsType == "life")
+    {
+        title += " " + "زندگی";
+    }
+    if (Model.InsType == "travel")
+    {
+        title += " " + "مسافرتی";
+    }
+    if (Model.InsType == "fire")
+    {
+        title += " " + "آتش سوزی";
+    }
+    if (Model.InsType == "cb")
+    {
+        title += " " + "ثالث";
+    }
+    if (Model.InsType == "lib")
+    {
+        title += " " + "مسئولیت";
+    }
+    ViewData["Title"] = title;
+}
+<h1 class="text-xs-center alert alert-info">@title</h1>
+@await Component.InvokeAsync("ShowThirdPartyComponent", new { Insid = Model.InsId })
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            
+        });
+    </script>
+
+}
+
+

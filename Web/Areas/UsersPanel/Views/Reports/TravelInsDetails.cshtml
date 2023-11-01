@@ -1,0 +1,510 @@
+﻿@model Core.DTOs.Admin.InsDetailsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+@{
+    ViewData["Title"] = "جزئیات بیمه مسافرتی";
+}
+<style>
+    .colored-toast .swal2-html-container {
+        color: white;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row alert alert-info">
+        <div class="col-xs-9">
+            @{
+
+                string title = "جزئیات درخواست بیمه مسافرتی " + " | کد پیگیری : " + Model.TravelInsurance.TraceCode + " | شماره بیمه نامه : " + Model.TravelInsurance.IssuedInsNo + " | حق بیمه: " + Model.TravelInsurance.Price.GetValueOrDefault().ToString("N0") + " تومان";
+            }
+            <h4 class="text-xs-right pt-1 pb-1">
+                @title
+                @if (Model.FireInsurance.Canceled)
+                {
+                    <span class="bg bg-danger text-white pr-1 pl-1 rounded mr-1">انصراف</span>
+                }
+            </h4>
+        </div>
+        <div class="col-xs-3 text-xs-left">
+            @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود مدارک"), User.Identity.Name))
+            {
+                <form method="post" class="d-inline-block" asp-action="DownloadZipDouments" asp-controller="Reports" asp-area="UsersPanel">
+                    <input type="hidden" name="insId" value="@Model.TravelInsurance.Id" />
+                    <input type="hidden" name="type" value="travel" />
+                    <button type="submit" class="btn btn-primary rounded"><span class="fa fa-download" title="دانلود مدارک"></span></button>
+                    <p class="p-0 m-0 text-xs-center">دانلود مدارک</p>
+                </form>
+
+            }
+
+        </div>
+    </div>
+</div>
+<section class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="hidden" id="tpartyid" value="@Model.TravelInsurance.Id" />
+            <div class="row">
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs">
+                        </div>
+                        <div class="col-md-8 col-xs-12">
+                            <h4 class="text-xs-center ">
+                                مشخصات
+                            </h4>
+                        </div>
+                        @if (await _genericInsService.CheckInsIssuedAsync(Model.TravelInsurance.Id, "travel") == false)
+                        {
+                            <div class="col-md-2 col-xs">
+                                <a class="float-lg-left font-medium-1" id="btnUpdate_travel_state" data-insid="@Model.TravelInsurance.Id" data-insissueno="@Model.TravelInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <section class="col-xs-12" id="travelState">
+
+                    <h6 class="text-xs-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+                    @{
+                        DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.TravelInsurance.SellerCode);
+                    }
+                    <div class="row">
+                        <p class="col-md-4 col-xs-12">نام : @seller?.FullName</p>
+                        <p class="col-md-4 col-xs-12">تلفن : @seller?.Cellphone</p>
+                        <p class="col-md-4 col-xs-12">کد : @Model.TravelInsurance.SellerCode</p>
+                    </div>
+                    @{
+                        string state = "فرد عادی";
+                        if (Model.TravelInsurance.InsurerStatus == "retired")
+                        {
+                            state = "بازنشته کشوری یا تامین اجتماعی";
+                        }
+                        if (Model.TravelInsurance.InsurerStatus == "related")
+                        {
+                            state = "منتسب بازنشسته";
+                        }
+                    }
+                    <h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12">
+                            <p>نام : @Model.TravelInsurance.InsurerName @Model.TravelInsurance.InsurerFamily</p>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <p>تلفن : @Model.TravelInsurance.InsurerCellphone</p>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <p>وضعیت : @state</p>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <span class="w-100">تصویر کارت ملی</span>
+                            <div class="w-100 text-xs-center mb-2 ">
+                                <a href="/images/Ins/travel/@Model.TravelInsurance.InsurerNCImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.InsurerNCImage" /></a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            @if (Model.TravelInsurance.InsurerStatus == "related")
+                            {
+                                <div class="w-100 text-xs-center">تصویر معرفی نامه منتسب</div>
+                                <div class="w-100 text-xs-center">
+                                    <a href="/images/Ins/travel/@Model.TravelInsurance.AttributedLetterImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.AttributedLetterImage" /></a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs">
+                                </div>
+                                <div class="col-md-8 col-xs-12">
+                                    <h4 class="text-xs-center ">
+                                        پرسشنامه
+                                    </h4>
+                                </div>
+                                @if (await _genericInsService.CheckInsIssuedAsync(Model.TravelInsurance.Id, "travel") == false)
+                                {
+                                    <div class="col-md-2 col-xs">
+                                        <a class="float-lg-left font-medium-1" id="btnUpdate_travel_pro" data-insid="@Model.TravelInsurance.Id" data-insissueno="@Model.TravelInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <section class="col-xs-12" id="travelPro">
+                            <h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه شده</span></h6>
+                            <div class="col-xs-12">
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-12">
+                                        <p class="text-xs-center">نام : @Model.TravelInsurance.InsuredName @Model.TravelInsurance.InsuredFamily</p>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <p class="text-xs-center">سن : @Model.TravelInsurance.InsuredAge</p>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 text-xs-center">تصویر کارت ملی</div>
+                                            <div class="col-xs-12 text-xs-center mb-2 ">
+                                                <a href="/images/Ins/travel/@Model.TravelInsurance.InsuredNCImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.InsuredNCImage" /></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 text-xs-center">تصویر گذرنامه</div>
+                                            <div class="col-xs-12 text-xs-center mb-2 ">
+                                                <a href="/images/Ins/travel/@Model.TravelInsurance.InsuredPassportImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.InsuredPassportImage" /></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="row">
+                                    <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد</div>
+                                    <div class="col-xs-12 text-xs-center">
+                                        <a href="/images/Ins/travel/@Model.TravelInsurance.SuggestionFormImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/travel/@Model.TravelInsurance.SuggestionFormImage" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                                @if (Model.TravelInsurance.InsCo != null)
+                                {
+                                    var insCo = await _genericInsService.GetTravelInsCoByIdAsync(Model.TravelInsurance.InsCo.Value);
+                                    <p>بیمه گر : @insCo.Title </p>
+                                }
+                                else
+                                {
+                                    <p>بیمه گر : - </p>
+                                }
+
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+
+                                @if (Model.TravelInsurance.InsClass != null)
+                                {
+                                    var insClass = await _genericInsService.GetTravelInsClassByIdAsync(Model.TravelInsurance.InsClass.Value);
+                                    <p>کلاس سفر : @insClass.Title </p>
+                                }
+                                else
+                                {
+                                    <p>کلاس سفر : - </p>
+                                }
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+
+                                @if (Model.TravelInsurance.TravelZoom != null)
+                                {
+                                    @*var zoom = await _genericInsService.GetTravelZoomByIdAsync(Model.TravelInsurance.TravelZoom.Value);
+                                int k = 0;*@
+                                    <p>منطقه سفر : @Model.TravelInsurance.ETravelZoom?.Title </p>
+                                }
+                                else
+                                {
+                                    <p>منطقه سفر : - </p>
+                                }
+
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                                <p>پوشش کرونا دارد؟ @((Model.TravelInsurance.HasCrona.GetValueOrDefault()) ? "بله" : "خیر")</p>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                                <p>مدت سفر : @Model.TravelInsurance.TravelPeriod.GetValueOrDefault() روز</p>
+                            </div>
+                        </section>
+                        @{
+                            bool hasUserUp = false;
+                            if (Model.TravelInsurance.TravelSupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).Any())
+                            {
+                                hasUserUp = true;
+                            }
+                        }
+                        @if (hasUserUp)
+                        {
+                            <div class="col-lg-12">
+                                <h5 class="text-xs-center text-danger">فایلهای آپلود شده جدید </h5>
+                                <table class="table table-bordered font-small-2">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-xs-center align-middle p-0 width-50">#</th>
+                                            <th class="text-xs-center align-middle p-0 width-10-per">عنوان</th>
+                                            <th class="text-xs-center align-middle p-0 width-15-per">تاریخ</th>
+                                            <th class="text-xs-center align-middle p-0 width-10-per">توسط</th>
+                                            <th class="text-xs-center align-middle p-0 width-10-per">فایل</th>
+                                            <th class="text-xs-center align-middle p-0 ">پیام</th>
+                                            <th class="text-xs-center align-middle p-0">دانلود</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int rad = 1;
+                                        }
+                                        @foreach (var item in Model.TravelInsurance.TravelSupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).OrderByDescending(x => x.RegDate).ToList())
+                                        {
+                                            <tr>
+                                                <td class="text-xs-center align-middle p-0">@rad</td>
+                                                <td class="text-xs-center align-middle p-0">@item.Title</td>
+                                                <td class="text-xs-center align-middle p-0">@item.RegDate.ToShamsiN()</td>
+                                                <td class="text-xs-center align-middle p-0">
+                                                    @{
+                                                        var user = await _genericInsService.GetUserByNameAsync(item.UserName);
+                                                        string userFullName = user?.FullName ?? "-";
+                                                    }
+                                                    @userFullName
+                                                </td>
+                                                <td class="text-xs-center align-middle p-0">
+                                                    @if (!string.IsNullOrEmpty(item.File))
+                                                    {
+                                                        @if (Core.Utility.Applications.IsImage(item.File))
+                                                        {
+                                                            <img src="~/Supp/travel/@item.File" class="rounded mx-auto zoom" with=50 height=50>
+                                                        }
+                                                        @if (item.File.EndsWith(".pdf"))
+                                                        {
+                                                            <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                                                        }
+                                                    }
+
+                                                </td>
+                                                <td class="text-xs-center align-middle">
+                                                    @foreach (string ml in item.MessageLines)
+                                                    {
+                                                        if (ml != item.MessageLines.LastOrDefault())
+                                                        {
+                                                            <span class="w-100">@ml.Replace("fu"," ")</span>
+                                                            <br />
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="w-100">@ml.Replace("fu"," ")</span>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td class="text-xs-center align-middle">
+                                                    <form asp-area="UsersPanel" asp-controller="Reports" asp-action="DownloadFile" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="filename" value="@item.File">
+                                                        <input type="hidden" name="insType" value="travel">
+                                                        <button type="submit" title="دانلود" class="text-success cursor-pointer font-size-large"><span class="icon-download"></span></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            rad++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-3"></div>
+                                <div class="col-md-6 col-xs-6">
+                                    <h4 class="text-xs-right text-md-center">
+                                        وضعیت مالی
+                                    </h4>
+                                </div>
+                                <div class="col-md-2 col-xs-3">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت مالی"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.TravelInsurance.Id" data-instype="travel" data-refreshid="FindivStatus" data-loc="@Model.Location" class="btn btn-primary float-xs-left FinbtnInsertState">ثبت وضعیت </button>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="FindivStatus" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowFinancialStatusesVM showFinancialStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedFinancialStatusesAsync(Model.TravelInsurance.Id, "travel", "FindivStatus", "false", User.Identity.Name);
+                                showFinancialStatusesVM.PermissionNames = Model.PermissinKeys;
+                                showFinancialStatusesVM.Location = Model.Location;
+                            }
+                            <partial name="ShowInsFinanceStatus" Model="@showFinancialStatusesVM" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-3">
+                                    @if (string.IsNullOrEmpty(Model.TravelInsurance.IssuedInsNo))
+                                    {
+                                        @if (!Model.TravelInsurance.Canceled)
+                                        {
+                                            <button data-insid="@Model.TravelInsurance.Id" data-instype="travel" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-danger float-xs-right" id="btnCanceled">اعلام انصراف</button>
+                                        }
+                                    }
+
+                                    @if (Model.TravelInsurance.Canceled)
+                                    {
+                                        <span class="text-danger">انصراف داده شده است !</span>
+                                    }
+                                </div>
+                                <div class="col-md-8 col-xs-6">
+                                    <h4 class="text-xs-right text-md-center">وضعیت صدور</h4>
+                                </div>
+                                <div class="col-md-2 col-xs-3">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت صدور"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.TravelInsurance.Id" data-instype="travel" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertState">ثبت وضعیت</button>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divStatus" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowInsStatusesVM showInsStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedStatus(Model.TravelInsurance.Id, "travel", "divStatus", "false", User.Identity.Name);
+                                showInsStatusesVM.Location = Model.Location;
+                                showInsStatusesVM.PermissionNames = Model.PermissinKeys;
+                            }
+                            <partial name="ShowInsStatuses" Model="@showInsStatusesVM" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-4"></div>
+                                <div class="col-md-6 col-xs-4">
+                                    <h4 class="text-xs-right text-md-center">بیمه نامه</h4>
+                                </div>
+                                <div class="col-md-3 col-xs-4">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("پیوست فایل"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.TravelInsurance.Id" data-refreshid="divSupp" data-instype="travel" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertSupp">پیوست فایل</button>
+                                    }
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود تمام فایلهای پیوست شده"), User.Identity.Name))
+                                    {
+                                        @if (Model.TravelInsurance.TravelSupplements.Any(z => string.IsNullOrEmpty(z.Message) || (!string.IsNullOrEmpty(z.Message) && !z.Message.Contains("fu"))))
+                                        {
+                                            <form method="post" class="d-inline-block" asp-action="DownloadZipSupps" asp-controller="Reports" asp-area="UsersPanel">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="insId" value="@Model.TravelInsurance.Id" />
+                                                <input type="hidden" name="type" value="travel" />
+                                                <button type="submit" class="btn btn-warning rounded">دانلود پیوست ها</button>
+                                            </form>
+                                        }
+                                    }
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divSupp" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowInsuranceSupplementsData showInsuranceSupplementsData = await
+                                _genericInsService.PreparationDataForShowInsSupplementsAsync(Model.TravelInsurance.Id, "travel", "divSupp", "false", User.Identity.Name);
+                                showInsuranceSupplementsData.PermissionNames = Model.PermissinKeys;
+                                showInsuranceSupplementsData.Location = Model.Location;
+                            }
+                            <partial name="ShowInsSupplements" Model="@showInsuranceSupplementsData" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div style="position:fixed;bottom :10mm;left:2mm">
+        @if (!string.IsNullOrEmpty(Model.TravelInsurance.IssuedInsNo))
+        {
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+        else
+        {
+
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+    </div>
+</section>
+
+@section Scripts {
+
+    <script src="~/AdminLayout/app-assets/js/scripts/InsDetails.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#btnUpdate_travel_state", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateTravelIns/UpdateTravelInsStateSection",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت وضعیت بیمه مسافرتی با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            $(document).on("click", "#btnUpdate_travel_pro", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateTravelIns/UpdateTravelInsProSection",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت پرسشنامه بیمه مسافرتی با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            $(document).on("click", "#btnCanceled", function () {
+                var id = $(this).attr("data-insid");
+                var instype = $(this).attr("data-instype");
+                if (confirm('آیا مطمئن به لغو درخواست خود هستید ؟')) {
+                    $.ajax({
+                        url: "/UsersPanel/Reports/CancelRequest",
+                        data: { insId: id, type: instype },
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN",
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        },
+                        type: "POST",
+
+                        async: true,
+
+                    }).done(function (result) {
+                        if (result == true) {
+                            window.location.reload();
+                        }
+                    });
+                }
+
+            });
+            var loc = window.location.href;
+            $("#sloc").val(loc);
+        });
+    </script>
+
+}

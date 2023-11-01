@@ -1,0 +1,51 @@
+﻿@model DataLayer.Entities.Supplementary.Conversation
+
+@{
+    ViewData["Title"] = "حذف پیام";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="text-xs-center alert alert-danger">حذف پیام</h2>
+
+<h3 class="text-xs-center alert alert-warning">آیا مطمئن به حذف پیام زیر هستید ؟</h3>
+<div>
+    
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Subject)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SenderNC)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SenderNC)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SenderFullName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SenderFullName)
+        </dd>       
+        <dt>
+            @Html.DisplayNameFor(model => model.RecepiesInfo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecepiesInfo)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index">بازگشت</a>
+    </form>
+</div>

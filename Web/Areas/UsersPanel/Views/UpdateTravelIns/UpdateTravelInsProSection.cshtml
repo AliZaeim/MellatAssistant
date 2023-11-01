@@ -1,0 +1,132 @@
+﻿@model Core.DTOs.SiteGeneric.Travel.UpdateTravelInsProVM
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateTravelIns" asp-action="UpdateTravelInsProSection" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#travelPro">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="guid" />
+
+            <input type="hidden" asp-for="StrInsuredNCImage" />
+            <input type="hidden" asp-for="StrInsuredPassportImage" />
+            <input type="hidden" asp-for="StrSuggestionFormImage" />
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group required">
+                    <label asp-for="InsuredName" class="control-label required"></label>
+                    <input asp-for="InsuredName" class="form-control" />
+                    <span asp-validation-for="InsuredName" class="text-danger"></span>
+                </div>
+                <div class="form-group required">
+                    <label asp-for="InsuredFamily" class="control-label required"></label>
+                    <input asp-for="InsuredFamily" class="form-control" />
+                    <span asp-validation-for="InsuredFamily" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsuredAge" class="control-label required"></label>
+                    <input asp-for="InsuredAge" class="form-control" />
+                    <span asp-validation-for="InsuredAge" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsuredNCImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/travel/@Model.StrInsuredNCImage" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="InsuredNCImage">
+                    <span asp-validation-for="InsuredNCImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsuredPassportImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/travel/@Model.StrInsuredPassportImage" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="InsuredPassportImage">
+                    <span asp-validation-for="InsuredPassportImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SuggestionFormImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/travel/@Model.StrSuggestionFormImage" />
+                    <input type="file" class="form-control" accept="image/*" asp-for="SuggestionFormImage">
+                    <span asp-validation-for="SuggestionFormImage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="InsCo" class="control-label"></label>
+                    <select asp-for="InsCo" id="insType" class="form-control">
+                        <option value="" selected="selected"> بیمه گر را انتخاب کنید</option>
+                        @foreach (var co in Model.TravelInsCos.Where(w => w.IsActive).ToList())
+                        {
+                            <option value="@co.Id">@co.Title</option>
+                        }
+                    </select>
+                    <span asp-validation-for="InsCo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsClass" class="control-label"></label>
+                    <select asp-for="InsClass" id="insClass" class="form-control">
+                        <option value=""> کلاس بیمه نامه را انتخاب کنید</option>
+                        @foreach (var cls in Model.TravelInsClasses.Where(w => w.IsActive).ToList())
+                        {
+                            <option value="@cls.Id">@cls.Title</option>
+                        }
+                    </select>
+                    <span asp-validation-for="InsClass" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HasCrona" class="control-label"></label>
+                    <select asp-for="HasCrona" id="hascrona" class="form-control">
+                        <option value="" selected="selected">انتخاب کنید</option>
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </select>
+                    <span asp-validation-for="HasCrona" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TravelZoom" class="control-label"></label>
+                    <select asp-for="TravelZoom" id="insZooms" class="form-control">
+                        <option value=""> منطقه را انتخاب کنید</option>
+                        @foreach (var zoom in Model.TravelZooms)
+                        {
+                            <option value="@zoom.Id">@zoom.Title</option>
+                        }
+                    </select>
+                    <span asp-validation-for="TravelZoom" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TravelPeriod" class="control-label"></label>
+                    <input asp-for="TravelPeriod" class="form-control" />
+                    <span asp-validation-for="TravelPeriod" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#insClass").on("change", function() {
+            var vl = $(this).val();
+            $.ajax({
+                url: "/UsersPanel/UpdateTravelIns/GetZoomsofClass",
+                data: { cId: vl },
+                type: "GET",
+                success: function(data) {
+                    var tsel = $("#insZooms");                  
+                    $('#insZooms').find('option').not(':first').remove();
+                    for (var i = 0; i < Object.keys(data).length; i++) {
+                        var opt = "<option value=" + data[i].id + ">" + data[i].title +"</option>";
+                        tsel.append(opt);
+                    }
+                }
+            });
+        });
+
+    });
+
+</script>

@@ -1,0 +1,43 @@
+﻿@model DataLayer.Entities.InsPolicy.Fire.BuildingUsage
+@{
+    ViewData["Title"] = "ویرایش کاربری";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";    
+}
+<h1 class="text-xs-center alert alert-info">ویرایش کاربری</h1>
+<div class="container">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UsageRate" class="control-label"></label>
+                <input asp-for="UsageRate" class="form-control" />
+                <span asp-validation-for="UsageRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NeedsToInquiry" class="control-label"></label>
+                <select asp-for="NeedsToInquiry" class="form-control">
+                    <option value="true">بله</option>
+                    <option value="false">خیر</option>
+                </select>
+                <span asp-validation-for="NeedsToInquiry" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts{    
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

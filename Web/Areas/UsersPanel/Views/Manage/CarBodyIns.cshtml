@@ -1,0 +1,76 @@
+﻿@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "بیمه بدنه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info mb-5">بیمه بدنه</h1>
+<div class="container">    
+    <div class="row">
+        @if (_userService.CheckPermissionByName("cbinsgroup", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/CarBodyCarGroups/Index" class="round-button"><span class="mb-1 col-xs-12">گروه و خودرو</span> <span class="col-xs-12 icon-th-large fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("cbusage", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/CarBodyUsages/Index" class="round-button"><span class="mb-1 col-xs-12">کاربری خودرو</span> <span class="col-xs-12 icon-taxi fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("cblegdis", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/CarBodyLegalDiscounts/Index" class="round-button"><span class="mb-1 col-xs-12">تخفیفات و اضافات</span> <span class="col-xs-12 icon-gift fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("cbinsurertypes", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/CarBodyInsurerTypes/Index" class="round-button"><span class="mb-1 col-xs-12">انواع بیمه گذار</span> <span class="col-xs-12 icon-gear-a fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }           
+    </div>
+    <div class="row zmargin_top10mm">
+        @if (_userService.CheckPermissionByName("cbinsurancetypes", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/CarBodyInsuranceTypes/Index" class="round-button"><span class="mb-1 col-xs-12">نوع بیمه نامه</span> <span class="col-xs-12 icon-clipboard3 fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_userService.CheckPermissionByName("cbcovers", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/CarBodyCovers/Index" class="round-button"><span class="mb-1 col-xs-12">پوششها</span> <span class="col-xs-12 icon-shield2 fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }       
+         
+    </div>
+    
+</div>

@@ -1,0 +1,440 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.ThirdPartyVM
+@{
+    ViewData["Title"] = "درخواست بیمه ثالث - بیمه ملت";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+
+    <link href="~/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="~/lib/fonts/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    
+    <style>
+        /*p {
+            color: grey
+        }*/
+
+        #heading {
+            text-transform: uppercase;
+            color: #673AB7;
+            font-weight: normal
+        }
+
+        #msform {
+            text-align: center;
+            position: relative;
+            margin-top: 20px;
+            margin: 20px 10px 10px 10px;
+        }
+
+            #msform fieldset {
+                background: white;
+                border: 0 none;
+                /*border-radius: 0.5rem;*/
+                box-sizing: border-box;
+                width: 100%;
+                margin: 0;
+                padding-bottom: 20px;
+                position: relative;
+            }
+
+        .form-card {
+            text-align: right
+        }
+
+        #msform fieldset:not(:first-of-type) {
+            display: none
+        }
+
+        #msform input, #msform .form-control,
+        #msform textarea {
+            font-size: 18px;
+            letter-spacing: 1px;
+            border: 1px solid blue;
+        }
+
+
+
+        #msform .action-button {
+            width: 100px;
+            background: #673AB7;
+            font-weight: bold;
+            color: white;
+            border: 0 none;
+            border-radius: 0px;
+            cursor: pointer;
+            padding: 10px 5px;
+            margin: 10px 0px 10px 5px;
+            float: right
+        }
+
+            #msform .action-button:hover,
+            #msform .action-button:focus {
+                background-color: #311B92
+            }
+
+        #msform .action-button-previous {
+            width: 100px;
+            background: #616161;
+            font-weight: bold;
+            color: white;
+            border: 0 none;
+            border-radius: 0px;
+            cursor: pointer;
+            padding: 10px 5px;
+            margin: 10px 5px 10px 0px;
+            float: right
+        }
+
+            #msform .action-button-previous:hover,
+            #msform .action-button-previous:focus {
+                background-color: #000000
+            }
+
+        .card {
+            z-index: 0;
+            border: none;
+            position: relative
+        }
+
+        .fs-title {
+            font-size: 25px;
+            color: #673AB7;
+            margin-bottom: 15px;
+            font-weight: normal;
+            text-align: right
+        }
+
+        .purple-text {
+            color: #673AB7;
+            font-weight: normal
+        }
+
+        .steps {
+            font-size: 25px;
+            color: gray;
+            margin-bottom: 10px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .fieldlabels {
+            color: gray;
+            text-align: right
+        }
+
+        #progressbar {
+            margin-bottom: 30px;
+            overflow: hidden;
+            color: lightgrey
+        }
+
+            #progressbar .active {
+                color: #673AB7
+            }
+
+            #progressbar li {
+                list-style-type: none;
+                font-size: 15px;
+                width: 25%;
+                float: right;
+                position: relative;
+                font-weight: 400
+            }
+
+            #progressbar #state:before {
+                font-family: FontAwesome;
+                content: "\f006"
+            }
+
+            #progressbar #document:before {
+                font-family: FontAwesome;
+                content: "\f007"
+            }
+
+            #progressbar #records:before {
+                font-family: FontAwesome;
+                content: "\f030"
+            }
+
+            #progressbar #payment:before {
+                font-family: FontAwesome;
+                content: "\f00c"
+            }
+
+            #progressbar li:before {
+                width: 50px;
+                height: 50px;
+                line-height: 45px;
+                display: block;
+                font-size: 20px;
+                color: #ffffff;
+                background: lightgray;
+                border-radius: 50%;
+                margin: 0 auto 10px auto;
+                padding: 2px
+            }
+
+            #progressbar li:after {
+                content: '';
+                width: 100%;
+                height: 2px;
+                background: lightgray;
+                position: absolute;
+                left: 0;
+                top: 25px;
+                z-index: -1
+            }
+
+            #progressbar li.active:before,
+            #progressbar li.active:after {
+                background: #673AB7
+            }
+
+        .progress {
+            height: 20px
+        }
+
+        .progress-bar {
+            background-color: #673AB7
+        }
+
+        .fit-image {
+            width: 100%;
+            object-fit: cover
+        }
+
+        /*.form-control {
+            border-radius: 20px !important;
+        }*/
+
+        /*.custom-select {
+            border-radius: 15rem !important;
+        }*/
+
+        .form-control {
+            /*border-radius: 10px;*/
+            padding: 1.2rem .75rem !important;
+            font-size: 0.79rem !important;
+            border: 1px solid #ccc !important;
+            margin-bottom: 10px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            /*height: 40px !important;
+            line-height: 2 !important;*/
+            color: black;
+        }
+    </style>
+    <style>
+        .imagePreview {
+            width: 15mm;
+            height: 15mm;
+            background-position: center center;
+            background: url('/images/icons/select-icon.png');
+            background-color: #fff;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: inline-block;
+            box-shadow: 0px -3px 6px 2px rgba(0,0,0,0.2);
+            float: left;
+            cursor: pointer;
+        }
+
+        /*.btn-primary {
+            display: block;
+            border-radius: 0px;
+            box-shadow: 0px 4px 6px 2px rgba(0,0,0,0.2);
+            margin-top: -5px;
+        }*/
+
+        .imgUp {
+            margin-bottom: 15px;
+        }
+
+        .del {
+            position: absolute;
+            top: 0px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background-color: rgba(255,255,255,0.6);
+            cursor: pointer;
+        }
+
+        .imgAdd {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4bd7ef;
+            color: #fff;
+            box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.2);
+            text-align: center;
+            line-height: 30px;
+            margin-top: 0px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .form-group.required .control-label:after {
+            content: " *";
+            color: red;
+        }
+
+        .loader {
+            border: 2px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+
+       
+    </style>
+}
+    @section Header{
+        <partial name="_Header" />
+    }
+    <div class="container-fluid p-0">
+    <div class="row w-100 p-0 m-0 justify-content-center">
+        <div class="col-12 col-sm-9 col-md-7 col-lg-6  text-center p-0 mt-3 mb-2">
+                <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                    <h2 id="heading">ثبت درخواست بیمه ثالث اتومبیل</h2>
+                    <p>در ثبت و بارگذاری مدارک دقت فرمائید، ملاک صدور بیمه نامه اطلاعات ثبت شده توسط شما خواهد بود</p>
+                    <div id="msform">
+                        <!-- progressbar -->
+                        <ul id="progressbar">
+                            <li class="active" id="state"><strong>وضعیت</strong></li>
+                            <li id="document"><strong>مدارک</strong></li>
+                            <li id="records"><strong>سوابق</strong></li>
+                            <li id="payment"><strong>پرداخت</strong></li>
+                        </ul>
+                        <div class="progress">
+                            <div id="prog-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div> <br>
+                        <fieldset>
+                            <script src="~/lib/jquery/dist/jquery-3.2.1.min.js"></script>
+                            <div class="form-card m-1" id="form-card">
+                                @await Html.PartialAsync("/Views/ThirdParty/TPStep1.cshtml", Model.ThirdPartyStep1)
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Footer{
+        <partial name="_Footer" />
+    }
+    @section Scripts{   
+    <script src="/Layout/Js/bootstrap.min.js"></script>   
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="/Layout/PageJs/Fireins.js"></script>
+    <script>
+        function vmsNationalCode(input) {
+            if (!/^\d{10}$/.test(input)
+                || input == '0000000000'
+                || input == '1111111111'
+                || input == '2222222222'
+                || input == '3333333333'
+                || input == '4444444444'
+                || input == '5555555555'
+                || input == '6666666666'
+                || input == '7777777777'
+                || input == '8888888888'
+                || input == '9999999999')
+                return false;
+            var check = parseInt(input[9]);
+            var sum = 0;
+            var i;
+            for (i = 0; i < 9; ++i) {
+                sum += parseInt(input[i]) * (10 - i);
+            }
+            sum %= 11;
+            return (sum < 2 && check == sum) || (sum >= 2 && check + sum == 11);
+        }
+        var sellercode_input = document.getElementById("SellerCode");
+        sellercode_input.addEventListener("keyup", function (e) {
+            if (e.key !== "Enter") {
+                var sellerinfo_span = document.getElementById("sellerinfo");
+                sellerinfo_span.innerText = "";
+            }
+
+        });
+        $(document).ready(function () {
+            jQuery.ajaxSetup({
+                beforeSend: function () {
+                    $('#overlay').show();
+                },
+                complete: function () {
+                    $('#overlay').hide();
+                },
+
+            });
+        });
+        $(function () {
+            $(document).on("change", ".uploadFile", function () {
+                var uploadFile = $(this);
+                var files = !!this.files ? this.files : [];
+                if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+                if (/^image/.test(files[0].type)) { // only image file
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
+
+                    reader.onloadend = function () { // set image data as background of div
+                        //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                    }
+                }
+
+            });
+
+        });
+
+        var sellercode_input = document.getElementById("SellerCode");
+        if (sellercode_input != null && typeof (sellercode_input) != "undefined") {
+            //sellercode_input.addEventListener('keypress', function (e) {
+            //    if (e.key === "Enter") {
+            //        GetSalesExInfo(sellercode_input.value);
+            //    }
+            //});
+
+
+
+        }
+
+        sellercode_input.addEventListener("keyup", function (e) {
+            if (e.key !== "Enter") {
+                var sellerinfo_span = document.getElementById("sellerinfo");
+                sellerinfo_span.innerText = "";
+            }
+
+        });
+
+
+
+
+
+    </script>
+    }
+
+    
+
+

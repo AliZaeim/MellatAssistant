@@ -1,0 +1,55 @@
+﻿@model Core.DTOs.Admin.UpdateUserRolePercents
+<div class="container-fluid">
+    <div class="row pt-5">
+        <div class="col-xs-12">
+            <form asp-action="UpdateUserRolePercents" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="Id" type="hidden" />
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                        <label asp-for="ThirdPartyPercent" class="control-label"></label>
+                        <input asp-for="ThirdPartyPercent" class="form-control" />
+                        <span asp-validation-for="ThirdPartyPercent" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LiabilityPercent" class="control-label"></label>
+                        <input asp-for="LiabilityPercent" class="form-control" />
+                        <span asp-validation-for="LiabilityPercent" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LifePercent" class="control-label"></label>
+                        <input asp-for="LifePercent" class="form-control" />
+                        <span asp-validation-for="LifePercent" class="text-danger"></span>
+                    </div>                    <div class="form-group">
+                        <label asp-for="FirePercent" class="control-label"></label>
+                        <input asp-for="FirePercent" class="form-control" />
+                        <span asp-validation-for="FirePercent" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    
+                    <div class="form-group">
+                        <label asp-for="FirePercent" class="control-label"></label>
+                        <input asp-for="FirePercent" class="form-control" />
+                        <span asp-validation-for="FirePercent" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CarBodyPercent" class="control-label"></label>
+                        <input asp-for="CarBodyPercent" class="form-control" />
+                        <span asp-validation-for="CarBodyPercent" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TravelPercent" class="control-label"></label>
+                        <input asp-for="TravelPercent" class="form-control" />
+                        <span asp-validation-for="TravelPercent" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ثبت" class="btn btn-primary offset-md-4 col-md-4 col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

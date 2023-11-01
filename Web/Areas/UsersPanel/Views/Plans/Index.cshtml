@@ -1,0 +1,64 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Life.Plan>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "طرحهای بیمه زندگی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<h1 class="text-xs-center alert alert-info">طرحهای بیمه زندگی</h1>
+@if (_userService.CheckPermissionByName("addllifep",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت طرح</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.Price.Value.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editlifep",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("managepm", User.Identity.Name))
+                    {
+                        <a asp-action="AddPaymentToPlan" asp-route-pId="@item.Id">مدیریت روشهای پرداخت</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletelifep", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" class="text-danger" asp-route-id="@item.Id">حذف</a>
+                    }                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a href="/UsersPanel/Manage/LifeIns">بازگشت</a>
+</div>

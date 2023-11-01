@@ -1,0 +1,270 @@
+﻿@model Core.DTOs.Admin.RegisterdInsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+
+
+@inject IGenericInsService _genericInsService
+@{
+    string tit = "کارمزد فروش";
+    ViewData["Title"] = tit;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container-fluid">
+    <form asp-action="MyCommissions" method="post">
+        <input type="hidden" asp-for="@Model.LogUserName" />
+        <input type="hidden" asp-for="@Model.InsSearchFormVM.LoginUserName" />
+        <input type="hidden" asp-for="@Model.InsSearchFormVM.SearchType" />
+        <input type="hidden" asp-for="@Model.IsForSale" />
+        <input type="hidden" asp-for="@Model.InsSearchFormVM.IsForSale" />
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">جستجوی بیمه نامه ها : </legend>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.InsType" class="control-label"></label>
+                        <select asp-for="InsSearchFormVM.InsType" id="insType" class="form-control">
+                            <option value="all">همــه</option>
+                            @foreach (var type in Model.InsTypes)
+                            {
+                                <option value="@type.Value">@type.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="InsSearchFormVM.InsType" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="InsSearchFormVM.TrCode" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.TrCode" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.TrCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.DateType" class="control-label"></label>
+                       
+                        <select asp-for="InsSearchFormVM.DateType" class="form-control">
+                            <option value="">تاریخ ثبت</option>
+                            <option value="dteIssue">تاریخ صدور</option>
+                            <option value="dtePay">تاریخ پرداخت</option>
+                        </select>
+                        <span asp-validation-for="InsSearchFormVM.DateType" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="InsSearchFormVM.InsNo" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.InsNo" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.InsNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.FRegDate" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.FRegDate" placeholder="yyyy/0m/0d" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.FRegDate" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="InsSearchFormVM.Insurer" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.Insurer" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.Insurer" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.ERegDate" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.ERegDate" placeholder="yyyy/0m/0d" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.ERegDate" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row  border-top mt-1">
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.SortType" class="control-label"></label>
+                    <select asp-for="InsSearchFormVM.SortType" class="form-control text-xs-center">
+                        <option value="order_desc">به صورت نزولی</option>
+                        <option value="order_asc">به صورت صعودی</option>
+                    </select>
+                    <span asp-validation-for="InsSearchFormVM.SortType" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.SortField" class="control-label"></label>
+                    <select asp-for="InsSearchFormVM.SortField" class="form-control text-xs-center">
+                        <option value="Reg_Date">تاریخ ثبت</option>
+                        <option value="Status_Date">تاریخ وضعیت </option>
+                    </select>
+                    <span asp-validation-for="InsSearchFormVM.SortField" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.RecPerPage" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.RecPerPage" min=1 class="form-control text-xs-center" />
+                    <span asp-validation-for="InsSearchFormVM.RecPerPage" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.PageN" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.PageN" min=1 class="form-control text-xs-center" />
+                    <span asp-validation-for="InsSearchFormVM.PageN" class="text-danger"></span>
+                </div>
+                <div class="col-md-1 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.TotalPage" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.TotalPage" type="text" class="form-control text-xs-center" disabled />
+                    <span asp-validation-for="InsSearchFormVM.TotalPage" class="text-danger"></span>
+                </div>
+                <div class="col-md-1 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.TotalRecs" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.TotalRecs" type="text" class="form-control text-xs-center" disabled />
+                    <span asp-validation-for="InsSearchFormVM.TotalRecs" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label class="control-label text-xs-center w-100">عملیات</label>
+                    <input type="submit" value="تایید" class=" text-xs-center btn btn-primary col-xs-12" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<h1 class="text-xs-center alert alert-info mt-1">@tit <span class="tag tag-square tag-warning">@Model.complexRegisterdsInsVMs.Count()</span></h1>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle p-0">
+                    #
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    شماره بیمه نامه
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    نوع
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    تاریخ صدور
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    کارشناس فروش
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    بیمه گذار
+                </th>
+
+                <th class="text-xs-center align-middle p-0">
+                    تاریخ پرداخت
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    حق بیمه
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    حق بیمه خالص
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    کارمزد
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    کارمزد خالص
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int rad = 1;
+            }
+            @foreach (var item in Model.complexRegisterdsInsVMs)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle p-0">
+                        @rad
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.InsNo)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">                       
+                        @Html.DisplayFor(modelItem => item.FaInsType)
+                    </td>
+                    @{
+                        string cls = "text-danger";
+                        if (item.LastIssueStatusVM != null)
+                        {
+                            if (item.LastIssueStatusVM.IsEndOfProcess && item.LastIssueStatusVM.IsSystemic)
+                            {
+                                cls = "text-success";
+                            }
+                        }
+                    }
+                    <td class="text-xs-center align-middle p-0 @cls font-size-samll">
+                        @if (item.LastIssueStatusVM != null)
+                        {
+                            <span>@item.LastIssueStatusVM.RegLastStatusDate.ToShamsi()</span>
+                        }
+                        else
+                        {
+                            <span>نامعلوم</span>
+                        }
+                    </td>
+
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+
+                        @item.SalesExPro.SalesExFullName - @item.SalesExPro.SalesExCode
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.InsurerFullName
+                    </td>
+
+                    @{
+                        string tdcls = "text-danger";
+                        if (item.LastFinancialStatus != null)
+                        {
+                            if (item.LastFinancialStatus.IsEndOfProcess && item.LastFinancialStatus.IsSystemic)
+                            {
+                                tdcls = "text-success";
+                            }
+                        }
+                    }
+                    <td class="text-xs-center align-middle p-0 @tdcls font-size-samll">
+                        @{
+                            if (item.LastFinancialStatus != null)
+                            {
+                                <span>@item.LastFinancialStatus.RegLastStatusDate.ToShamsiWithTime()</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        }
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.Premium.GetValueOrDefault().ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.NetPremium.GetValueOrDefault().ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.Commission.GetValueOrDefault().ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                       @item.NetCommission.GetValueOrDefault().ToString("N0")
+                    </td>
+
+
+                </tr>
+                { rad++; }
+            }
+            <tr>
+                <td colspan="7" class="text-xs-center align-middle">جمع</td>
+                <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.Premium.GetValueOrDefault()).ToString("N0")</td>
+                <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.NetPremium.GetValueOrDefault()).ToString("N0")</td>
+                <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.Commission.GetValueOrDefault()).ToString("N0")</td>
+                <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.NetCommission.GetValueOrDefault()).ToString("N0")</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+        });
+    </script>
+}
+

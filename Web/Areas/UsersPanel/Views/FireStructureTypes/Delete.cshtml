@@ -1,0 +1,39 @@
+﻿@model DataLayer.Entities.InsPolicy.Fire.FireStructureType
+
+@{
+    ViewData["Title"] = "حذف نوع سازه بیمه آتش سوزی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">حذف نوع سازه بیمه آتش سوزی</h1>
+
+<h3 class="text-xs-center text-warning">آیا مطمئن به حذف نوع سازه هستید ؟</h3>
+<div class="container-fluid">
+    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DiscountPercent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DiscountPercent)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OverChargePercent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OverChargePercent)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index">بازگشت</a>
+    </form>
+</div>

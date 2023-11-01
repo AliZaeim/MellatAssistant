@@ -1,0 +1,316 @@
+﻿@using Core.Services.Interfaces;
+@inject IUserService _userServie
+<div data-scroll-to-active="true" class="main-menu menu-fixed menu-dark menu-accordion menu-shadow">
+    <!-- main menu content-->
+    <div class="main-menu-content">
+        @if (_userServie.CheckPermissionByName("management", User.Identity.Name))
+        {
+            <ul id="main-menu-navigation" class="navigation navigation-main">
+                <li class="nav-item">
+                    <a href="#"><i class="icon-stack-2"></i><span class="menu-title">مدیریت</span></a>
+                    <ul class="menu-content">
+                        @if (_userServie.CheckPermissionByName("upload", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-upload5 text-danger"></i> آپلود</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("uploadcenter", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/UsersPanel/UploadCenters/Index" class="menu-item showspinner"><i class="icon-upload3 text-success"></i> آپلود سنتر</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("ckuploadedfiles", User.Identity.Name))
+                                    {
+                                        <li class="is-shown showspinner">
+                                            <a href="~/UsersPanel/Commons/FileBrowser" class="menu-item showspinner"><i class="icon-upload2 text-info"></i> فایلهای آپلودی CK</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("uploadinsfile", User.Identity.Name))
+                                    {
+                                        <li class="is-shown showspinner">
+                                            <a href="~/UsersPanel/UploadDocs/Create" class="menu-item showspinner"><i class="icon-paper-clip text-warning"></i> آپلود فایل بیمه</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("roles", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-group text-primary"></i> نقش ها</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("roleslist", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Roles/Index" class="menu-item showspinner"><i class="icon-list"></i> مشاهده لیست</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("addrole", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Roles/Create" class="menu-item showspinner"><i class="icon-save"></i> ثبت نقش</a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("financial", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-coin-dollar text-warning"></i> مالی</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("calcom", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/WebSiteFinancial/Index" class="menu-item showspinner"><i class="icon-list"></i> محاسبه کارمزد</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("insus", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-umbrella3 text-success"></i> بیمه ها</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("issuestate", User.Identity.Name))
+                                    {
+                                        <li class="is-shown showspinner">
+                                            <a href="~/UsersPanel/InsStatuses/Index" class="menu-item showspinner"><i class="icon-command2 text-success"></i> وضعیت صدور</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("financialstate", User.Identity.Name))
+                                    {
+                                        <li class="is-shown showspinner">
+                                            <a href="~/UsersPanel/FinancialStatuses/Index" class="menu-item showspinner"><i class="icon-drbag text-warning"></i> وضعیت مالی</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("tpins", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Manage/ThirdParty" class="menu-item showspinner"><i class="icon-bar-graph text-primary"></i>بیمه ثالث</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("lifeins", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Manage/LifeIns" class="menu-item showspinner"><i class="icon-android-people text-info"></i>بیمه زندگی</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("fireins", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Manage/FireIns" class="menu-item showspinner"><i class="icon-fire text-danger"></i>بیمه آتش سوزی</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("cbins", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Manage/CarBodyIns" class="menu-item showspinner"><i class="icon-android-car text-success"></i>بیمه بدنه</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("travelins", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Manage/TravelIns" class="menu-item showspinner"><i class="icon-android-plane text-primary"></i>بیمه مسافرتی</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("weblog", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-newspaper text-primary"></i> وبلاگ</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("webloggroups", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/BlogGroups/Index" class="menu-item showspinner">گروهها</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("blogs", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Blogs/Index" class="menu-item showspinner">بلاگ ها</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("addinfos", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-book3 text-danger"></i> اطلاعات تکمیلی</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("abouts", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Abouts/Index" class="menu-item showspinner"><i class="icon-camera8 text-danger"></i> درباره ما</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("usermessages", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/ContactMessages/Index" class="menu-item showspinner"><i class="icon-user text-info"></i> پیامهای کاربران</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("sliders", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/AdminSliders/Index" class="menu-item showspinner">اسلایدر<i class="icon-layers text-warning"></i></a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("specialoffer", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/AdminSpecialOffers/Index" class="menu-item showspinner">پیشنهاد ویژه<i class="icon-help2 text-success"></i></a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("userhelpinfo", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/AdminHelpInfos/Index" class="menu-item showspinner">راهنمای کاربران<i class="icon-help-circled text-warning"></i></a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("faqs", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/QuestionAnswers/Index" class="menu-item showspinner">پرسش و پاسخ<i class="icon-feedback3 text-primary"></i></a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("websiteupdates", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/WebsiteUpdate/Index" class="menu-item showspinner">بروزرسانی ها<i class="icon-ribbon text-danger"></i></a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("workwiths", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/WorkWiths/Index" class="menu-item showspinner">همکاری با ما<i class="icon-android-contacts text-success"></i></a>
+                                        </li>
+                                    }
+                                    <li class="is-shown">
+                                        <a href="/UsersPanel/Counties/Index" class="menu-item showspinner">
+                                            شهرستانها<i class="icon-ios-world-outline text-info"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("reports", User.Identity.Name))
+                        {
+                            <li class="has-sub">
+                                <a href="#" class="menu-item"><i class="icon-paper text-warning"></i> گزارشات</a>
+                                <ul class="menu-content">
+                                    @if (_userServie.CheckPermissionByName("repusers", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Users/Index" class="menu-item showspinner"><i class="icon-user text-info"></i> کاربران</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("reqsworkwith", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/Cooperations/Index" class="menu-item showspinner"><i class="icon-bullhorn2 text-warning"></i> درخواست های همکاری</a>
+                                        </li>
+                                    }
+                                    @if (_userServie.CheckPermissionByName("coworkers", User.Identity.Name))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="/UsersPanel/CoWorkers/Index" class="menu-item showspinner"><i class="icon-android-contact text-success"></i> همکاران</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("registerdreqs", User.Identity.Name))
+                        {
+                            <li class="nav-item">
+                                <a href="/UsersPanel/Reports/RegisterdReqs"><i class="icon-paper-clip"></i><span class="menu-title">درخواست های ثبت شده</span></a>
+                            </li>
+                        }
+
+
+                        @if (_userServie.CheckPermissionByName("registerdinss", User.Identity.Name))
+                        {
+                            <li class="nav-item">
+                                <a href="/UsersPanel/Reports/RegisterdsIns"><i class="icon-paper-clip"></i><span class="menu-title">بیمه های صادر شده</span></a>
+                            </li>
+                        }
+
+                    </ul>
+                </li>
+            </ul>
+        }
+
+        <ul class="navigation navigation-main">
+            <li class="nav-item">
+                <a href="#"><i class="icon-security"></i><span class="menu-title">درخواست بیمه</span></a>
+                <ul class="menu-content">
+                    <li class="is-shown">
+                        <a href="/Life-Insurance" class="menu-item showspinner"><i class="icon-shield text-success"></i>بیمه زندگی</a>
+                    </li>
+                    <li class="is-shown">
+                        <a href="/Third-Party-Price-Inquiry" class="menu-item showspinner"><i class="icon-truck text-info"></i>بیمه ثالث</a>
+                    </li>
+                    <li class="is-shown">
+                        <a href="/Car-Body-Price-Inquiry" class="menu-item showspinner"><i class="icon-key22 text-primary"></i>بیمه بدنه</a>
+                    </li>
+                    <li class="is-shown">
+                        <a href="/Fire-Insurance-Price-Inquiry" class="menu-item showspinner"><i class="icon-fire text-danger"></i>بیمه آتش سوزی</a>
+                    </li>
+                    <li class="is-shown">
+                        <a href="/Liabilty-Insurance" class="menu-item showspinner"><i class="icon-hammer22 text-white"></i>بیمه مسئولیت</a>
+                    </li>
+                    <li class="is-shown">
+                        <a href="/Travel-Insurance" class="menu-item showspinner"><i class="icon-airplane text-warning"></i>بیمه مسافرتی</a>
+                    </li>
+                </ul>
+            </li>
+
+            @if (_userServie.CheckPermissionByName("myregisterdreqs", User.Identity.Name))
+            {
+                <li class="nav-item">
+                    <a href="/UsersPanel/Reports/MyRegisterdReqs"><i class="icon-library"></i>درخواست های من</a>
+                </li>
+            }
+            @if (_userServie.CheckPermissionByName("myregisterdinss", User.Identity.Name))
+            {
+                <li class="nav-item">
+                    <a href="/UsersPanel/Reports/MyRegisterdsIns"><i class="icon-list"></i>بیمه های من</a>
+                </li>
+            }
+            @if (_userServie.CheckPermissionByName("myins", User.Identity.Name))
+            {
+                <li class="nav-item">
+                    <a href="/UsersPanel/Reports/MyInsurances"><i class="icon-books"></i>گزارش فروش</a>
+                </li>
+            }
+
+            @if (_userServie.CheckPermissionByName("comrep", User.Identity.Name))
+            {
+                <li class="nav-item">
+                    <a href="#" class="menu-item"><i class="icon-calculator4"></i> <span class="menu-title">گزارش کارمزد</span></a>
+                    <ul class="menu-content">
+                        @if (_userServie.CheckPermissionByName("mycommisisons", User.Identity.Name))
+                        {
+                            <li class="is-shown">
+                                <a href="/UsersPanel/Reports/MyCommissions" class="menu-item showspinner"><i class="icon-money text-primary"></i> کارمزد فروش</a>
+                            </li>
+                        }
+                        @if (_userServie.CheckPermissionByName("collectionreport", User.Identity.Name))
+                        {
+                            <li class="is-shown">
+                                <a href="/UsersPanel/Reports/CollectionReport" class="menu-item showspinner"><i class="icon-lock-combination text-danger"></i> کارمزد وصول</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

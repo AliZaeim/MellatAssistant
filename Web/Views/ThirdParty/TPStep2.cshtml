@@ -1,0 +1,187 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.ThirdPartyStep2
+<div class="col-xs-12 p-2 zsteps">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Third-Party-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                   @* <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="ThirdPartyInsurance" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله دوم - مدارک</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form method="post" asp-action="TPStep2" asp-controller="ThirdParty" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#form-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="StrSuggestionFormImage" />
+        <input type="hidden" asp-for="StrPrevInsPolicyImage" />
+        <input type="hidden" asp-for="StrCarCardFrontImage" />
+        <input type="hidden" asp-for="StrCarCardBackImage" />
+        <input type="hidden" asp-for="StrDrivingPermitFrontImage" />
+        <input type="hidden" asp-for="StrDrivingPermitBackImage" />
+        <input type="hidden" asp-for="TraceCode" />
+        <div class="form-group row required">
+            <div class="imgUp col-12">
+                <label asp-for="SuggestionFormImage" class="control-label col-8 col-lg-4 required"></label>
+                <div class="imagePreview" id="sug-image"></div>
+                <input type="file" class="uploadFile img no-display" id="sug-image-upload" asp-for="SuggestionFormImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="SuggestionFormImage" id="SuggestionFormImage_valid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required">
+            <div class="imgUp col-12">
+                <label asp-for="PrevInsPolicyImage" class="control-label col-8 col-lg-4 "></label>
+                <div class="imagePreview" id="prevpolicy-image"></div>
+                <input type="file" class="uploadFile img no-display" id="prevpolicy-image-upload" asp-for="PrevInsPolicyImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="PrevInsPolicyImage" id="PrevInsPolicyImage_valid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required">
+            <div class="imgUp col-12">
+                <label asp-for="CarCardFrontImage" class="control-label col-8 col-lg-4 required"></label>
+                <div class="imagePreview" id="carcardfront-image"></div>
+                <input type="file" class="uploadFile img no-display" id="carcardfront-image-upload" asp-for="CarCardFrontImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="CarCardFrontImage" id="CarCardFrontImage_valid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required">
+            <div class="imgUp col-12">
+                <label asp-for="CarCardBackImage" class="control-label col-8 col-lg-4 required"></label>
+                <div class="imagePreview" id="carcardback-image"></div>
+                <input type="file" class="uploadFile img no-display" id="carcardback-image-upload" asp-for="CarCardBackImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="CarCardBackImage" id="CarCardBackImage_valid" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row required">
+            <div class="imgUp col-12">
+                <label asp-for="DrivingPermitFrontImage" class="control-label col-8 col-lg-4 required"></label>
+                <div class="imagePreview" id="drivingpermitfront-image"></div>
+                <input type="file" class="uploadFile img no-display" id="drivingpermitfront-image-upload" asp-for="DrivingPermitFrontImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="DrivingPermitFrontImage" id="DrivingPermitFrontImage_valid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required">
+            <div class="imgUp col-12">
+                <label asp-for="DrivingPermitBackImage" class="control-label col-8 col-lg-4 required"></label>
+                <div class="imagePreview" id="drivingpermitback-image"></div>
+                <input type="file" class="uploadFile img no-display" id="drivingpermitback-image-upload" asp-for="DrivingPermitBackImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="DrivingPermitBackImage" id="DrivingPermitBackImage_valid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group required">
+            <label asp-for="VehicleOperationKilometers" class="control-label required"></label>
+            <input asp-for="VehicleOperationKilometers" class="form-control" />
+            <span asp-validation-for="VehicleOperationKilometers" class="text-danger"></span>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/ThirdParty/TPStep1" data-ajax-update="#form-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" id="submit2" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document).ready(function () {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    function validate(elem, file) {
+        var idd = ($(elem).attr("id"));
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["jpg", "jpeg", "png", "gif"];
+
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            alert("پسوند فایل نادرست است! پسوند های درست عبارتند از  : " + arrayExtensions.join(', '));
+            $("#" + idd).val("");
+
+        }
+    }
+    var sug_image_el = document.getElementById("sug-image");
+    var prevpolicy_image_el = document.getElementById("prevpolicy-image");
+    var carcardfront_image_el = document.getElementById("carcardfront-image");
+    var carcardback_image_el = document.getElementById("carcardback-image");
+    var drivingpermitfront_image_el = document.getElementById("drivingpermitfront-image");
+    var drivingpermitback_image_el = document.getElementById("drivingpermitback-image");
+
+    var sug_image_upload_el = document.getElementById("sug-image-upload");
+    var prevpolicy_image_upload_el = document.getElementById("prevpolicy-image-upload");
+    var carcardfront_image_upload_el = document.getElementById("carcardfront-image-upload");
+    var carcardback_image_upload_el = document.getElementById("carcardback-image-upload");
+    var drivingpermitfront_upload_image_el = document.getElementById("drivingpermitfront-image-upload");
+    var drivingpermitback_image_upload_el = document.getElementById("drivingpermitback-image-upload");
+
+    var percent = parseFloat(100 / 4) * 2;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("state").classList.remove("active");
+    document.getElementById("document").classList.add("active");
+    document.getElementById("records").classList.remove("active");
+    document.getElementById("payment").classList.remove("active");
+    var imgpreviews = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgpreviews.length; l++) {
+        imgpreviews[l].addEventListener("click", function () {
+            var nextEl = this.nextElementSibling;
+            var elem = document.getElementById(nextEl.id);
+            elem.click();
+        });
+    } 
+
+    
+
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        var imgname = img_el.value;
+        var src = "/images/icons/select-icon.png";
+        if (imgname !== "") {
+            src = "/images/Ins/tp/" + imgname;
+        }
+        document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+    }
+
+    ShowImage("StrSuggestionFormImage", "sug-image");
+    ShowImage("StrPrevInsPolicyImage", "prevpolicy-image");
+    ShowImage("StrCarCardFrontImage", "carcardfront-image");
+    ShowImage("StrCarCardBackImage", "carcardback-image");
+    ShowImage("StrDrivingPermitFrontImage", "drivingpermitfront-image");
+    ShowImage("StrDrivingPermitBackImage", "drivingpermitback-image");
+    function Opvalid(image_upload_el, valid_el) {
+        image_upload_el.addEventListener("change", function () {
+            var val_el = document.getElementById(valid_el);
+            val_el.innerText = "";
+        });
+    };
+    Opvalid(sug_image_upload_el, "SuggestionFormImage_valid");
+    Opvalid(prevpolicy_image_upload_el, "PrevInsPolicyImage_valid");
+    Opvalid(carcardfront_image_upload_el, "CarCardFrontImage_valid");
+    Opvalid(carcardback_image_upload_el, "CarCardBackImage_valid");
+    Opvalid(drivingpermitfront_upload_image_el, "DrivingPermitFrontImage_valid");
+    Opvalid(drivingpermitback_image_upload_el, "DrivingPermitBackImage_valid");
+   
+</script>
+
+
+

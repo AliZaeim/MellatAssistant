@@ -1,0 +1,67 @@
+﻿@model Core.DTOs.Admin.StateRateToFireInsCoverageUsageVM
+@{
+    string title = "افزودن استان و نرخ به کاربری" + " " + Model.BuildingUsageTitle + " " + "با پوشش" + " " + Model.FireCoverageTitle;
+    ViewData["Title"] = @title;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+   
+}
+<h1 class="text-xs-center alert alert-info">@title</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group"> 
+                <span>عدد نرخ : </span>
+                <input id="allDatainp" class="text-xs-center" inputmode="decimal" type="number" maxlength="5" max="100" min="0" step="0.01" oninvalid="this.setCustomValidity('عدد نرخ به درستی وارد نشده است !')" oninput="this.setCustomValidity('')" />
+                <label>اعمال به همه</label>
+                <input id="chkall" type="checkbox" />
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <form asp-action="AddStatesRateToFireUsageCoverage" method="post">
+                <h4 class="text-xs-center alert alert-danger">عدد مجاز برای نرخ ریسک بین 0 تا 100 با 2 رقم اعشار می باشد</h4>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="BuildingUsageId">
+                <input type="hidden" asp-for="FireCoverageId">
+
+                @for (var s = 0; s < Model.States.Count; s++)
+                {
+
+                    <div class="col-md-2 col-xs-12">
+                        <div class="form-group text-xs-center">
+                            <input type="hidden" value="@Model.BuildingUsageFireCoverageId" asp-for="@Model.FireInsStateRates[s].BuildingUsageFireCoverageId">
+                            <input asp-for="@Model.FireInsStateRates[s].StateId" type="hidden" value="@Model.States[s].StateId">
+                            <input value="@Model.States[s].StateName" readonly="readonly" tabindex="-1" class="form-control text-xs-center">
+                            <label asp-for="Rate" class="control-label text-xs-center"></label>
+                            @{
+                                float rate = 0;
+                            }
+                            <input asp-for="@Model.FireInsStateRates[s].Rate" required="required" inputmode="decimal" type="number" value="@rate" maxlength="5" max="100" min="0" step="0.01" oninvalid="this.setCustomValidity('عدد نرخ به درستی وارد نشده است !')" oninput="this.setCustomValidity('')" class="form-control text-xs-center inpRate" />
+                            <span asp-validation-for="Rate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                }
+                <div class="form-group text-xs-center">
+                    <input type="submit" value="ثبت" class="btn btn-primary offset-md-4 col-md-4 col-xs-12" />
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            $("#chkall").change(function(){
+                var inp = $("#allDatainp").val();
+                if ($(this).is(":checked")) {
+                    $(".inpRate").val(inp);
+                }
+                else{
+                    $(".inpRate").val("");
+                }
+            });
+        });
+    </script>
+}

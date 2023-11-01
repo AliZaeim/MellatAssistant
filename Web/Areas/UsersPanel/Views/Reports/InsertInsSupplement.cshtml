@@ -1,0 +1,59 @@
+﻿@model Core.DTOs.Admin.InsSupplementVM
+@{
+
+    string command = "Submit_InsertInsSupp('" + Model.RefereshEl + "')";
+}
+<div class="row">
+    <div class="offset-md-2 col-md-8 col-xs-12">
+        <form Id="InsertInsSupplementForm" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input hidden asp-for="InsId" />
+            <input hidden asp-for="AttType" />
+            <input hidden asp-for="InsType" />
+            <input hidden asp-for="RefereshEl" />
+            <input hidden asp-for="Location" />
+            @if (string.IsNullOrEmpty(Model.AttType))
+            {
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <select asp-for="Title" class="form-control">
+                        <option value="">عنوان فایل را انتخاب کنید...</option>
+                        <option value="سند بیمه نامه">سند بیمه نامه</option>
+                        <option value="پیوست ها">پیوست ها</option>
+                        <option value="جدول پیوست">جدول پیوست</option>
+                        <option value="برگه اقساط">برگه اقساط</option>
+                        <option value="شرایط عمومی">شرایط عمومی</option>
+                        <option value="شرایط اختصاصی">شرایط اختصاصی</option>
+                        <option value="سایر">سایر</option>
+                    </select>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" rows="4" class="form-control"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input type="file" name="File" id="file" asp-for="File" onchange="return fileValidation()" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="ثــبت" onclick="@command" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+@*<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>*@
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

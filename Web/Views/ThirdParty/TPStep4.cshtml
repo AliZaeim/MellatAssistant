@@ -1,0 +1,166 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.ThirdPartyStep4
+
+<section class="row">
+    <div class="col-12 p-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="row pr-2 pl-2">
+                    <div class="col-md-4 col-xs-12">
+                        <a href="/Third-Party-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-center pt-1">
+                       @* <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") ریال</h5>*@
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-md-left">
+                        <form asp-action="ThirdPartyInsurance" method="post">
+                            <input type="hidden" name="Premium" value="@Model.Premium" />
+                            <input type="hidden" name="Clear" value="true" />
+                            <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="text-center alert alert-info">وضعیت</h4>
+        <div class="col-12 text-center">
+            <h6 class="text-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+            <p>نام : @Model.SellerFullName</p>
+            <p>تلفن : @Model.SellerCellphone</p>
+            <p>کد : @Model.ThirdParty.SellerCode</p>
+        </div>
+
+        <div class="col-12 text-center">
+
+            @{
+                string state = "فرد عادی";
+                if (Model.ThirdParty.InsurerStatus == "retired")
+                {
+                    state = "بازنشته کشوری یا تامین اجتماعی";
+                }
+                if (Model.ThirdParty.InsurerStatus == "related")
+                {
+                    state = "منتسب بازنشسته";
+                }
+            }
+            <h6 class="text-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+            <p>نام : @Model.ThirdParty.InsurerName @Model.ThirdParty.InsurerFamily</p>
+            <p>تلفن : @Model.ThirdParty.InsurerCellphone</p>
+            <p>تصویر کارت ملی</p>
+            <div class="col-12 text-center">
+                <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.InsurerNCImage" />
+            </div>
+            <p>وضعیت : @state</p>
+            @if (Model.ThirdParty.HasInstallmentRequest)
+            {
+                <p>پرداخت به صورت اقساط : بله</p>
+                <p>تصویر رضایت کسر از حقوق</p>
+                <div class="col-12 text-center">
+                    <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.PayrollDeductionImage" />
+                </div>
+
+            }
+            else
+            {
+                <p>پرداخت به صورت اقساط : خیر</p>
+            }
+            @if (Model.ThirdParty.InsurerStatus == "related")
+            {
+                <p>تصویر معرفی نامه منتسب</p>
+                <div class="col-12 text-center">
+                    <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.AttributedLetterImage" />
+                </div>
+            }
+        </div>
+        <div class="col-12 p-3">
+            <div class="row">
+                <h4 class="text-center alert alert-info col-12">مدارک</h4>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">تصویر فرم پیشنهاد</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.SuggestionFormImage" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">تصویر بیمه نامه قبلی</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.PrevInsPolicyImage" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">تصویر روی کارت خودرو</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.CarCardFrontImage" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">تصویر پشت کارت خودرو</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.CarCardBackImage" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">تصویر روی گواهینامه</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.DrivingPermitFrontImage" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">تصویر پشت گواهینامه</p>
+                    <div class="col-12 text-center">
+                        <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.DrivingPermitBackImage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 p-3">
+            <div class="row">
+                <h4 class="text-center alert alert-info col-12">سوابق</h4>
+                <div class="col-12">
+                    @if (Model.ThirdParty.LicensePlateChanged)
+                    {
+                        <p>آیا پلاک خودرو نسبت به بیمه نامه سال قبل تغییر کرده است؟ بله</p>
+                        <p class="text-center">تصویر کارت سبز خودرو</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.CarGreenPaperImage" />
+                        </div>
+                    }
+                    else
+                    {
+                        <p>آیا پلاک خودرو نسبت به بیمه نامه سال قبل تغییر کرده است؟ خیر</p>
+                    }
+                    @if (Model.ThirdParty.ExistPrevInsurancePolicy)
+                    {
+                        <p>آیا بیمه نامه ای از قبل برای انتقال تخفیف به بیمه نامه جدید دارید؟ بله</p>
+                        <p class="text-center">تصویر بیمه نامه انتقالی</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/tp/@Model.ThirdParty.PrevInsurancePolicyImage" />
+                        </div>
+                    }
+                    else
+                    {
+                        <p>آیا بیمه نامه ای از قبل برای انتقال تخفیف به بیمه نامه جدید دارید؟ خیر</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 p-3 text-center">
+        <a class="btn btn-outline-info" href="/FollowupRequest/?TrcCode=@Model.TraceCode&&InsType=tp">ثبت و ارسال درخواست</a>
+    </div>
+    <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+        <img src="~/images/Spinner-3.gif" />
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    var percent = parseFloat(100 / 4) * 4;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("state").classList.remove("active");
+    document.getElementById("document").classList.remove("active");
+    document.getElementById("records").classList.remove("active");
+    document.getElementById("payment").classList.add("active");
+</script>

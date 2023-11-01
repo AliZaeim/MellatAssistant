@@ -1,0 +1,61 @@
+﻿@model DataLayer.Entities.InsPolicy.Fire.FireBaseInfo
+@{
+    ViewData["Title"] = "ثبت اطلاعات پایه آتش سوزی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    
+}
+<h1 class="text-xs-center alert alert-info">ثبت اطلاعات پایه آتش سوزی</h1>
+<div class="container">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="StolenRate" class="control-label"></label>
+                <input asp-for="StolenRate" class="form-control" />
+                <span asp-validation-for="StolenRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GlassRate" class="control-label"></label>
+                <input asp-for="GlassRate" class="form-control" />
+                <span asp-validation-for="GlassRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PressureTankRate" class="control-label"></label>
+                <input asp-for="PressureTankRate" class="form-control" />
+                <span asp-validation-for="PressureTankRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CashDiscount" class="control-label"></label>
+                <input asp-for="CashDiscount" class="form-control" />
+                <span asp-validation-for="CashDiscount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FestivalDiscount" class="control-label"></label>
+                <input asp-for="FestivalDiscount" class="form-control" />
+                <span asp-validation-for="FestivalDiscount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vat" class="control-label"></label>
+                <input asp-for="Vat" class="form-control" />
+                <span asp-validation-for="Vat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NoDamageDiscount" class="control-label"></label>
+                <input asp-for="NoDamageDiscount" class="form-control" />
+                <span asp-validation-for="NoDamageDiscount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثــبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts{    
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

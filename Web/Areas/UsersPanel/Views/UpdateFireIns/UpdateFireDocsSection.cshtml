@@ -1,0 +1,226 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.UpdateFireDocsStateVM
+<style>
+    .no-display {
+        display: none;
+    }
+</style>
+<div class="conteiner-fluid">
+    <div class="row">
+        <form method="post" asp-action="UpdateFireDocsSection" asp-controller="UpdateFireIns" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+              data-ajax-update="#fireDocs" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="guid" />
+            <input type="hidden" asp-for=StrPropertiesListFile />
+            <input type="hidden" asp-for=StrExteriorofBuildingImage />
+            <input type="hidden" asp-for=StrGasBurningDevice1Image />
+            <input type="hidden" asp-for=StrGasBurningDevice2Image />
+            <input type="hidden" asp-for=StrGasBurningDevice3Image />
+            <input type="hidden" asp-for=StrGasBurningDevice4Image />
+            <input type="hidden" asp-for=StrInsuranceLocationInputImage />
+            <input type="hidden" asp-for=StrInsuredPlaceFuseandMeterImage />
+            <input type="hidden" asp-for=StrInsuredPlaceMeterandGasBranchesImage />
+            <input type="hidden" asp-for=StrMainMeterandElectricalPanelImage />
+            <input type="hidden" asp-for=StrWholeInteriorFilm />
+            <input type="hidden" asp-for=StrPerviousInsImage />
+            <input type="hidden" asp-for=StrNoDamageCertificateImage />
+            <div class="col-xs-12">
+                <div class="form-group required">
+                    <label asp-for="InsuranceType" class="control-label required"></label>
+                    <select asp-for="InsuranceType" id="insType" class="custom-select">
+                        <option value="" selected="selected">نوع بیمه نامه را انتخاب کنید</option>
+                        <option value=1>مسکونی</option>
+                        <option value=2>غیرصنعتی</option>
+                        <option value=3>صنعتی</option>
+                    </select>
+                    <span asp-validation-for="InsuranceType" id="insType_span" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 @((Model.InsuranceType.GetValueOrDefault() == 1)? "":"no-display")" id="div_instype1">
+                <div class="form-group form-check ">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasTheftCover" /> @Html.DisplayNameFor(model => model.HasTheftCover)
+                    </label>
+                </div>
+                <div class="form-group @((Model.HasTheftCover) ? "":"no-display")" id="propFileDiv">
+                    <label asp-for="PropertiesListFile" class="control-label"></label>
+                    <input type="file" asp-for="PropertiesListFile" class="form-control" />
+                    <span asp-validation-for="PropertiesListFile" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 @((Model.InsuranceType.GetValueOrDefault() == 2)? "":"no-display")" id="div_instype2">
+                <div class="row">
+                    <div class="col-md-4 col-xs-12">
+                        <div class="form-group">
+                            <label asp-for="ExteriorofBuildingImage" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrExteriorofBuildingImage" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="ExteriorofBuildingImage">
+                            <span asp-validation-for="ExteriorofBuildingImage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="InsuranceLocationInputImage" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrInsuranceLocationInputImage" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="InsuranceLocationInputImage">
+                            <span asp-validation-for="InsuranceLocationInputImage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MainMeterandElectricalPanelImage" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrMainMeterandElectricalPanelImage" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="MainMeterandElectricalPanelImage">
+                            <span asp-validation-for="MainMeterandElectricalPanelImage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="InsuredPlaceFuseandMeterImage" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrInsuredPlaceFuseandMeterImage" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="InsuredPlaceFuseandMeterImage">
+                            <span asp-validation-for="InsuredPlaceFuseandMeterImage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="InsuredPlaceMeterandGasBranchesImage" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrInsuredPlaceMeterandGasBranchesImage" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="InsuredPlaceMeterandGasBranchesImage">
+                            <span asp-validation-for="InsuredPlaceMeterandGasBranchesImage" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <div class="form-group">
+                            <label asp-for="GasBurningDevice1Image" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrGasBurningDevice1Image" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="GasBurningDevice1Image">
+                            <span asp-validation-for="GasBurningDevice1Image" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="GasBurningDevice2Image" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrGasBurningDevice2Image" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="GasBurningDevice2Image">
+                            <span asp-validation-for="GasBurningDevice2Image" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="GasBurningDevice3Image" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrGasBurningDevice3Image" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="GasBurningDevice3Image">
+                            <span asp-validation-for="GasBurningDevice3Image" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="GasBurningDevice4Image" class="control-label"></label>&ensp;<img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrGasBurningDevice4Image" />
+                            <input type="file" accept="image/*" class="form-control" asp-for="GasBurningDevice4Image">
+                            <span asp-validation-for="GasBurningDevice4Image" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="WholeInteriorFilm" class="control-label"></label>&ensp;<span class="text-danger">(حداکثر 1 دقیقه)</span>
+                            <input type="file" class="form-control" asp-for="WholeInteriorFilm">
+                            <span asp-validation-for="WholeInteriorFilm" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <div class="form-group">
+                            <label asp-for="InsuranceHistoryStatus" class="control-label"></label>
+                            <select asp-for="InsuranceHistoryStatus" id="insHisStatus" class="form-control">
+                                <option value="" selected="selected">وضعیت سابقه بیمه را انتخاب کنید</option>
+                                <option value="1">بیمه آتش سوزی ندارد</option>
+                                <option value="2">بیمه آتش سوزی از سایر شرکتها</option>
+                                <option value="3">بیمه آتش سوزی از بیمه ملت دارد</option>
+                            </select>
+                            <span asp-validation-for="InsuranceHistoryStatus" class="text-danger"></span>
+                        </div>
+                        <div id="Ihs2" class="@((Model.InsuranceHistoryStatus == 2)? "" : "no-display")">
+                            <div class="form-group" id="piimg">
+                                <label asp-for="PerviousInsImage" class="control-label"></label><img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrPerviousInsImage" />
+                                <input type="file" class="form-control" id="pii-image-upload" asp-for="PerviousInsImage">
+                                <span asp-validation-for="PerviousInsImage" class="text-danger"></span>
+                            </div>
+                            <div class="form-group form-check" id="has_no_damage_discount">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" id="hasnodamagediscount" asp-for="HasNoDamagedDiscount" /> @Html.DisplayNameFor(model => model.HasNoDamagedDiscount)
+                                </label>
+                            </div>
+                            <div class="form-group @((Model.HasNoDamagedDiscount)? "" : "no-display")" id="ndciimgDiv">
+                                <label asp-for="NoDamageCertificateImage" class="control-label"></label><img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrNoDamageCertificateImage" />
+                                <input type="file" class="form-control" id="ndci-image-upload" asp-for="NoDamageCertificateImage">
+                                <span asp-validation-for="NoDamageCertificateImage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div id="Ihs3" class="@((Model.InsuranceHistoryStatus == 3)? "" : "no-display")">
+                            <div class="form-group" id="piimg2">
+                                <label asp-for="PerviousInsImage" class="control-label"></label><img width="50" height="50" class="float-md-left" src="~/images/Ins/fire/@Model.StrPerviousInsImage" />
+                                <input type="file" class="form-control" asp-for="PerviousInsImage">
+                                <span asp-validation-for="PerviousInsImage" class="text-danger"></span>
+                            </div>
+                            <div class="form-group form-check" id="ins_health_changed_div">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" id="inshealthchanged" asp-for="InsuredHealthChanged" /> @Html.DisplayNameFor(model => model.InsuredHealthChanged)
+                                </label>
+                            </div>
+                            <div class="form-group form-check" id="ins_health_changed_div">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" id="inshealthchanged" asp-for="SufferDamageLastYear" /> @Html.DisplayNameFor(model => model.SufferDamageLastYear)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 @((Model.InsuranceType.GetValueOrDefault() == 3)? "":"no-display")" id="div_instype3">
+                <h4 class="text-center text-danger w-100">پس از ثبت و ارسال مدارک، منتظر تماس کارشناس باشید</h4>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary offset-md-4 col-md-4 col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#insType").change(function() {
+            var vlu = $(this).val();
+            if (vlu == "") {
+                $("#div_instype1").hide();
+                $("#div_instype2").hide();
+                $("#div_instype3").hide();
+            }
+            if (vlu == "1") {
+                $("#div_instype1").show();
+                $("#div_instype2").hide();
+                $("#div_instype3").hide();
+            }
+            if (vlu == "2") {
+                $("#div_instype2").show();
+                $("#div_instype1").hide();
+                $("#div_instype3").hide();
+            }
+            if (vlu == "3") {
+                $("#div_instype3").show();
+                $("#div_instype2").hide();
+                $("#div_instype1").hide();
+            }
+        });
+        $("#HasTheftCover").change(function() {
+
+            if ($(this).is(":checked")) {
+                $("#propFileDiv").show();
+            }
+            else {
+                $("#propFileDiv").hide();
+            }
+        });
+        $("#hasnodamagediscount").change(function() {            
+            if ($(this).is(":checked")) {
+                $("#ndciimgDiv").show();
+            }
+            else {
+                $("#ndciimgDiv").hide();
+            }
+        });
+        $("#insHisStatus").change(function() {
+            var vlu = $(this).val();
+            if (vlu == "" || vlu == "1") {
+                $("#Ihs2").hide();
+                $("#Ihs3").hide();
+            }
+            if (vlu == "2") {
+                $("#Ihs2").show();
+                $("#Ihs3").hide();
+            }
+            if (vlu == "3") {
+                $("#Ihs2").hide();
+                $("#Ihs3").show();
+            }
+        });
+    });
+</script>

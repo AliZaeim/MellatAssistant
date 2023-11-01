@@ -1,0 +1,104 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد صفحه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.SuggestionFormImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر روی کارت خودرو</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarCardFrontImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر پشت کارت خودرو</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.CarCardBackImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر روی گواهینامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DrivingPermitFrontImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر پشت گواهینامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.DrivingPermitBackImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر بیمه نامه قبلی</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.PreviousInsImage" />
+    </div>
+</div>
+@{
+    string InsHis = "بیمه بدنه ندارد";
+    switch (Model.InsuranceHistoryStatus.GetValueOrDefault())
+    {
+        case 1:
+            InsHis = "بیمه بدنه ندارد";
+            break;
+        case 2:
+            InsHis = "بیمه از سایر شرکت ها دارد";
+            break;
+        case 3:
+            InsHis = "بیمه بدنه از بیمه ملت دارد";
+            break;
+        default:
+            InsHis = "بیمه بدنه ندارد";
+            break;
+    }
+
+}
+<div class="col-xs-12 text-xs-center">
+    <p>
+        وضعیت سابقه بیمه : @InsHis
+    </p>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">آیا تخفیف عدم خسارت دارد؟ @((Model.HasNoneDamageDiscount)? "بله":"خیر")</div>
+        <div class="col-xs-12 text-xs-center">تصویر گواهینامه عدم خسارت</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.NoDamageCertificateImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">آیا سلامت خودرو تغییر کرده است؟ @((Model.IsChangedHealthOfCar)? "بله":"خیر")</div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">آیا سال قبل خسارت گرفته اید؟ @((Model.RecievedDamageLastYear)? "بله":"خیر")</div>
+    </div>
+</div>
+<input type="hidden" id="inpSuccDoc" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccDoc").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

@@ -1,0 +1,47 @@
+﻿@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "بیمه مسافرتی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<h1 class="text-xs-center alert alert-info mb-5">بیمه مسافرتی</h1>
+<div class="container">    
+    <div class="row">
+        @if (_userService.CheckPermissionByName("tinsco", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/TravelInsCo/Index" class="round-button"><span class="mb-1 col-xs-12">بیمه گر</span> <span class="col-xs-12 icon-office fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }        
+        @if (_userService.CheckPermissionByName("travelclass", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/TravelClass/Index" class="round-button"><span class="mb-1 col-xs-12">کلاس بیمه نامه</span> <span class="col-xs-12 icon-ios-star fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }    
+        @if (_userService.CheckPermissionByName("travelzooms", User.Identity.Name))
+        {
+            <div class="col-md-3 col-xs-6">
+                <div class="round-button">
+                    <div class="round-button-circle">
+                        <a href="/UsersPanel/TravelZooms/Index" class="round-button"><span class="mb-1 col-xs-12">مناطق سفر</span> <span class="col-xs-12 icon-android-globe fs-40 text-bold-700"></span></a>
+                    </div>
+                </div>
+            </div>
+        }        
+         <div class="col-md-3 col-xs-6">
+           
+        </div>
+           
+    </div>
+  
+    
+</div>

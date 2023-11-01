@@ -1,0 +1,132 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.ThirdPartyStep3
+<div class="col-xs-12 p-2 zsteps" data-step="2">
+     <div class="row">
+         <div class="col-12">
+            <div class="row">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Third-Party-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>                    
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                   @* <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="ThirdPartyInsurance" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله سوم - سوابق</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form method="post" asp-action="TPStep3" asp-controller="ThirdParty" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#form-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="StrCarGreenPaperImage" />
+        <input type="hidden" asp-for="StrPrevInsurancePolicyImage" />
+        <div class="form-group form-check ">
+            <label class="form-check-label">
+                <input class="form-check-input" id="lpt" asp-for="LicensePlateChanged" /> @Html.DisplayNameFor(model => model.LicensePlateChanged)
+            </label>
+        </div>
+        <div class="form-group row  @((!string.IsNullOrEmpty(Model.StrCarGreenPaperImage) || Model.LicensePlateChanged)? "":"no-display")" id="cdpDiv">
+            <div class="imgUp col-12">
+                <label asp-for="CarGreenPaperImage" class="control-label"></label>
+                <div class="imagePreview" id="cgpi-image"></div>
+                <input type="file" class="uploadFile img no-display" id="cgpi-image-upload" asp-for="CarGreenPaperImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="CarGreenPaperImage" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group form-check ">
+            <label class="form-check-label">
+                <input class="form-check-input" id="epip" asp-for="ExistPrevInsurancePolicy" /> @Html.DisplayNameFor(model => model.ExistPrevInsurancePolicy)
+            </label>
+        </div>
+        <div class="form-group row @((!string.IsNullOrEmpty(Model.StrPrevInsurancePolicyImage) || Model.ExistPrevInsurancePolicy)? "":"no-display")" id="pipiDiv">
+            <div class="imgUp col-12">
+                <label asp-for="PrevInsurancePolicyImage" class="control-label"></label>
+                <div class="imagePreview" id="pipi-image"></div>
+                <input type="file" class="uploadFile img no-display" id="pipi-image-upload" asp-for="PrevInsurancePolicyImage" value="Upload Photo">
+                <br />
+                <span asp-validation-for="PrevInsurancePolicyImage" class="text-danger valid"></span>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/ThirdParty/TPStep2" data-ajax-update="#form-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    var percent = parseFloat(100 / 4) * 3;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("state").classList.remove("active");
+    document.getElementById("document").classList.remove("active");
+    document.getElementById("records").classList.add("active");
+    document.getElementById("payment").classList.remove("active");
+
+    var licensPlateChanged_el = document.getElementById("lpt");
+    licensPlateChanged_el.addEventListener("click", function () {
+        if (licensPlateChanged_el.checked) {
+            document.getElementById("cdpDiv").classList.remove("no-display");
+        }
+        else {
+            document.getElementById("cdpDiv").classList.add("no-display");
+        }
+    });
+    
+        //UploadImage("cgpi-image", "cgpi-image-upload");
+    document.getElementById("cgpi-image").addEventListener("click", function () {
+        document.getElementById("cgpi-image-upload").click();
+    });
+    document.getElementById("pipi-image").addEventListener("click", function () {
+        document.getElementById("pipi-image-upload").click();
+    });
+    var prevIns_el = document.getElementById("epip");
+    prevIns_el.addEventListener("click", function () {
+        if (prevIns_el.checked) {
+            document.getElementById("pipiDiv").classList.remove("no-display");
+        }
+        else {
+            document.getElementById("pipiDiv").classList.add("no-display");
+        }
+    });
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        var imgname = img_el.value;
+        var src = "/images/icons/select-icon.png";
+        if (imgname !== "") {
+            src = "/images/Ins/tp/" + imgname;
+        }
+        document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+    }
+    ShowImage("StrCarGreenPaperImage", "cgpi-image");
+    ShowImage("StrPrevInsurancePolicyImage", "pipi-image");
+    document.querySelectorAll('.uploadFile').forEach(function (el) {
+        el.addEventListener('change', function () {
+            var parent = this.parentElement;
+            parent.querySelector('.valid').innerText = '';
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function () { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,211 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.FireInsStep3VM
+<div class="col-xs-12 p-2 zsteps" data-step="2">
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Fire-Insurance-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") تومان</h5>
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="FireInsuranceIndex" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله سوم - وضعیت سابقه بیمه</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form method="post" asp-action="FireInsStep3" asp-controller="FireInsurance" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#fireform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="Str_NoDamageCertificateImage" />
+        <input type="hidden" asp-for="Str_PerviousInsImage" />
+
+        <div class="form-group required">
+            <label asp-for="InsuranceHistoryStatus" class="control-label required"></label>
+            <select asp-for="InsuranceHistoryStatus" id="insHisStatus" class="custom-select">
+                <option value="" selected="selected">وضعیت سابقه بیمه را انتخاب کنید</option>
+                <option value="1">بیمه آتش سوزی ندارد</option>
+                <option value="2">بیمه آتش سوزی از سایر شرکتها</option>
+                <option value="3">بیمه آتش سوزی از بیمه ملت دارد</option>
+            </select>
+            <span asp-validation-for="InsuranceHistoryStatus" class="text-danger"></span>
+        </div>
+        <div class="form-group row required @((Model.InsuranceHistoryStatus is 2 or 3)? "" : "no-display")" id="piimg">
+            <div class="imgUp col-12">
+                <label asp-for="PerviousInsImage" class="control-label col-9 col-lg-6"></label><span>&lArr;</span>
+                <div class="imagePreview" id="PII-image"></div>
+                <input type="file" class="uploadFile img no-display" id="pii-image-upload" asp-for="PerviousInsImage">
+                <br />
+                <span asp-validation-for="PerviousInsImage" id="piiImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div id="Ihs2" class="@((Model.InsuranceHistoryStatus == 2)? "" : "no-display")">
+
+            <div class="form-group form-check" id="has_no_damage_discount">
+                <label class="form-check-label">
+                    <input class="form-check-input" id="hasnodamagediscount" asp-for="HasNoDamagedDiscount" /> @Html.DisplayNameFor(model => model.HasNoDamagedDiscount)
+                </label>
+            </div>
+            <div class="form-group row required @((Model.HasNoDamagedDiscount)? "" : "no-display")" id="ndciimg">
+                <div class="imgUp col-12">
+                    <label asp-for="NoDamageCertificateImage" class="control-label "></label>
+                    <div class="imagePreview" id="NDCI-image"></div>
+                    <input type="file" class="uploadFile img no-display" id="ndci-image-upload" asp-for="NoDamageCertificateImage">
+                    <br />
+                    <span asp-validation-for="NoDamageCertificateImage" id="ndciImageValid" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div id="Ihs3" class="@((Model.InsuranceHistoryStatus == 3)? "" : "no-display")">            
+            <div class="form-group form-check" id="ins_health_changed_div">
+                <label class="form-check-label">
+                    <input class="form-check-input" id="inshealthchanged" asp-for="InsuredHealthChanged" /> @Html.DisplayNameFor(model => model.InsuredHealthChanged)
+                </label>
+            </div>
+            <div class="form-group form-check" id="ins_health_changed_div">
+                <label class="form-check-label">
+                    <input class="form-check-input" id="inshealthchanged" asp-for="SufferDamageLastYear" /> @Html.DisplayNameFor(model => model.SufferDamageLastYear)
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" data-ajax="true" data-ajax-url="/FireInsurance/FireInsStep2" data-ajax-update="#fireform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+
+</div>
+
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+     $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+    var percent = parseFloat(100 / 4) * 3;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.remove("active");
+    document.getElementById("records").classList.add("active");
+    document.getElementById("check").classList.remove("active");
+    function scrollToTop() {
+        window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    }
+    //window.scrollTo(0, 0);
+    document.querySelectorAll('.uploadFile').forEach(function (el) {
+        el.addEventListener('change', function () {
+            var parent = this.parentElement;
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function () { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+    var insHS = document.getElementById("insHisStatus");
+    if (insHS !== null && typeof (insHS) !== "undefined") {
+        insHS.addEventListener("change", function () {
+            var sel_option_val = insHS.options[insHS.selectedIndex].value;
+            var ihs2 = document.getElementById("Ihs2");
+            var ihs3 = document.getElementById("Ihs3");
+            var previns = document.getElementById("piimg");
+            if (sel_option_val === "1") {                
+                if (previns !== null && previns !== "undefined")                
+                {
+                    previns.classList.add("no-display")
+                }
+                if (ihs2 !== null && ihs2 !== "undefined") {                    
+                    ihs2.classList.add("no-display");                    
+                }
+                if (ihs3 !== null && ihs3 !== "undefined") {
+                    ihs3.classList.add("no-display");
+                }
+            }
+            if (sel_option_val === "2") {                
+                if (previns !== null && previns !== "undefined") {
+                    previns.classList.remove("no-display")
+                }                
+                if (ihs2 !== null && ihs2 !== "undefined") {
+                    ihs2.classList.remove("no-display");                    
+                }
+                if (ihs3 !== null && ihs3 !== "undefined") {
+                    ihs3.classList.add("no-display");
+                }
+            }
+            if (sel_option_val === "3") {
+                if (previns !== null && previns !== "undefined") {
+                    previns.classList.remove("no-display")
+                }
+                if (ihs2 !== null && ihs2 !== "undefined") {
+                    ihs2.classList.add("no-display");
+                }
+                if (ihs3 !== null && ihs3 !== "undefined") {
+                    ihs3.classList.remove("no-display");
+                }
+            }
+        })
+    }
+    var hasnodamage_chk = document.getElementById("hasnodamagediscount");
+    if (hasnodamage_chk !== null && typeof (hasnodamage_chk) !== "undefined") {
+        hasnodamage_chk.addEventListener("change", function () {
+            var chk_val = hasnodamage_chk.checked;
+            if (hasnodamage_chk.checked) {
+                document.getElementById("ndciimg").classList.remove("no-display");
+            }
+            else {
+                document.getElementById("ndciimg").classList.add("no-display");
+                //document.getElementById("NDCI-image").style.backgroundImage = "none""
+            }
+        });
+
+    }
+    var imgprevs = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgprevs.length; l++) {
+        imgprevs[l].addEventListener("click", function () {
+            beforeEl = this.nextElementSibling;
+            document.getElementById(beforeEl.id).click();
+        });
+    }
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined") {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/fire/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    //1- hidden file Input /InsurerNCImage
+    // 2- Div for imagePreview fireinsurernc-image
+    ShowImage("Str_PerviousInsImage", "PII-image");
+    ShowImage("Str_NoDamageCertificateImage", "NDCI-image");
+</script>

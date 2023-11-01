@@ -1,0 +1,170 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.ThirdParty
+
+@{
+    ViewData["Title"] = "ویرایش طرح بیمه ای";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش طرح بیمه ای</h1>
+
+<div>
+    <a asp-action="Thirdpartydetails" asp-controller="Reports" asp-area="UsersPanel" asp-route-Id="@Model.Id">بازگشت</a>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <form asp-action="UpdateThirdParty" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="RegisterDate" />
+            <input type="hidden" asp-for="AttributedLetterImage" />
+            <input type="hidden" asp-for="CarCardBackImage" />
+            <input type="hidden" asp-for="CarCardFrontImage" />
+            <input type="hidden" asp-for="CarGreenPaperImage" />
+            <input type="hidden" asp-for="DrivingPermitBackImage" />
+            <input type="hidden" asp-for="DrivingPermitFrontImage" />
+            <input type="hidden" asp-for="InsurerNCImage" />
+            <input type="hidden" asp-for="PayrollDeductionImage" />
+            <input type="hidden" asp-for="PrevInsPolicyImage" />
+            <input type="hidden" asp-for="PrevInsurancePolicyImage" />
+            <input type="hidden" asp-for="SuggestionFormImage" />
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                        <label asp-for="SellerCode" class="control-label"></label>
+                        <input asp-for="SellerCode" class="form-control" />
+                        <span asp-validation-for="SellerCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InsurerName" class="control-label"></label>
+                        <input asp-for="InsurerName" class="form-control" />
+                        <span asp-validation-for="InsurerName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InsurerFamily" class="control-label"></label>
+                        <input asp-for="InsurerFamily" class="form-control" />
+                        <span asp-validation-for="InsurerFamily" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InsurerCellphone" class="control-label"></label>
+                        <input asp-for="InsurerCellphone" class="form-control" />
+                        <span asp-validation-for="InsurerCellphone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InsurerNCImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.InsurerNCImage" width="50" height="50" />
+                        <input type="file" asp-for="InsurerNCImage" class="form-control" />
+                        <span asp-validation-for="InsurerNCImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InsurerStatus" class="control-label"></label>
+                        <Select asp-for="InsurerStatus" class="form-control">
+                            <option selected="selected" value="">وضعیت بیمه گذار را انتخاب کنید</option>
+                            <option value="np" data-id="np">فرد عادی</option>
+                            <option value="retired" data-id="retired">بازنشسته کشوری یا تامین اجتماعی</option>
+                            <option value="related" data-id="related">منتسب بازنشسته</option>
+                        </Select>
+                        <span asp-validation-for="InsurerCellphone" class="text-danger"></span>
+                    </div>
+                   
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="HasInstallmentRequest" /> @Html.DisplayNameFor(model => model.HasInstallmentRequest)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PayrollDeductionImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.PayrollDeductionImage" width="50" height="50" />
+                        <input type="file" asp-for="PayrollDeductionImage" class="form-control" />
+                        <span asp-validation-for="PayrollDeductionImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AttributedLetterImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.AttributedLetterImage" width="50" height="50" />
+                        <input type="file" asp-for="AttributedLetterImage" class="form-control" />
+                        <span asp-validation-for="AttributedLetterImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="LicensePlateChanged" /> @Html.DisplayNameFor(model => model.LicensePlateChanged)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CarGreenPaperImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.CarGreenPaperImage" width="50" height="50" />
+                        <input type="file" asp-for="CarGreenPaperImage" class="form-control" />
+                        <span asp-validation-for="CarGreenPaperImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="ExistPrevInsurancePolicy" /> @Html.DisplayNameFor(model => model.ExistPrevInsurancePolicy)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PrevInsurancePolicyImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.PrevInsurancePolicyImage" width="50" height="50" />
+                        <input type="file" asp-for="PrevInsurancePolicyImage" class="form-control" />
+                        <span asp-validation-for="PrevInsurancePolicyImage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                        <label asp-for="VehicleOperationKilometers" class="control-label"></label>
+                        <input asp-for="VehicleOperationKilometers" class="form-control" />
+                        <span asp-validation-for="VehicleOperationKilometers" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ExtraFinanceDisount" class="control-label"></label>
+                        <input asp-for="ExtraFinanceDisount" class="form-control" />
+                        <span asp-validation-for="ExtraFinanceDisount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SuggestionFormImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.SuggestionFormImage" width="50" height="50" />
+                        <input type="file" asp-for="SuggestionFormImage" class="form-control" />
+                        <span asp-validation-for="SuggestionFormImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PrevInsPolicyImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.PrevInsPolicyImage" width="50" height="50" />
+                        <input type="file" asp-for="PrevInsPolicyImage" class="form-control" />
+                        <span asp-validation-for="PrevInsPolicyImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CarCardFrontImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.CarCardFrontImage" width="50" height="50" />
+                        <input type="file" asp-for="CarCardFrontImage" class="form-control" />
+                        <span asp-validation-for="CarCardFrontImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CarCardBackImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.CarCardBackImage" width="50" height="50" />
+                        <input type="file" asp-for="CarCardBackImage" class="form-control" />
+                        <span asp-validation-for="CarCardBackImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DrivingPermitFrontImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.DrivingPermitFrontImage" width="50" height="50" />
+                        <input type="file" asp-for="DrivingPermitFrontImage" class="form-control" />
+                        <span asp-validation-for="DrivingPermitFrontImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DrivingPermitBackImage" class="control-label"></label><img class="float-xs-left" src="/images/Ins/tp/@Model.DrivingPermitBackImage" width="50" height="50" />
+                        <input type="file" asp-for="DrivingPermitBackImage" class="form-control" />
+                        <span asp-validation-for="DrivingPermitBackImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Premium" class="control-label"></label>
+                        <input asp-for="Premium" class="form-control" />
+                        <span asp-validation-for="Premium" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+<div>
+
+    <a asp-action="Thirdpartydetails" asp-controller="Reports" asp-area="UsersPanel" asp-route-Id="@Model.Id">بازگشت</a>
+</div>
+@section Scripts
+{
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+

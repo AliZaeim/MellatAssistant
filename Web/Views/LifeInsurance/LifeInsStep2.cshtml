@@ -1,0 +1,190 @@
+﻿@model Core.DTOs.SiteGeneric.LifeIns.LifeInsuranceStep2
+<div class="col-xs-12 p-2 zsteps">
+
+    <h3 class="text-center">مرحله دوم - پرسشنامه</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form asp-action="LifeInsStep2" asp-controller="LifeInsurance" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#form-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="StrQuestionnairePage1Image" />
+        <input type="hidden" asp-for="StrQuestionnairePage2Image" />
+        <input type="hidden" asp-for="StrQuestionnairePage3Image" />
+        <input type="hidden" asp-for="StrQuestionnairePage4Image" />
+        <div class="form-group required">
+            <label asp-for="PlanId" class="control-label"></label>
+            <select asp-for="PlanId" id="planid" onchange="GetPaymentsByFetch()" class="custom-select">
+                <option value="">لطفا طرح را انتخاب کنید</option>
+                @{
+                    var plans = Model.Plans;
+                }
+                @foreach (var item in Model.Plans)
+                {
+                    <option value="@item.Id">@item.Title | @item.Price.Value.ToString("N0")</option>
+                }
+            </select>
+            <span asp-validation-for="PlanId" class="text-danger"></span>
+        </div>
+        <div class="form-group required" id="payments">
+            <label asp-for="PeymentMethodId" class="control-label"></label>
+            <select asp-for="PeymentMethodId" class="custom-select">
+                <option value="">لطفا  روش پرداخت را انتخاب کنید</option>
+                @if (Model.PaymentMethods != null)
+                {
+                    @foreach (var item in Model.PaymentMethods?.ToList())
+                    {
+                        <option value="@item.Id">@item.Title</option>
+                    }
+                }
+
+            </select>
+            <span asp-validation-for="PeymentMethodId" class="text-danger"></span>
+        </div>
+        <div class="form-group row required" id="page1img">
+            <div class="imgUp col-12">
+                <label asp-for="QuestionnairePage1Image" class="control-label"></label>
+                <div class="imagePreview" id="page1-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="page1-image-upload" asp-for="QuestionnairePage1Image">
+                <br />
+                <span asp-validation-for="QuestionnairePage1Image" id="page1ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="page2img">
+            <div class="imgUp col-12">
+                <label asp-for="QuestionnairePage2Image" class="control-label"></label>
+                <div class="imagePreview col-6" id="page2-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="page2-image-upload" asp-for="QuestionnairePage2Image">
+                <br />
+                <span asp-validation-for="QuestionnairePage2Image" id="page2ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="page3img">
+            <div class="imgUp col-12">
+                <label asp-for="QuestionnairePage3Image" class="control-label"></label>
+                <div class="imagePreview" id="page3-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="page3-image-upload" asp-for="QuestionnairePage3Image">
+                <br />
+                <span asp-validation-for="QuestionnairePage3Image" id="page3ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="page4img">
+            <div class="imgUp col-12">
+                <label asp-for="QuestionnairePage4Image" class="control-label"></label>
+                <div class="imagePreview" id="page4-image"></div>
+                <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="page4-image-upload" asp-for="QuestionnairePage4Image">
+                <br />
+                <span asp-validation-for="QuestionnairePage4Image" id="page4ImageValid" class="text-danger valid"></span>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" data-ajax="true" data-ajax-url="/LifeInsurance/LifeInsStep1" data-ajax-update="#form-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+</div>
+
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document).ready(function(){
+        $(document)
+            .ajaxStart(function () {
+                $('#loader').removeClass("no-display");
+
+            })
+            .ajaxComplete(function () {
+                $('#loader').addClass("no-display");
+            });
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    
+    var percent = parseFloat(100 / 3) * 2;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.add("active");
+    document.getElementById("check").classList.remove("active");
+    document.querySelectorAll('.uploadFile').forEach(function(el) {
+        el.addEventListener('change', function() {
+            var parent = this.parentElement;           
+            parent.querySelector('.valid').innerText = '';
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function() { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+    var imgpreviews = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgpreviews.length; l++) {
+        imgpreviews[l].addEventListener("click", function() {
+            var nextEl = this.nextElementSibling;
+            var elem = document.getElementById(nextEl.id);
+            elem.click();
+        });
+    }
+    function validate(elem, file) {
+        var idd = ($(elem).attr("id"));
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["jpg", "jpeg", "png", "gif"];
+
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            alert("پسوند فایل نادرست است! پسوند های درست عبارتند از  : " + arrayExtensions.join(', '));
+            $("#" + idd).val("");
+
+        }
+    }
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        var imgname = img_el.value;
+
+        var src = "/images/icons/select-icon.png";
+        if (imgname !== "") {
+            src = "/images/Ins/life/" + imgname;
+        }
+        document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+    }    
+    ShowImage("StrQuestionnairePage1Image", "page1-image");
+    ShowImage("StrQuestionnairePage2Image", "page2-image");
+    ShowImage("StrQuestionnairePage3Image", "page3-image");
+    ShowImage("StrQuestionnairePage4Image", "page4-image");
+    var planid_el = document.getElementById("planid");
+    var payment_el = document.getElementById("payments");
+    function GetPayments() {
+        var plid = planid_el.value;
+
+        var url = '/LifeInsurance/GetPaymentsByPlanId?planId=' + plid;
+        var request = new XMLHttpRequest();
+        request.open("POST", url);
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                document.querySelector("#payments").innerHTML = this.responseText;
+            }
+        }
+        request.send();
+    }
+    function GetPaymentsByFetch() {
+        fetch('/LifeInsurance/GetPaymentsByPlanId?planId=' + planid_el.value, {
+            method: "POST"
+        }).then(function(response) {
+            if (response.status == 200) {
+                return response.text();
+            }
+        }).then((content) => {
+            document.querySelector("#payments").innerHTML = content;
+        })
+    }
+</script>

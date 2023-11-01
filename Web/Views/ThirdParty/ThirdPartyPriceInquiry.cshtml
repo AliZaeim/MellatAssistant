@@ -1,0 +1,201 @@
+﻿@using Core.Convertors
+@model Core.DTOs.SiteGeneric.ThirdPartyIns.InsuranceInquiryVM
+@{
+    ViewData["Title"] = "استعلام بیمه ثالث - بیمه ملت";
+    bool dis = false;
+    if (Model.IsPosted == "yes")
+    {
+        dis = true;
+    }
+
+}
+
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    }
+@section Header{
+    <partial name="_Header" />
+    }
+<div class="container-fluid border">
+    <div class="row d-block justify-content-center">
+        <div class="col-12 text-center mt-1 mb-2">
+            <div class="card bg-zinfo">
+                <div class="row">
+                    <div class="col-md-2 hidden-sm-down">
+                    </div>
+                    <div class="col-md-8 col-xs-12 text-xs-center">
+                        <h2 id="heading" class="zHeaderfont-size">استعلام قیمت بیمه ثالث</h2>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <a href="javascript:void(0)" id="moreInfo" class="btn btn-purple text-white mt-1 ml-3 mb-1">نیاز به اطلاعات بیشتر دارید؟</a>
+                    </div>
+                </div>
+
+                <iframe src="https://apps.mellatinsurance.ir/Automobile2010/Forms/estelam_sales.aspx" height="700"></iframe>
+            </div>
+            <form method="post">
+                <input type="hidden" name="Premium" value="0" />
+                <button type="submit" asp-action="ThirdPartyInsurance" class="btn btn-success" asp-controller="ThirdParty">ثبت درخواست خرید</button>
+            </form>
+        </div>
+    </div>
+</div>
+<section class="container mt-5" id="minf">
+    <div class="row">
+        <div id="s_post" class="col-lg-6 py-3 pl-3">
+            <div class="d-flex flex-column">
+                @foreach (var blg in Model.Blogs.ToList())
+                {
+                    <div class="d-flex flex-md-row flex-column mb-2">
+                        <img src="/images/blogs/@blg.BlogImageInBlog" class="img-fluid ml-3 rad10 mb-2" />
+                        <div>
+                            <a href="/blog/d/@blg.BlogUrl" class="IRANSansWeb_Medium">@blg.BlogTitle</a>
+                            <p class="text-justify">@blg.BlogSummary.Get_Nth_Character(100) ... </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+@section Footer{
+    <partial name="_Footer" />
+    }
+@section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="/Layout/Js/vanilla-masker.js"></script>
+    <script src="~/Layout/Js/wordifyfa.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
+    <script>
+        var newInput = document.getElementById("InsValidDate");
+        VMasker(newInput).maskPattern("9999/99/99");
+        var numInps = document.getElementsByClassName("covNum");
+        window.addEventListener("load", function () {
+            for (var c = 0; c < numInps.length; c++) {
+                var x = wordifyfa(numInps[c].value);
+                var next = numInps[c].nextElementSibling;
+                var next2 = next.nextElementSibling;
+                if (next2 !== null && typeof (next2) !== "undefined") {
+                    next2.innerText = x;
+                }
+            }
+        });
+        var hasprevins = document.getElementById("HasPrevIns");
+        hasprevins.addEventListener("change", function () {
+            var fields = document.getElementsByClassName("previnsfield");
+            if (hasprevins.checked) {
+                for (var i = fields.length - 1; i >= 0; i--) {
+                    fields[i].classList.remove("no-display");
+                }
+            }
+            else {
+                for (var i = fields.length - 1; i >= 0; i--) {
+                    fields[i].classList.add("no-display");
+                }
+            }
+        });
+        var vgroupid = document.getElementById("VehicleGroupId");
+        vgroupid.addEventListener("change", function () {
+            var url1 = "/ThirdParty/VehicleTypes";
+            var formdata1 = new FormData();
+            formdata1.append("grId", vgroupid.value);
+            fetch(url1, {
+                method: "POST",
+                body: formdata1
+            }).then(function (response) {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            }).then((content) => {
+                var tsel1 = document.getElementById("vtsel");
+                var tsel2 = document.getElementById("vusel");
+                for (let i = tsel1.options.length - 1; i >= 1; i--) {
+                    tsel1.removeChild(tsel1.options[i])
+                }
+                for (let i = tsel2.options.length - 1; i >= 1; i--) {
+                    tsel2.removeChild(tsel2.options[i])
+                }
+                for (var i = 0; i < content.length; i++) {
+                    var opt1 = document.createElement("option");
+                    opt1.text = content[i].groupTitle;
+                    opt1.value = content[i].id;
+                    tsel1.add(opt1);
+                }
+            });
+
+        });
+        var vtypeid = document.getElementById("VehicleTypeId");
+        document.getElementById("vtsel").addEventListener("change", function () {
+            var url2 = "/ThirdParty/VehicleUsagesByGroupId";
+            var formdata2 = new FormData();
+            formdata2.append("gId", vgroupid.value);
+            fetch(url2, {
+                method: "POST",
+                body: formdata2
+            }).then(function (response) {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            }).then((content) => {
+                if (content.length > 0) {
+                    var tsel2 = document.getElementById("vusel");
+                    for (let i = tsel2.options.length - 1; i >= 1; i--) {
+                        tsel2.removeChild(tsel2.options[i])
+                    }
+                    for (var i = 0; i < content.length; i++) {
+                        var opt2 = document.createElement("option");
+                        opt2.text = content[i].usage;
+                        opt2.value = content[i].id;
+                        tsel2.add(opt2);
+                    }
+                };
+            })
+        });
+        var insutertypeid = document.getElementById("InsurerType");
+        document.getElementById("InsurerType").addEventListener("change", function () {
+            var url = "/ThirdParty/GetInsurerTypeById";
+            var formdata = new FormData();
+            formdata.append("ItId", insutertypeid.value);
+            fetch(url, {
+                method: "POST",
+                body: formdata
+            }).then(function (response) {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            }).then((content) => {
+                //LegalDiscounts
+                document.getElementById("extradis").value = content.discountPercent;
+                document.getElementById("legaldis").value = content.legalDiscounts;
+            })
+        });
+        document.getElementById("moreInfo").addEventListener("click", function () {
+            var element = document.getElementById('minf');
+            var topPos = element.getBoundingClientRect().top + window.scrollY - 200;
+            window.scrollTo({
+                top: topPos,
+                behavior: "smooth"
+            });
+        });
+    </script>
+    }

@@ -1,0 +1,274 @@
+﻿@model DataLayer.Entities.User.User
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "مشخصات کاربری";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row alert alert-info">
+        <div class="col-md-1 col-xs-none"></div>
+        <div class="col-md-10 col-xs-10"><h1 class="text-xs-center">مشخصات کاربری</h1></div>
+        <div class="col-md-1 col-xs-2">
+            <a asp-action="EditUserData" class="btn btn-warning">ویرایش</a>
+        </div>
+    </div>
+    <dl class="row">
+        @if (!string.IsNullOrEmpty(Model.Name))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Family))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Family)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Family)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.NC))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.NC)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.NC)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.PersonalImage))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PersonalImage)
+            </dt>
+            <dd class="col-sm-10">
+                <img src="/images/users/@Model.PersonalImage" width="50" height="50" />
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.IdNumber))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IdNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IdNumber)
+            </dd>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Cellphone))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Cellphone)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Cellphone)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Father))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Father)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Father)
+            </dd>
+        }
+        @if (Model.BirthDate != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.BirthDate.ToShamsiN()
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Password))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.UserCreditCardNumber))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UserCreditCardNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UserCreditCardNumber)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.UserBankAccountNumber))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UserBankAccountNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UserBankAccountNumber)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.ShebaNumber))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ShebaNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ShebaNumber)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.ReferralCode))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ReferralCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ReferralCode)
+            </dd>
+        }
+        @if (Model.County != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.County.State.StateName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.County.State.StateName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.County.CountyName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.County.CountyName)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Address))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.PostalCode))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PostalCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PostalCode)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.SalesExCode))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SalesExCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SalesExCode)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.AgentCode))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AgentCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AgentCode)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.FieldofStudy))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FieldofStudy)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FieldofStudy)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.LevelofStudy))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LevelofStudy)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LevelofStudy)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.UniversityName))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UniversityName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UniversityName)
+            </dd>
+        }
+        @if (Model.GraduationDate != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.GraduationDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.GraduationDate)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Phone))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.DemandNo))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DemandNo)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DemandNo)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.DemandValue))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DemandValue)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DemandValue)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.PortalPassword))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PortalPassword)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PortalPassword)
+            </dd>
+        }
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PortalIsActive)
+        </dt>
+        <dd class="col-sm-10">
+            @((Model.PortalIsActive)? "فعال" : "غیرفعال")
+        </dd>
+    </dl>
+</div>

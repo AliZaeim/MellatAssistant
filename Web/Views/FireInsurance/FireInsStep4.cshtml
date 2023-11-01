@@ -1,0 +1,312 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.FireInsStep4VM
+@using Core.Utility
+<section class="row">
+    <div class="col-12 p-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="row pr-2 pl-2">
+                    <div class="col-md-4 col-xs-12">
+                        <a href="/Fire-Insurance-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-center pt-1">
+                        <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") تومان</h5>
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-md-left">
+                        <form asp-action="FireInsuranceIndex" method="post">
+                            <input type="hidden" name="Premium" value="@Model.Premium" />
+                            <input type="hidden" name="Clear" value="true" />
+                            <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="text-center alert-info">وضعیت</h4>
+        <div class="col-12 text-center">
+            <div class="row">
+                <h5 class="text-xs-center col-12">شماره پیگیری : @Model.FireInsurance.TraceCode</h5>
+                <div class="col-12 col-md-4">                    
+                    <h6 class="text-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+                    <p>نام : @Model.SellerFullName</p>
+                    <p>تلفن : @Model.SellerCellphone</p>
+                    <p>کد : @Model.FireInsurance.SellerCode</p>
+                    <hr />
+                    <p>تصویر صفحه اول فرم پیشنهاد</p>
+                    <div class="col-12 text-center">
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.SuggestionFormPage1Image" />
+                    </div>
+                    <p>تصویر صفحه دوم فرم پیشنهاد</p>
+                    <div class="col-12 text-center">
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.SuggestionFormPage2Image" />
+                    </div>
+                </div>
+                <div class="col-12 col-md-8">
+                    @{
+                        string state = "فرد عادی";
+                        if (Model.FireInsurance.InsurerStatus == "retired")
+                        {
+                            state = "بازنشته کشوری یا تامین اجتماعی";
+                        }
+                        if (Model.FireInsurance.InsurerStatus == "related")
+                        {
+                            state = "منتسب بازنشسته";
+                        }
+                    }
+                    <h6 class="text-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+                    <p>نام : @Model.FireInsurance.InsurerName @Model.FireInsurance.InsurerFamily</p>
+                    <p>تلفن : @Model.FireInsurance.InsurerCellphone</p>
+                    <p>تصویر کارت ملی</p>
+                    <div class="col-12 text-center">
+                        <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsurerNCImage" />
+                    </div>
+                    <p>وضعیت : @state</p>
+                    @if (Model.FireInsurance.HasInstallmentRequest)
+                    {
+                        <p>پرداخت به صورت اقساط : بله</p>
+                        <p>تصویر رضایت کسر از حقوق</p>
+                        <div class="col-12 text-center">
+                            <img class="rounded mx-auto" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.PayrollDeductionImage" />
+                        </div>
+
+                    }
+                    else
+                    {
+                        <p>پرداخت به صورت اقساط : خیر</p>
+                    }
+                    @if (Model.FireInsurance.InsurerStatus == "related")
+                    {
+                        <p>تصویر معرفی نامه منتسب</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.AttributedLetterImage" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 text-center">
+        </div>
+        <div class="col-12 p-3">
+            <div class="row">
+                <h4 class="text-center alert-info col-12">مدارک</h4>
+                <div class="col-12 col-lg-6">
+                    <p class="text-center">
+                        نوع بیمه نامه :
+
+                        @{
+                            string instype = "مسکونی";
+                            if (Model.FireInsurance.InsuranceType == 2)
+                            {
+                                instype = "غیر صنعتی";
+                            }
+                            if (Model.FireInsurance.InsuranceType == 3)
+                            {
+                                instype = "صنعتی";
+                            }
+                        }
+                        @instype
+                    </p>
+                </div>
+                @if (Model.FireInsurance.InsuranceType == 1)
+                {
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">
+                            آیا پوشش سرقت دارد ؟
+                            @if (Model.FireInsurance.HasTheftCover)
+                            {
+                                <span> بله </span>
+                            }
+                            else
+                            {
+                                <span> خیر </span>
+                            }
+                        </p>
+
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">لیست اموال</p>
+                        @if (Model.FireInsurance.PropertiesFile.IsImage())
+                        {
+                            <div class="col-12 text-center">
+                                <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.PropertiesFile" />
+                            </div>
+                        }
+                        @if (Model.FireInsurance.PropertiesFile.IsPdf())
+                        {
+                            <div class="col-12 text-center">
+                                فایل پی دی اف پیوست شده است
+                            </div>
+                        }
+                    </div>
+                }
+                @if (Model.FireInsurance.InsuranceType == 2)
+                {
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از نمای بیرون ساختمان</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.ExteriorofBuildingImage" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از ورودی محل بیمه</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsuranceLocationInputImage" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از کنتور و تابلو برق اصلی</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.MainMeterandElectricalPanelImage" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از کنتور و فیوز محل مورد بیمه</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsuredPlaceFuseandMeterImage" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از کنتور و اشعابات گاز محل مورد بیمه</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsuredPlaceMeterandGasBranchesImage" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از وسیله گازسوز 1</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice1Image" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از وسیله گازسوز 2</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice2Image" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از وسیله گازسوز 3</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice3Image" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">عکس از وسیله گازسوز 4</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice4Image" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p class="text-center">فیلم کوتاه از کل فضای داخلی</p>
+                        <div class="col-12 text-center">
+                            <video controls width=150 height=150 >
+                                <source src="/images/Ins/fire/@Model.FireInsurance.WholeInteriorFilm">
+                            </video>
+                        </div>
+                    </div>
+                }
+                @if (Model.FireInsurance.InsuranceType == 3)
+                {
+                    <div class="col-12">
+                        <h4 class="text-center text-danger">منتظر تماس کارشناس</h4>
+                    </div>
+                }
+
+
+
+            </div>
+        </div>
+        <div class="col-12 p-3">
+            <div class="row">
+                <h4 class="text-center alert-info col-12">سوابق</h4>
+                <div class="col-12">
+                    @if (Model.FireInsurance.InsuranceHistoryStatus == 1)
+                    {
+                        <p>وضعیت سابقه بیمه : بیمه آتش سوزی ندارد</p>
+                    }
+                    @if (Model.FireInsurance.InsuranceHistoryStatus == 2)
+                    {
+                        <p>وضعیت سابقه بیمه : بیمه آتش سوزی از سایر شرکتها</p>
+                        <p class="text-center">تصویر از بیمه نامه قبلی</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.PerviousInsImage" />
+                        </div>
+                        @if (Model.FireInsurance.HasNoDamagedDiscount)
+                        {
+                            <p>تخفیف عدم خسارت دارد؟ بله</p>
+                            <div class="col-12 text-center">
+                                <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.NoDamageCertificateImage" />
+                            </div>
+                        }
+                        else
+                        {
+                            <p>تخفیف عدم خسارت دارد؟ نه</p>
+                        }
+                    }
+
+                    @if (Model.FireInsurance.InsuranceHistoryStatus == 3)
+                    {
+                        <p class="text-center">تصویر از بیمه نامه قبلی</p>
+                        <div class="col-12 text-center">
+                            <img width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.PerviousInsImage" />
+                        </div>
+                        @if (Model.FireInsurance.InsuredHealthChanged)
+                        {
+                            <p class="text-center"> سلامت مورد بیمه تغییر پیدا کرده است ؟ بله</p>
+                        }
+                        else
+                        {
+                            <p class="text-center"> سلامت مورد بیمه تغییر پیدا کرده است ؟ خیر</p>
+                        }
+                        @if (Model.FireInsurance.SufferDamageLastYear)
+                        {
+                            <p class="text-center">آیا سال قبل خسارت گرفته اید ؟ بله</p>
+                        }
+                        else
+                        {
+                            <p class="text-center">آیا سال قبل خسارت گرفته اید ؟ خیر</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="col-12 p-3">
+        <div class="form-group text-center">
+            @{
+                int payalue = (int)(Model.FireInsurance.Premium);
+            }
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/FireInsurance/FireInsStep3" data-ajax-update="#fireform-card">مرحله قبل</a>
+            <form asp-controller="SitePages" asp-action="GoToPayment" method="post" class="d-inline-flex">
+                <input type="hidden" name="InsId" value="@Model.FireInsurance.Id" />
+                <input type="hidden" name="InsType" value="fire" />
+                <input type="hidden" name="BackUrl" value="https://melatins.com/PaymentResult" />
+                <input type="hidden" name="Currency" value="IRT" />
+                <input type="submit" class="btn btn-primary" value="پرداخت (@payalue.ToString("N0") تومان)" />
+            </form>
+            <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+                <img src="~/images/Spinner-3.gif" />
+            </div>
+            
+        </div>
+    </div>
+    
+</section>
+
+<script>
+    $(document)
+        .ajaxStart(function () {
+            $('#loader').removeClass("no-display");
+
+        })
+        .ajaxComplete(function () {
+            $('#loader').addClass("no-display");
+        });
+    var percent = parseFloat(100 / 4) * 4;
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.remove("active");
+    document.getElementById("records").classList.remove("active");
+    document.getElementById("check").classList.add("active");
+</script>
+

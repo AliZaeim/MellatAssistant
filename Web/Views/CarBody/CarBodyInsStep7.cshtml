@@ -1,0 +1,227 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBodyInsStep7VM
+
+
+<div class="col-xs-12 offset-lg-3 col-lg-6 p-2 zsteps" data-step="1">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Car-Body-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    @*<h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault(0).ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="CarBodyInsurance" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-center text-white pl-1 pr-1 col-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center">مرحله هفتم - فیلمها</h3>
+    <h6 class="text-danger text-center">فیلم های با پسوند mp4, mpeg, mkv مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز فیلم 25 مگابایت می باشد</h6>
+    <form id="Step7Form" method="post" asp-action="CarBodyInsStep7" asp-controller="CarBody" asp-antiforgery="true" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#cbform-card" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrCarInteriorFilm" />
+        <input type="hidden" asp-for="StrEngineSpaceFilm" />
+        <input type="hidden" asp-for="StrOuterBodyFilm" />
+        <div class="form-group row required" id="outerFilm">
+            <div class="imgUp col-12">
+                <label asp-for="OuterBodyFilm" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="outer-film"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('outer-film-upload','outerFilmValid')" id="outer-film-upload" accept="video/*" asp-for="OuterBodyFilm">
+                <br />
+                <span asp-validation-for="OuterBodyFilm" id="outerFilmValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="interiorFilm">
+            <div class="imgUp col-12">
+                <label asp-for="CarInteriorFilm" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="interior-film"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('interior-film-upload','interiorFilmValid')" id="interior-film-upload" accept="video/*" asp-for="CarInteriorFilm">
+                <br />
+                <span asp-validation-for="CarInteriorFilm" id="interiorFilmValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="engineFilm">
+            <div class="imgUp col-12">
+                <label asp-for="EngineSpaceFilm" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="engine-film"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('engine-film-upload','engineFilmValid')" id="engine-film-upload" accept="video/*" asp-for="EngineSpaceFilm">
+                <br />
+                <span asp-validation-for="EngineSpaceFilm" id="engineFilmValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep6" data-ajax-update="#cbform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" id="btnNext8" class="btn btn-primary" />
+        </div>
+    </form>
+
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+
+    var percent = parseFloat((100 / 8) * 7);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("exterior").classList.remove("active");
+    document.getElementById("internal").classList.remove("active");
+    document.getElementById("motor").classList.remove("active");
+    document.getElementById("accessories").classList.remove("active");
+    document.getElementById("bodystains").classList.remove("active");
+    document.getElementById("filmes").classList.add("active");
+    document.getElementById("check").classList.remove("active");
+    //function ShowImage(show_el_id) {
+    //    var srctick = "/images/icons/tick-icon58.png";
+    //    document.getElementById(show_el_id).style.backgroundImage = "url('" + srctick + "')";
+    //}
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined") {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/icons/tick-icon58.png";
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    ShowImage("StrOuterBodyFilm","outer-film");
+    ShowImage("StrCarInteriorFilm", "interior-film");
+    ShowImage("StrEngineSpaceFilm", "engine-film");
+    function UpdateValidSpan(inputId, spanId) {
+        var inp = document.getElementById(inputId);
+        if (inp !== null && typeof (inp) !== "undefined") {
+            if (inp.value !== null) {
+                var sp = document.getElementById(spanId);
+                if (sp !== null && typeof (sp) !== "undefined") {
+                    sp.innerText = '';
+                }
+            }
+
+        }
+    }
+    document.querySelectorAll('.imagePreview').forEach((el) => el.addEventListener("click", function () {
+        //click sibling .uploadFile
+        this.nextElementSibling.click();
+    }
+    ));
+    document.querySelectorAll('.uploadFile').forEach((el) => el.addEventListener("change", function () {
+        this.parentNode.lastElementChild.innerHTML = "";
+        var src = "/images/icons/tick-icon58.png";
+        var srcN = "/images/icons/notaccept58.png";
+        const fileSize = this.files[0].size / 1024 / 1024; // in MiB
+        var btnNext = document.getElementById('btnNext8');
+        if (fileSize >= 25) {
+            //btnNext.disabled = true;
+            this.previousElementSibling.style.backgroundImage = "url('" + srcN + "')";
+            alert("حجم فیلم بیشتر از 25 مگا بایت است !");
+            this.parentNode.lastElementChild.innerHTML = "حجم فیلم بیشتر از 25 مگا بایت است !";
+            return false;
+        }
+        var files = this.files;
+        if (files.length == 0) {
+            return false;
+        }
+        else {
+            var filename = files[0].name;
+            /* getting file extenstion eg- .jpg,.png, etc */
+            var extension = filename.substr(filename.lastIndexOf("."));
+            /* define allowed file types */
+            var allowedExtensionsRegx = /(\.mp4|\.mpeg|\.mkv)$/i;
+            /* testing extension with regular expression */
+            var isAllowed = allowedExtensionsRegx.test(extension);
+
+            if (isAllowed) {
+                this.previousElementSibling.style.backgroundImage = "url('" + src + "')";
+                /* file upload logic goes here... */
+            } else {
+                //btnNext.disabled = true;
+                //alert("نوع فایل برای آپلود مورد قبول نیست !");
+                this.parentNode.lastElementChild.innerHTML = "نوع فایل برای آپلود مورد قبول نیست !";
+                this.previousElementSibling.style.backgroundImage = "url('" + srcN + "')";
+                //return false;
+            }
+        }
+        //var res = checkfilminputs();
+        //if (res == false)
+        //{
+        //    btnNext.disabled = true;
+        //}
+        //else
+        //{
+        //    btnNext.disabled = false;
+        //}
+    }
+    ));
+    function checkfilminputs() {
+        var res = true;
+        const film1 = document.getElementById('outer-film-upload');
+        const film2 = document.getElementById('interior-film-upload');
+        const film3 = document.getElementById('engine-film-upload')
+
+        var films1 = film1.files;
+        var films2 = film2.files;
+        var films3 = film3.files;
+        var allowedExtensionsRegx = /(\.mp4|\.mpeg|\.mkv)$/i;
+        if (films1 !== null) {
+            if (films1.length == 0) {
+                res = false;
+            }
+            else {
+                var filename1 = films1.files[0].name;
+                var extension1 = filename1.substr(filename1.lastIndexOf("."));
+                var isAllowed1 = allowedExtensionsRegx.test(extension1);
+                if (isAllowed1 == false) {
+                    res = false;
+                }
+            }
+
+        }
+        if (films2 !== null) {
+            if (films2.length == 0) {
+                res = false;
+            }
+            else {
+                var filename2 = films2.files[0].name;
+                var extension2 = filename2.substr(filename2.lastIndexOf("."));
+                var isAllowed2 = allowedExtensionsRegx.test(extension2);
+                if (!isAllowed2 == false) {
+                    res = false;
+                }
+            }
+
+        }
+        if (films3 !== null) {
+            if (films3.length == 0) {
+                res = false;
+            }
+            else {
+                var filename3 = films3.files[0].name;
+                var extension3 = filename3.substr(filename2.lastIndexOf("."));
+                var isAllowed3 = allowedExtensionsRegx.test(extension3);
+                if (!isAllowed3 == false) {
+                    res = false;
+                }
+            }
+
+        }
+
+        return res;
+    }
+</script>

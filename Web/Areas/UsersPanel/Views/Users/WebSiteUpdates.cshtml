@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DataLayer.Entities.Supplementary.WebsiteUpdate>
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "بروزرسانی های سایت";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">بروزرسانی های سایت</h1>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                #
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RegDate)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rad = 1;
+        }
+        @foreach (var item in Model.OrderByDescending(r => r.RegDate))
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @rad
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @foreach (var com in item.CommentList.ToList())
+                    {
+                        if (com == item.CommentList.ToList().LastOrDefault())
+                        {
+                            <span>@com</span>
+                        }
+                        else
+                        {
+                            <span>@com</span><br />
+                        }
+
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.RegDate.ToShamsi()
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

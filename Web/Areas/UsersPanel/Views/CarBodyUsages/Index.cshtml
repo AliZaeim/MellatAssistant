@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.CarBody.CarBodyUsage>
+@using Core.Services.Interfaces;
+@inject ICarBodyService _carBodyService;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "کاربری های خودرو";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">کاربری های خودروی بیمه بدنه</h1>
+@if (_userService.CheckPermissionByName("addcbu", User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت کاربری</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Rate)
+            </th>
+            <th class="text-xs-center align-middle">
+                گروه ها
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayFor(model => item.Rate)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("selcbug", User.Identity.Name))
+                    {
+                        <p>
+                            <a asp-action="AddGroups" asp-route-id="@item.Id">انتخاب گروه</a>
+                        </p>
+                    }
+
+                    @foreach (var gr in item.CarBodyGroupUsages.ToList())
+                    {
+                        DataLayer.Entities.InsPolicy.CarBody.CarBodyCarGroup carGroup = await _carBodyService.GetCarBodyCarGroupByIdAsync(gr.CarBodyGroupId);
+                        if (gr != item.CarBodyGroupUsages.LastOrDefault())
+                        {
+                            <span>@carGroup.Title - </span>
+                        }
+                        else
+                        {
+                            <span>@carGroup.Title</span>
+                        }
+                    }
+                </th>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editcbu",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletecbu", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

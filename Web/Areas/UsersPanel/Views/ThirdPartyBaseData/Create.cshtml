@@ -1,0 +1,47 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.ThirdPartyBaseData
+
+@{
+    ViewData["Title"] = "ثبت اطلاعات پایه بیمه ثالث";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ثبت اطلاعات پایه بیمه ثالث</h1>
+<div class="container-fluid">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="DriverAccidentPremium" class="control-label"></label>
+                <input asp-for="DriverAccidentPremium" class="form-control" />
+                <span asp-validation-for="DriverAccidentPremium" class="text-danger"></span>
+            </div>           
+            <div class="form-group">
+                <label asp-for="VAT" class="control-label"></label>
+                <input asp-for="VAT" class="form-control" />
+                <span asp-validation-for="VAT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LegalDiscounts" class="control-label"></label>
+                <input asp-for="LegalDiscounts" class="form-control" />
+                <span asp-validation-for="LegalDiscounts" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="LegalDiscountPermit" /> @Html.DisplayNameFor(model => model.LegalDiscountPermit)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

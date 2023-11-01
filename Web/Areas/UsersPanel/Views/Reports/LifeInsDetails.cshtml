@@ -1,0 +1,456 @@
+﻿@model Core.DTOs.Admin.InsDetailsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+@{
+    ViewData["Title"] = "جزئیات درخواست بیمه زندگی";
+}
+<div class="container-fluid">
+    <div class="row alert alert-info">
+        <div class="col-xs-10">
+            @{
+                string title = "جزئیات درخواست بیمه زندگی " + " | کد پیگیری : " + Model.LifeInsurance.TraceCode + " | شماره بیمه نامه : " + Model.LifeInsurance.IssuedInsNo + " | حق بیمه: " + Model.LifeInsurance.Price.ToString("N0") + " تومان";
+            }
+            <h4 class="text-xs-right pt-1 pb-1">
+                @title
+                @if (Model.LifeInsurance.Canceled)
+                {
+                    <span class="bg bg-danger text-white pr-1 pl-1 rounded mr-1">انصراف</span>
+                }
+            </h4>
+        </div>
+        <div class="col-xs-2 text-xs-left">
+            @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود مدارک"), User.Identity.Name))
+            {
+                <form method="post" class="d-inline-block" asp-action="DownloadZipDouments" asp-controller="Reports" asp-area="UsersPanel">
+                    <input type="hidden" name="insId" value="@Model.LifeInsurance.Id" />
+                    <input type="hidden" name="type" value="life" />
+                    <button type="submit" class="btn btn-primary rounded" title="دانلود مدارک"><span class="fa fa-download"></span></button>
+                    <p class="p-0 m-0 text-xs-center">دانلود مدارک</p>
+                </form>
+            }
+
+        </div>
+    </div>
+</div>
+<section class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="hidden" id="tpartyid" value="@Model.LifeInsurance.Id" />
+
+            <div class="row">
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs">
+                        </div>
+                        <div class="col-md-8 col-xs-12">
+                            <h4 class="text-xs-center ">
+                                مشخصات
+                            </h4>
+                        </div>
+                        @if (await _genericInsService.CheckInsIssuedAsync(Model.LifeInsurance.Id, "life") == false)
+                        {
+                            @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                            {
+                                <div class="col-md-2 col-xs">
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_life_state" data-insid="@Model.LifeInsurance.Id" data-insissueno="@Model.LifeInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                </div>
+                            }
+
+                        }
+
+                    </div>
+                </div>
+                <section class="col-xs-12  text-xs-center" id="lifeState">
+
+                    <h6 class="text-xs-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+                    @{
+                        DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.LifeInsurance.SellerCode);
+                        DataLayer.Entities.User.Role role = null;
+                        string RTitle = "-";
+                        if (seller != null)
+                        {
+                            if (Model.LifeInsurance.SellerRoleId != null)
+                            {
+                                role = await _genericInsService.GetRoleByIdAsync(Model.LifeInsurance.SellerRoleId.Value);
+                            }
+                        }
+                        if (role != null)
+                        {
+                            RTitle = role.RoleTitle;
+                        }
+                    }
+                    <div class="row">
+                        <p class="col-md-3 col-xs-12">نام : @seller?.FullName</p>
+                        <p class="col-md-3 col-xs-12">تلفن : @seller?.Cellphone</p>
+                        <p class="col-md-3 col-xs-12">کد : @Model.LifeInsurance.SellerCode</p>
+                        <p class="col-md-3 col-xs-12">مسئولیت : @RTitle</p>
+                    </div>
+                    <h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+                    <div class="row">
+                        <div class="col-md-4 col-xs-12">نام : @Model.LifeInsurance.InsurerName @Model.LifeInsurance.InsurerFamily</div>
+                        <div class="col-md-4 col-xs-12">تصویر کارت ملی <br /> <a href="/images/Ins/life/@Model.LifeInsurance.InsurerNCImage"><img src="/images/Ins/life/@Model.LifeInsurance.InsurerNCImage" width="50" height="50" class="rounded zoom" /></a></div>
+                        <div class="col-md-4 col-xs-12">تلفن : @Model.LifeInsurance.InsurerCellphone</div>
+
+                    </div>
+                    <h6 class="text-xs-center border-bottom mt-2"><span class="text-primary">بیمه شده</span></h6>
+                    <div class="row">
+                        <div class="col-md-4 col-xs-12">نام : @Model.LifeInsurance.InsuredName @Model.LifeInsurance.InsuredFamily</div>
+                        <div class="col-md-4 col-xs-12">تصویر کارت ملی <br /><a href="/images/Ins/life/@Model.LifeInsurance.InsuredNCImage"> <img src="/images/Ins/life/@Model.LifeInsurance.InsuredNCImage" width="50" height="50" class="rounded zoom" /></a></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-xs-12">طــرح : @Model.LifeInsurance.Plan?.Title | @Model.LifeInsurance.Plan?.Price.GetValueOrDefault().ToString("N0") تومان</div>
+                        <div class="col-md-4 col-xs-12">روش پرداخت : @Model.LifeInsurance.PaymentMethod?.Title </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs">
+                                </div>
+                                <div class="col-md-8 col-xs-12">
+                                    <h4 class="text-xs-center ">
+                                        مدارک
+                                    </h4>
+                                </div>
+                                @if (await _genericInsService.CheckInsIssuedAsync(Model.LifeInsurance.Id, "life") == false)
+                                {
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                    {
+                                        <div class="col-md-2 col-xs">
+                                            <a class="float-lg-left font-medium-1" id="btnUpdate_life_docs" data-insid="@Model.LifeInsurance.Id" data-insissueno="@Model.LifeInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <section id="lifeDocs">
+                            <div class="col-xs-12 col-lg-6 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر صفحه اول پرسشنامه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage1Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-6 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر صفحه دوم پرسشنامه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage2Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-6 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر صفحه سوم پرسشنامه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage3Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-6 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر صفحه چهارم پرسشنامه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/life/@Model.LifeInsurance.QuestionnairePage4Image" /></a>
+                                </div>
+                            </div>
+                            @{
+                                bool hasUserUp = false;
+                                if (Model.LifeInsurance.LifeInsuranceSupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).Any())
+                                {
+                                    hasUserUp = true;
+                                }
+                            }
+                            @if (hasUserUp)
+                            {
+                                
+                                <div class="col-lg-12">
+                                    <h5 class="text-xs-center text-danger">فایلهای آپلود شده جدید </h5>
+                                    <table class="table table-bordered font-small-2">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-xs-center align-middle p-0 width-50">#</th>
+                                                <th class="text-xs-center align-middle p-0 width-10-per">عنوان</th>
+                                                <th class="text-xs-center align-middle p-0 width-15-per">تاریخ</th>
+                                                <th class="text-xs-center align-middle p-0 width-10-per">توسط</th>
+                                                <th class="text-xs-center align-middle p-0 width-10-per">فایل</th>
+                                                <th class="text-xs-center align-middle p-0 ">پیام</th>
+                                                <th class="text-xs-center align-middle p-0">دانلود</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int rad = 1;
+                                            }
+                                            @foreach (var item in Model.LifeInsurance.LifeInsuranceSupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).OrderByDescending(x => x.RegDate).ToList())
+                                            {
+                                                <tr>
+                                                    <td class="text-xs-center align-middle p-0">@rad</td>
+                                                    <td class="text-xs-center align-middle p-0">@item.Title</td>
+                                                    <td class="text-xs-center align-middle p-0">@item.RegDate.ToShamsiN()</td>
+                                                    <td class="text-xs-center align-middle p-0">
+                                                        @{
+                                                            var user = await _genericInsService.GetUserByNameAsync(item.UserName);
+                                                            string userFullName = user?.FullName ?? "-";
+                                                        }
+                                                        @userFullName
+                                                    </td>
+                                                    <td class="text-xs-center align-middle p-0">
+                                                        @if (!string.IsNullOrEmpty(item.File))
+                                                        {
+                                                            @if (Core.Utility.Applications.IsImage(item.File))
+                                                            {
+                                                                <img src="~/Supp/life/@item.File" class="rounded mx-auto zoom" with=50 height=50>
+                                                            }
+                                                            @if (item.File.EndsWith(".pdf"))
+                                                            {
+                                                                <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                                                            }
+                                                        }
+
+                                                    </td>
+                                                    <td class="text-xs-center align-middle">
+                                                        @foreach (string ml in item.MessageLines)
+                                                        {
+                                                            if (ml != item.MessageLines.LastOrDefault())
+                                                            {
+                                                                <span class="w-100">@ml.Replace("fu"," ")</span>
+
+                                                                <br />
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="w-100">@ml.Replace("fu"," ")</span>
+                                                            }
+
+                                                        }
+                                                    </td>
+                                                    <td class="text-xs-center align-middle">
+                                                        <form asp-area="UsersPanel" asp-controller="Reports" asp-action="DownloadFile" method="post">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="filename" value="@item.File">
+                                                            <input type="hidden" name="insType" value="life">
+                                                            <button type="submit" title="دانلود" class="text-success cursor-pointer font-size-large"><span class="icon-download"></span></button>
+                                                        </form>
+                                                    </td>
+
+
+                                                </tr>
+                                                rad++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </section>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-3">
+                                </div>
+                                <div class="col-md-8 col-xs-6">
+                                    <h4 class="text-md-center">
+                                        وضعیت مالی
+                                    </h4>
+                                </div>
+                                <div class="col-md-2 col-xs-3">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت مالی"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.LifeInsurance.Id" data-instype="life" data-refreshid="FindivStatus_life" data-loc="@Model.Location" class="btn btn-primary float-xs-left FinbtnInsertState">ثبت وضعیت </button>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="FindivStatus_life" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowFinancialStatusesVM showFinancialStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedFinancialStatusesAsync(Model.LifeInsurance.Id, "life", "FindivStatus_life", "false", User.Identity.Name);
+                                showFinancialStatusesVM.Location = Model.Location;
+                                showFinancialStatusesVM.PermissionNames = Model.PermissinKeys;
+                            }
+                            <partial name="ShowInsFinanceStatus" model="@showFinancialStatusesVM" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-3">
+                                    @if (string.IsNullOrEmpty(Model.LifeInsurance.IssuedInsNo))
+                                    {
+                                        @if (!Model.LifeInsurance.Canceled)
+                                        {
+                                            <button data-insid="@Model.LifeInsurance.Id" data-instype="life" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-danger float-xs-right" id="btnCanceled">اعلام انصراف</button>
+                                        }
+                                    }
+
+                                    @if (Model.LifeInsurance.Canceled)
+                                    {
+                                        <span class="text-danger">انصراف داده شده است !</span>
+                                    }
+                                </div>
+                                <div class="col-md-8 col-xs-6">
+                                    <h4 class="text-md-center">وضعیت صدور</h4>
+                                </div>
+                                <div class="col-md-2 col-xs-3">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت صدور"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.LifeInsurance.Id" data-instype="life" data-refreshid="divStatus_life" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertState">ثبت وضعیت</button>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divStatus_life" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowInsStatusesVM showInsStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedStatus(Model.LifeInsurance.Id, "life", "divStatus_life", "false", User.Identity.Name);
+                                showInsStatusesVM.Location = Model.Location;
+                                showInsStatusesVM.PermissionNames = Model.PermissinKeys;
+                            }
+                            <partial name="ShowInsStatuses" model="showInsStatusesVM" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-4"></div>
+                                <div class="col-md-6 col-xs-4">
+                                    <h4 class="text-xs-right text-md-center">بیمه نامه</h4>
+                                </div>
+                                <div class="col-md-3 col-xs-4">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("پیوست فایل"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.LifeInsurance.Id" data-refreshid="divSupp_life" data-instype="life" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertSupp">پیوست فایل</button>
+                                    }
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود تمام فایلهای پیوست شده"), User.Identity.Name))
+                                    {
+                                        @if (Model.LifeInsurance.LifeInsuranceSupplements.Any(z => string.IsNullOrEmpty(z.Message) || (!string.IsNullOrEmpty(z.Message) && !z.Message.Contains("fu"))))
+                                        {
+                                            <form method="post" class="d-inline-block" asp-action="DownloadZipSupps" asp-controller="Reports" asp-area="UsersPanel">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="insId" value="@Model.LifeInsurance.Id" />
+                                                <input type="hidden" name="type" value="life" />
+                                                <button type="submit" class="btn btn-warning rounded">دانلود پیوست ها</button>
+                                            </form>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divSupp_life" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowInsuranceSupplementsData showInsuranceSupplementsData = await _genericInsService.PreparationDataForShowInsSupplementsAsync(Model.LifeInsurance.Id, "life", "divSupp_life", "false", User.Identity.Name);
+                                showInsuranceSupplementsData.Location = Model.Location;
+                                showInsuranceSupplementsData.PermissionNames = Model.PermissinKeys;
+                            }
+                            <partial name="ShowInsSupplements" model="@showInsuranceSupplementsData" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div style="position:fixed;bottom :10mm;left:2mm">
+
+        @if (!string.IsNullOrEmpty(Model.LifeInsurance.IssuedInsNo))
+        {
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+        else
+        {
+
+            @if (User.Identity.Name == "0000000000")
+            {
+
+                <a asp-action="RegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/AdminLayout/app-assets/js/scripts/InsDetails.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#btnUpdate_life_state", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateLifeIns/UpdateLifeStateSection",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت وضعیت بیمه نامه زندگی با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            $(document).on("click", "#btnUpdate_life_docs", function () {
+                var id = $(this).attr("data-insid");
+                var insissueno = $(this).attr("data-insissueno");
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/UpdateLifeIns/UpdateLifeDocsSection",
+                    data: { guid: id },
+                    type: "GET",
+                }).done(function (result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت مدارک بیمه نامه زندگی با شماره" + " " + insissueno + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    $("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+            $(document).on("click", "#btnCanceled", function () {
+                var id = $(this).attr("data-insid");
+                var instype = $(this).attr("data-instype");
+                if (confirm('آیا مطمئن به لغو درخواست خود هستید ؟')) {
+                    $.ajax({
+                        url: "/UsersPanel/Reports/CancelRequest",
+                        data: { insId: id, type: instype },
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN",
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        },
+                        type: "POST",
+
+                        async: true,
+
+                    }).done(function (result) {
+                        if (result == true) {
+                            window.location.reload();
+                        }
+                    });
+                }
+
+            });
+            var loc = window.location.href;
+            $("#sloc").val(loc);
+        });
+
+    </script>
+}

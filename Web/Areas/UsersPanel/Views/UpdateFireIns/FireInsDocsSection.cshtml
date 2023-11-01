@@ -1,0 +1,222 @@
+﻿@model DataLayer.Entities.InsPolicy.Fire.FireInsurance
+<div class="row">
+    <div class="col-xs-12 col-lg-3 mb-1">
+        @{
+            string instype = "مسکونی";
+            if (Model.InsuranceType.GetValueOrDefault() == 3)
+            {
+                instype = "صنعتی";
+            }
+            if (Model.InsuranceType.GetValueOrDefault() == 2)
+            {
+                instype = "غیر صنعتی";
+            }
+        }
+        <div class="col-xs-12 text-xs-center">نوع بیمه : @instype</div>
+
+    </div>
+    @if (Model.InsuranceType.GetValueOrDefault() == 1)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">پوشش سرقت دارد؟ @((Model.HasTheftCover)? "بله":"خیر")</div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">لیست اموال</div>
+
+            @if (!string.IsNullOrEmpty(Model.PropertiesFile))
+            {
+                @if (Core.Utility.Applications.IsImage(Model.PropertiesFile))
+                {
+                    <img src="/images/Ins/fire/@Model.PropertiesFile" class="rounded mx-auto zoom" with=50 height=50>
+                }
+                @if (Model.PropertiesFile.EndsWith(".pdf"))
+                {
+                    <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                }
+            }
+            else
+            {
+                <p class="w-100 text-xs-center text-danger">مشخص نشده است !</p>
+            }
+        </div>
+    }
+    @if (Model.InsuranceType == 2)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد صفحه اول</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.SuggestionFormPage1Image" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد صفحه دوم</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.SuggestionFormPage2Image" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر نمای بیروم ساختمان</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.ExteriorofBuildingImage" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر ورودی محل بیمه</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.InsuranceLocationInputImage" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر کنتور و فیوز محل بیمه</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.InsuredPlaceFuseandMeterImage" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر کنتور و انشعابات گاز محل بیمه</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.InsuredPlaceMeterandGasBranchesImage" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 1</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.GasBurningDevice1Image" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 2</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.GasBurningDevice2Image" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 3</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.GasBurningDevice3Image" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 4</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.GasBurningDevice4Image" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر کنتور و تابلو برق اصلی</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.MainMeterandElectricalPanelImage" />
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-12 mb-1 text-xs-center">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">فیلم کوتاه از فضای داخلی</div>
+                <div class="col-xs-12 text-xs-center">
+                    <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                        <source src="/images/Ins/fire/@Model.WholeInteriorFilm" />
+                    </video>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-xs-12 mb-1">
+        @{
+            string sb = " ";
+            if (Model.InsuranceHistoryStatus.GetValueOrDefault() == 1)
+            {
+                sb = "بیمه آتش سوزی ندارد";
+            }
+            if (Model.InsuranceHistoryStatus.GetValueOrDefault() == 2)
+            {
+                sb = "بیمه آتش سوزی از سایر شرکت ها";
+            }
+            if (Model.InsuranceHistoryStatus.GetValueOrDefault() == 3)
+            {
+                sb = "بیمه آتش سوزی از بیمه ملت";
+            }
+        }
+        <p>وضعیت سابقه بیمه : @sb</p>
+    </div>
+    @if (Model.InsuranceHistoryStatus.GetValueOrDefault() == 2 || Model.InsuranceHistoryStatus.GetValueOrDefault() == 3)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">تصویر بیمه نامه قبلی</div>
+                <div class="col-xs-12 text-xs-center">
+                    <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.PerviousInsImage" />
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-xs-12 col-lg-3 mb-1">
+        <div class="row">
+            <div class="col-xs-12 text-xs-center">آیا تخفیف عدم خسارت دارد؟ @((Model.HasNoDamagedDiscount) ? "بله" : "خیر")</div>
+        </div>
+    </div>
+    @if (Model.HasNoDamagedDiscount)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">تصویر گواهی عدم خسارت</div>
+                <div class="col-xs-12 text-xs-center">
+                    <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.NoDamageCertificateImage" />
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.InsuranceHistoryStatus.GetValueOrDefault() == 3)
+    {
+        <div class="col-xs-12 col-lg-6 mb-1">
+            <p>آیا سلامت مورد بیمه تغییر پیدا کرده است؟ @((Model.InsuredHealthChanged) ? "بله":"خیر")</p>
+        </div>
+        <div class="col-xs-12 col-lg-6 mb-1">
+            <p>آیا سال قبل خسارت گرفته اید؟ @((Model.SufferDamageLastYear) ? "بله":"خیر")</p>
+        </div>
+    }
+
+</div>
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined") {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes") {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "") {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

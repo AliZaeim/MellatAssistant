@@ -1,0 +1,42 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.ThirdPartyBaseData
+
+@{
+    ViewData["Title"] = "حذف اطلاعات پایه بیمه ثالث";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-danger">حذف اطلاعات پایه بیمه ثالث</h1>
+
+<h3 class="text-xs-center text-warning">آیا مطمئن به حــذف اطلاعات پایه هستید؟</h3>
+<div class="container-fluid">
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DriverAccidentPremium)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DriverAccidentPremium)
+            </dd>
+           
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LegalDiscountPermit)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LegalDiscountPermit)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LegalDiscounts)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LegalDiscounts)
+            </dd>
+        </dl>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="حــذف" class="btn btn-danger" /> |
+            <a asp-action="Index">بازگشــت</a>
+        </form>
+    </div>
+</div>
+

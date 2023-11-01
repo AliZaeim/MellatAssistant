@@ -1,0 +1,68 @@
+﻿@model DataLayer.Entities.InsPolicy.Life.LifeInsurance
+@using Core.Services.Interfaces;
+@inject IGenericInsService _genericInsService
+<h6 class="text-xs-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+@{
+    DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.SellerCode);
+}
+<div class="row">
+    <p class="col-md-4 col-xs-12">نام : @seller?.FullName</p>
+    <p class="col-md-4 col-xs-12">تلفن : @seller?.Cellphone</p>
+    <p class="col-md-4 col-xs-12">کد : @Model.SellerCode</p>
+</div>
+<h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+<div class="row">
+    <div class="col-md-4 col-xs-12">نام : @Model.InsurerName @Model.InsurerFamily</div>
+    <div class="col-md-4 col-xs-12">تصویر کارت ملی <br /> <img src="/images/Ins/life/@Model.InsurerNCImage" width="50" height="50" class="rounded zoom" /></div>
+    <div class="col-md-4 col-xs-12">تلفن : @Model.InsurerCellphone</div>
+</div>
+<h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه شده</span></h6>
+<div class="row">
+    <div class="col-md-4 col-xs-12">نام : @Model.InsuredName @Model.InsuredFamily</div>
+    <div class="col-md-4 col-xs-12">تصویر کارت ملی <br /> <img src="/images/Ins/life/@Model.InsuredNCImage" width="50" height="50" class="rounded zoom" /></div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-xs-12">طــرح : @Model.Plan.Title | @Model.Plan.Price.GetValueOrDefault().ToString("N0")</div>
+    <div class="col-md-4 col-xs-12">روش پرداخت : @Model.PaymentMethod.Title </div>
+</div>
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined") {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes") {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "") {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>  

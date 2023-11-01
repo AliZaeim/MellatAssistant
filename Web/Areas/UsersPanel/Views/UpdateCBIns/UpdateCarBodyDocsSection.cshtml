@@ -1,0 +1,113 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.UpdateCarBodyDocsSection
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateCBIns" asp-action="UpdateCarBodyDocsSection" id="cbStateSectionForm" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#cbDocuments">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Str_CarCardBackImage" />
+            <input type="hidden" asp-for="Str_CarCardFrontImage" />
+            <input type="hidden" asp-for="Str_DrivingPermitBackImage" />
+            <input type="hidden" asp-for="Str_DrivingPermitFrontImage" />
+            <input type="hidden" asp-for="Str_NoDamageCertificateImage" />
+            <input type="hidden" asp-for="Str_PreviousInsImage" />
+            <input type="hidden" asp-for="Str_SuggestionFormImage" />
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="SuggestionFormImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_SuggestionFormImage" />
+                    <input asp-for="SuggestionFormImage" type="file" class="form-control" />
+                    <span asp-validation-for="SuggestionFormImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarCardFrontImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_CarCardFrontImage" />
+                    <input asp-for="CarCardFrontImage" type="file" class="form-control" />
+                    <span asp-validation-for="CarCardFrontImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarCardBackImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_CarCardBackImage" />
+                    <input asp-for="CarCardBackImage" type="file" class="form-control" />
+                    <span asp-validation-for="CarCardBackImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DrivingPermitFrontImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_DrivingPermitFrontImage" />
+                    <input asp-for="Str_DrivingPermitFrontImage" type="file" class="form-control" />
+                    <span asp-validation-for="DrivingPermitFrontImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DrivingPermitBackImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_DrivingPermitBackImage" />
+                    <input asp-for="DrivingPermitBackImage" type="file" class="form-control" />
+                    <span asp-validation-for="CarCardBackImage" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="InsuranceHistoryStatus" class="control-label "></label>
+                    <Select asp-for="InsuranceHistoryStatus" class="custom-select w-100">
+                        <option selected="selected" value="">وضعیت سابقه بیمه را انتخاب کنید</option>
+                        <option value="1">بیمه بدنه ندارد</option>
+                        <option value="2">بیمه از سایر شرکتها دارد</option>
+                        <option value="3">بیمه بدنه از بیمه ملت دارد</option>
+                    </Select>
+                    <span asp-validation-for="InsuranceHistoryStatus" class="text-danger"></span>
+                </div>
+                <div class="form-group@((Model.InsuranceHistoryStatus == 2 || Model.InsuranceHistoryStatus == 3) ? "":"no-display")" id="piiDiv">
+                    <label asp-for="PreviousInsImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_PreviousInsImage" />
+                    <input asp-for="PreviousInsImage" type="file" class="form-control" />
+                    <span asp-validation-for="PreviousInsImage" class="text-danger"></span>
+                </div>
+                <div class="form-group row @(Model.InsuranceHistoryStatus == 2 ? "":"no-display")" id="insHisst2">
+
+                    <div class="form-group col-12 required">
+                        <label asp-for="HasNoneDamageDiscount" class="control-label"></label>
+                        <Select asp-for="HasNoneDamageDiscount" class="custom-select w-100">
+                            <option selected value="">انتخاب کنید ...</option>
+                            <option value="false">خیر</option>
+                            <option value="true">بله</option>
+                        </Select>
+                        <span asp-validation-for="HasNoneDamageDiscount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group imgUp col-12 required @((Model.HasNoneDamageDiscount.GetValueOrDefault() ? "":"no-display"))" id="ndci-imgDiv">
+                        <label asp-for="NoDamageCertificateImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_NoDamageCertificateImage" />
+                        <input type="file" asp-for="NoDamageCertificateImage" class="form-control">
+                        <span asp-validation-for="NoDamageCertificateImage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row " id="insHisst3">
+
+                    <div class="form-group col-12 ">
+                        <label asp-for="IsChangedHealthOfCar" class="control-label"></label>
+                        <Select asp-for="IsChangedHealthOfCar" id="ischangehealth_slelect" class="custom-select w-100">
+                            <option selected value="">انتخاب کنید ...</option>
+                            <option value=false>خیر</option>
+                            <option value=true>بله</option>
+                        </Select>
+                        <span asp-validation-for="IsChangedHealthOfCar" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-12 ">
+                        <label asp-for="RecievedDamageLastYear" class="control-label"></label>
+                        <Select asp-for="RecievedDamageLastYear" id="recieveddamagelastyear_slelect" class="custom-select w-100">
+                            <option selected value="">انتخاب کنید ...</option>
+                            <option value=false>خیر</option>
+                            <option value=true>بله</option>
+                        </Select>
+                        <span asp-validation-for="RecievedDamageLastYear" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

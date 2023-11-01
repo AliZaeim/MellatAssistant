@@ -1,0 +1,75 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.CarBody.CarBodyCarGroup>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "گروه های خودرو";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">گروه های خودروی بیمه بدنه</h1>
+@if (_userService.CheckPermissionByName("addvg",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت گروه</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BaseRate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IncreasePeriod)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IncreaseCoefficient)
+            </th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.BaseRate)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.IncreasePeriod)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.IncreaseCoefficient)
+                </td>
+
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("addcbcar", User.Identity.Name))
+                    {
+                        <a asp-action="Create" asp-controller="CarBodyCars" asp-route-gId="@item.Id">ثبت خودرو</a> <span>|</span>
+                    }
+                    
+                    @if (_userService.CheckPermissionByName("editvg",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletevg", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("viewcbcars", User.Identity.Name))
+                    {
+                        <a asp-action="Index" asp-controller="CarBodyCars" asp-area="UsersPanel" asp-route-gId="@item.Id">مشاهده خودروها <span class="tag tag-info">@item.CarBodyCars.Count()</span></a>
+                    }                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

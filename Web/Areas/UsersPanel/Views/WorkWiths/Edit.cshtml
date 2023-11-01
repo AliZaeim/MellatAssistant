@@ -1,0 +1,58 @@
+﻿@model DataLayer.Entities.Supplementary.WorkWith
+
+@{
+    ViewData["Title"] = "ویرایش همکاری با ما";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش همکاری با ما</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-md-3 col-md-6 col-xs-12">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="RegDate" />
+                <div class="form-group">
+                    <label asp-for="PageMessage" class="control-label"></label>
+                    <textarea asp-for="PageMessage" class="form-control" ></textarea>
+                    <span asp-validation-for="PageMessage" class="text-danger"></span>
+                </div>
+                <script>
+                    CKEDITOR.replace('PageMessage');
+                </script>
+                <div class="form-group">
+                    <label asp-for="SaveMessage" class="control-label"></label>
+                    <textarea asp-for="SaveMessage"  class="form-control"></textarea>
+                    <span asp-validation-for="SaveMessage" class="text-danger"></span>
+                </div>
+                <script>
+                    CKEDITOR.replace('SaveMessage');
+                </script>
+                
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ثــبت" class="btn btn-primary col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}

@@ -1,0 +1,198 @@
+﻿@page
+@model Web.Pages.CooperationRequestModel
+@using Core.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "همکاری با بیمه ملت";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="علی اصل زعیم" />
+    <meta name="description" content="درخواست همکاری با بیمه ملت" />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="canonical" href="metainsur.ir/Faq" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<section class="container-fluid pt-5 pb-4 pb-lg-0 intro-section">
+
+    <div class="container mb-5  box br-top p-5 ">
+        <h5 class="mb-4 bt-color text-center">درخواست همکاری با بیمه ملت</h5>
+        <div class="row">
+            <div class="col-md-6 pl-md-5">
+                <p class="text-justify">
+                    شرکت بیمه ملت در راستای توسعه شبکه فروش و نمایندگی خود بر اساس آئین نامه 96 شورایعالی بیمه اقدام به جذب افراد علاقمند به فعالیت در زمینه نمایندگی و فروش محصولات بیمه ای می نماید. به همین منظور با فراهم نمودن شرایط ویژه برای افراد علاقمند پس از برگزاری دوره آموزشی رایگان و غیرحضوری، کد رسمی نمایندگی و مجوز فعالیت در زمینه فروش محصولات بیمه ای شرکت را در سراسر کشور اعطاء می نماید.
+                    متقاضیان می توانند با تکمیل فرم زیر نسبت به ارسال درخواست خود اقدام نمایند. پس از بررسی درخواست ارسال شده توسط سرپرستی سازمان فروش نسبت به دعوت از واجدین شرایط برای حضور در جلسه توجیهی و دوره آموزشی اقدام خواهد شد.
+
+                </p>
+                <p class="text-left">
+                    <b>بیمه ملت ، همراه خانواده</b>
+                </p>
+
+
+            </div>
+            <div class="col-md-6 mb-4 pr-md-5">
+                <p class="mb-3">جهت ثبت درخواست همکاری، لطفا از فرم زیر استفاده کنید</p>
+                <form method="post">
+                    <div class="form-group">
+                        <span asp-validation-for="cooperationReqVM.FullName" class="text-danger mb-2"></span>
+                        <input class="form-control" type="text" asp-for="cooperationReqVM.FullName" placeholder="نـام و نام خانوادگی" />
+
+                        <span asp-validation-for="cooperationReqVM.Cellphone" class="text-danger  mb-2"></span>
+                        <input class="form-control" asp-for="cooperationReqVM.Cellphone" placeholder="تلفن همراه" />
+
+                        <span asp-validation-for="cooperationReqVM.BirthDate" class="text-danger mb-2"></span>
+                        <input class="form-control " asp-for="cooperationReqVM.BirthDate" placeholder="تاریخ تولد مثال: 1368/09/12" />
+
+                        <span asp-validation-for="cooperationReqVM.LevelOfEducation" class="text-danger mb-2"></span>
+                        <select asp-for="cooperationReqVM.LevelOfEducation" class="custom-select mb-2 zround10">
+                            <option value="">لطفا مقطع تحصیلی خود را انتخاب کنید</option>
+                            <option value="زیر دیپلم">زیر دیپلم</option>
+                            <option value="دیپلم">دیپلم</option>
+                            <option value="فوق دیپلم">فوق دیپلم</option>
+                            <option value="لیسانس">لیسانس</option>
+                            <option value="فوق لیسانس">فوق لیسانس</option>
+                            <option value="دکترا">دکترا</option>
+                        </select>
+                        <span asp-validation-for="cooperationReqVM.StateId" class="text-danger mb-2"></span>
+                        <select asp-for="cooperationReqVM.StateId" id="stateId" class="custom-select mb-2 zround10" asp-items="ViewBag.StateId">
+                            <option value="">لطفا استان را انتخاب کنید</option>
+                        </select>
+                        <span asp-validation-for="cooperationReqVM.CountyId" class="text-danger mb-2"></span>
+                        <select class="custom-select mb-2 zround10" id="coId" asp-for="cooperationReqVM.CountyId">
+                            <option value="">لطفا بعد از انتخاب استان، شهرستان را انتخاب کنید</option>
+                        </select>
+
+                    </div>
+                    <button class="btn btn-success w-100 mb-3" type="submit">ثبت درخواست</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <object class="d-none d-xl-block" type="image/svg+xml" data="/Images/Svg/desktop-wave.svg"></object>
+</section>
+<section id="reason" class="container py-3 py-sm-3 ">
+    <div class="row  mt-4 mx-1">
+        <div class="col-lg-4  mb-3">
+            <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                <div class="mt-4">
+                    <img src="/Images/icons/life-ins.png" />
+                </div>
+                <div class="p-3">
+                    <a href="/Life-Insurance">
+                        <h6 class="IRANSansWeb_Medium">درخواست بیمه زندگی</h6>
+                        <p>استعلام شرایط برای جامع ترین بیمه زندگی کشور را اینجا انجام دهید. </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4  mb-3">
+            <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                <div class="mt-4">
+                    <img src="/Images/icons/third-ins.png" />
+                </div>
+                <div class="p-3">
+                    <a href="/Third-Party-Price-Inquiry">
+                        <h6 class="IRANSansWeb_Medium">درخواست بیمه ثالث</h6>
+                        <p>بدون نیاز به مراجعه حضوری بیمه ثالث خود را آنلاین خریداری کنید. </p>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4  mb-3">
+            <div class="value-body d-flex flex-sm-row flex-column text-sm-right text-center">
+                <div class="mt-4">
+                    <img src="/Images/icons/car-ins.gif" />
+                </div>
+                <div class="p-3">
+                    <a href="/Car-Body-Price-Inquiry">
+                        <h6 class="IRANSansWeb_Medium">درخواست بیمه بدنه</h6>
+                        <p>برای اولین بار در کشور صدور بیمه بدنه بدون نیاز به مراجعه شما. </p>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Footer{
+    <partial name="_Footer" />
+    }
+@section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#stateId").change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Cooperation?handler=GetCounties",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    data: { "sId": $(this).val() },
+                    success: function (response) {
+                        $('#coId').find('option:not(:first)').remove();
+                        $.each(response, function (index, val) {
+                            optionText = val.name;
+                            optionValue = val.id;
+                            $('#coId').append("<option value=" + optionValue + ">" + optionText + "</option>");
+                        });
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    }
+
+@if (TempData["success"] != null)
+{
+    string td = TempData["success"].ToString();
+    DataLayer.Entities.Supplementary.WorkWith workwith = await _userService.GetLastWorkWithAsync();
+    <input id="inpsuccess" type="hidden" value="@td" />
+    <input id="savemes" type="hidden" value="@workwith.SaveMessage" />
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+
+        var x = document.getElementById("inpsuccess").value;
+        if (x == "yes") {
+            var mess = document.getElementById("savemes").value;
+            Swal.fire({
+                icon: 'info',
+                title: 'تبریک',
+                html: mess,
+                confirmButtonText: "متوجه شدم",
+            });
+        }
+    </script>
+}

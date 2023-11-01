@@ -1,0 +1,6 @@
+User-agent:*
+Disallow:/UsersPanel
+Disallow:/Cart
+Disallow:/Payment
+Disallow:/About
+Disallow:/Generic

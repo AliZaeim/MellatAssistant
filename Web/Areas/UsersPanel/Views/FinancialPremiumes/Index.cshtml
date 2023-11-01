@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.ThirdParty.FinancialPremium>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "پوشش مالی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">پوشش مالی</h1>
+@if (_userService.CheckPermissionByName("addfp",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت پوشش مالی</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.FinancialCoverage)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Premium)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RegDate)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(x => x.FinancialCoverage))
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @item.FinancialCoverage.Value.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.Premium.Value.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.RegDate.ToShamsiN()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editfp",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletefp", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                    }
+                    
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

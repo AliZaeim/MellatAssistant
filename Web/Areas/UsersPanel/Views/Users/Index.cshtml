@@ -1,0 +1,311 @@
+﻿@model Core.DTOs.Admin.UsersVM;
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "کاربران";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">کاربران</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6">
+            <a asp-action="CreateUser" class="btn btn-success col-md-3">ثبت کاربر</a>
+        </div>
+        <div class="col-xs-6">
+            <form action="GetUsersExcelReport" method="post" class="float-sm-left">
+                <input type="hidden" name="UserName" value="@User.Identity.Name" />
+                <button type="submit" title="گزارش اکسل" class="btn btn-outline-primary mb-1">دانلود گزارش اکسل</button>
+            </form>
+        </div>
+    </div>
+    <div class="form-group  col-xs-12 pr-0 pl-0 ">
+        <form asp-action="Index" asp-area="UsersPanel" asp-controller="Users" method="post" class="form-inline">
+            <div class="row  mb-1">
+                <div class="col-md-3 col-xs-6">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <span class="col-xs-12 text-xs-center">جستجو بر اساس</span>
+                            <select class="col-xs-12" asp-for="SearchField" data-toggle="tooltip" data-placement="top" title="موضوع جستجو">
+                                <option value="">انتخاب کنید</option>
+                                <option value="name">نام</option>
+                                <option value="family">نام خانوادگی</option>
+                                <option value="cellphone">تلفن همراه</option>
+                                <option value="birthdate">تاریخ تولد</option>
+                                <option value="cardnumber">شماره کارت</option>
+                                <option value="accountnumber">شماره حساب</option>
+                                <option value="sheba">شماره شبا</option>
+                                <option value="referralcode">کد تجاری</option>
+                                <option value="sex">جنسیت</option>
+                                <option value="regdate">تاریخ ثبت نام</option>
+                                <option value="postalcode">کد پستی</option>
+                                <option value="nc">کد ملی</option>
+                                <option value="idnumber">شماره شناسنامه</option>
+                                <option value="studyfield">رشته تحصیلی</option>
+                                <option value="role">نقش</option>
+                                <option value="agentcode">کد نمایندگی</option>
+                                <option value="salesexcode">کد کارشناس فروش</option>
+                                <option value="state">استان</option>
+                                <option value="county">شهرستان</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <span class="col-xs-12 text-xs-center">عبارت جستجو</span>
+                            <input class="input-lg text-xs-center col-xs-12" asp-for="Search" type="text" autofocus autocomplete="off" placeholder="جستجو...">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4 col-xs-6">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <span class="col-xs-12 text-xs-center">مرتب سازی بر اساس</span>
+                            <select class="col-xs-12" asp-for="OrderField" data-toggle="tooltip" data-placement="top" title="مرتب سازی بر اساس">
+                                <option value="">انتخاب کنید</option>
+                                <option value="name">نام</option>
+                                <option value="family">نام خانوادگی</option>
+                                <option value="referralcode">کد تجاری</option>
+                                <option value="sex">جنسیت</option>
+                                <option value="regdate">تاریخ ثبت نام</option>
+                                <option value="agentcode">کد نمایندگی</option>
+                                <option value="salesexcode">کد کارشناس فروش</option>
+                                <option value="state">استان</option>
+                                <option value="county">شهرستان</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <span class="col-xs-12 text-xs-center">روش مرتب سازی</span>
+                            <select class="col-xs-12" asp-for="OrderType">
+                                <option value="">انتخاب کنید</option>
+                                <option value="descending">نزولی</option>
+                                <option value="ascending">صعودی</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <span class="col-xs-12 text-xs-center">تعداد رکورد</span>
+                            <input type="number" asp-for="RecCount" class="col-xs-12 text-xs-center" placeholder="تعداد" data-toggle="tooltip" data-placement="top" title="تعداد در صفحه" value="@Model.RecCount" />
+                        </div>
+                        <div class="col-xs-6">
+                            <span class="col-xs-12 text-xs-center">شماره صفحه</span>
+                            <input type="number" maxlength="5" asp-for="PageN" class="col-xs-12  text-xs-center" placeholder="برو به ؟" data-toggle="tooltip" data-placement="top" title="انتقال به صفحه" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="row">
+                        <span class="col-xs-12 text-xs-center"><span class="hidden-sm-down">عملیات</span></span>
+                        <input type="submit" value="تایید" class="offset-md-0 col-md-12 offset-xs-2 col-xs-8 bg-success text-white rounded" />
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-xs-center align-middle p-0">
+                        #
+                    </th>
+                    <th class="text-xs-center align-middle">
+                        نام
+                    </th>
+                    <th class="text-xs-center align-middle">
+                        نام خانوادگی
+                    </th>
+                    <th class="text-xs-center align-middle">
+                        تلفن همراه
+                    </th>
+                    <th class="text-xs-center align-middle">
+                        فعال/غیرفعال
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        نقش ها
+                    </th>
+                    <th class="text-xs-center align-middle">
+                        تاریخ ثبت
+                    </th>
+                    <th class="text-xs-center align-middle">عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int rad = 1;
+                }
+                @foreach (var item in Model.Users)
+                {
+                    <tr>
+                        <td class="text-xs-center align-middle p-0">
+                            @rad
+                        </td>
+                        <td class="text-xs-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="text-xs-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Family)
+                        </td>
+                        <td class="text-xs-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Cellphone)
+                        </td>
+                        <td class="text-xs-center align-middle">
+                            @if (item.IsActive)
+                            {
+                                <span class="fa fa-check-square cursor-pointer chk" data-id="@item.Id" data-status="0"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-square-o cursor-pointer chk" data-id="@item.Id" data-status="1"></span>
+                            }
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @{
+                                List<DataLayer.Entities.User.UserRole> userRoles = await _userService.GetUserRolesofUserAsync(item.Id);
+                            }
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="text-xs-center align-middle p-0">
+                                            نقش
+                                            @if (! await _userService.UserIsAdmin(item.Id))
+                                            {
+                                                <span>&ensp;</span> 
+                                                <a asp-action="AddRole" asp-route-userId="@item.Id"><span class="fa fa-plus-circle text-success cursor-pointer" title="افزودن نقش"></span></a>
+                                            }
+
+                                        </th>
+                                        <th class="text-xs-center align-middle p-0">تاریخ</th>
+                                        <th class="text-xs-center align-middle p-0">وضعیت</th>
+                                        <th class="text-xs-center align-middle p-0">مالی</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ur in userRoles.OrderByDescending(r => r.RegisterDate))
+                                    {
+                                        string cls = string.Empty;
+                                        if (ur == userRoles.LastOrDefault())
+                                        {
+                                            cls = "text-success";
+                                        }
+                                        <tr>
+                                            <td class="text-xs-center align-middle p-0 @cls">@ur.Role.RoleTitle</td>
+                                            <td class="text-xs-center align-middle p-0 @cls">@ur.RegisterDate.ToShamsiWithTime()</td>
+                                            <td class="text-xs-center align-middle p-0 @cls">
+                                                @if (ur.IsActive)
+                                                {
+                                                    <span class="fa fa-check-square cursor-pointer chkur" data-id="@ur.URId" data-status="0"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="fa fa-square-o cursor-pointer chkur" data-id="@ur.URId" data-status="1"></span>
+                                                }
+                                            </td>
+                                            <td class="text-xs-center align-middle p-0 upercent @cls" data-id=@ur.URId><span class="fa fa-percent upercent text-danger cursor-pointer" data-id=@ur.URId></span></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+
+                        </td>
+                        <td class="text-xs-center align-middle">
+                            @item.RegisteredDate.ToShamsiWithTime()
+                        </td>
+                        <td class="text-xs-center align-middle">
+                            <a asp-action="EditUser" asp-route-id="@item.Id">ویرایش</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">جزئیات</a>
+                            
+                        </td>
+                    </tr>
+                    rad++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".chk").click(function() {
+                if (confirm("آیا مطمئن به تغییر وضعیت کاربر هستید؟")) {
+                    var idd = $(this).attr("data-id");
+                    var st = $(this).attr("data-status");
+                    var th = $(this);
+                    $.ajax({
+                        url: "/UsersPanel/Users/ChangeStatusUser",
+                        data: { id: idd, status: st },
+                        type: "GET",
+                        success: function(result) {
+                            if (result === true) {
+                                th.removeClass("fa-square-o").addClass("fa-check-square");
+                                th.attr("data-status", 0);
+                            }
+                            else {
+
+                                th.removeClass("fa-check-square").addClass("fa-square-o");
+                                th.attr("data-status", 1);
+                            }
+                        },
+                        error: function() {
+                            alert("error");
+                        }
+                    })
+                }
+
+            });
+            $(".chkur").click(function() {
+                if (confirm("آیا مطمئن به تغییر وضعیت نقش هستید؟")) {
+                    var idd = $(this).attr("data-id");
+                    var st = $(this).attr("data-status");
+                    var th = $(this);
+                    $.ajax({
+                        url: "/UsersPanel/Users/ChangeStatusUserRole",
+                        data: { id: idd, status: st },
+                        type: "GET",
+                        success: function(result) {
+                            if (result === true) {
+                                th.removeClass("fa-square-o").addClass("fa-check-square");
+                                th.attr("data-status", 0);
+                            }
+                            else {
+
+                                th.removeClass("fa-check-square").addClass("fa-square-o");
+                                th.attr("data-status", 1);
+                            }
+                        },
+                        error: function() {
+                            alert("error");
+                        }
+                    })
+                }
+
+            });
+            $(document).on("click", ".upercent", function() {
+                var id = $(this).attr("data-id");
+
+                $.ajax({
+                    async: true,
+                    url: "/UsersPanel/Users/UpdateUserRolePercents",
+                    data: { urId: id },
+                    type: "GET",
+                }).done(function(result) {
+                    $("#adminmodal #modal-dialog").addClass("modal-lg");
+                    $("#adminmodal .modal-body").html(result);
+                    var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش کارمزد" + "</h4>";
+                    $("#adminmodal .modal-title").html(html);
+                    //$("#close-modal").hide();
+                    $("#adminmodal").modal('show');
+                });
+            });
+        });
+    </script>
+
+}

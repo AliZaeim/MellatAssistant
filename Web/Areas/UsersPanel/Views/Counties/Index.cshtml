@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DataLayer.Entities.Supplementary.County>
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "لیست شهرستانها";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">لیست شهرستانها <span class="tag tag-square tag-success">@Model.Count()</span></h1>
+@if (_userService.CheckPermissionByName("addcou",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت شهرستان</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                ردیف
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CountyName)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Freight)
+            </th>            
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        @foreach (var item in Model.GroupBy(g => g.State).ToList())
+        {
+            <tr>
+                <td class="align-middle" colspan="4">
+                    <h4 class="alert alert-primary text-xs-center">@item.Key.StateName <span class="tag tag-square tag-primary">@item.Key.Counties.Count()</span></h4>
+                </td>
+            </tr>
+            int rad = 1;
+            @foreach (var co in item.Key.Counties)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @rad
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @co.CountyName | @item.Key.StateName
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @co.Freight
+                    </td>                   
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermissionByName("editcou",User.Identity.Name))
+                        {
+                            <a asp-action="Edit" asp-route-id="@co.CountyId">ویرایش</a>
+                        }                        
+                    </td>
+                </tr>
+                rad++;
+            }           
+        }
+    </tbody>
+</table>

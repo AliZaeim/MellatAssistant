@@ -1,0 +1,235 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBodyInsStep2VM
+
+<div class="col-xs-12 offset-lg-3 col-lg-6 p-2 zsteps" data-step="1">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Car-Body-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                   @* <h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault(0).ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="CarBodyInsurance" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-center text-white pl-1 pr-1 col-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center">مرحله دوم - تصاویر بیرونی</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form id="Step1Form" method="post" asp-action="CarBodyInsStep2" asp-controller="CarBody" asp-antiforgery="true" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#cbform-card"  enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrAngle1Image" />
+        <input type="hidden" asp-for="StrAngle2Image" />
+        <input type="hidden" asp-for="StrAngle3Image" />
+        <input type="hidden" asp-for="StrAngle4Image" />
+        <input type="hidden" asp-for="StrApprenticeSideImage" />
+        <input type="hidden" asp-for="StrCarBehindImage" />
+        <input type="hidden" asp-for="StrCarFrontImage" />
+        <input type="hidden" asp-for="StrDriverSideImage" />
+        <input type="hidden" asp-for="StrHoodImage" />
+        <input type="hidden" asp-for="StrRoofImage" />
+        <input type="hidden" asp-for="StrTrunkImage" />        
+        <div class="form-group row required" id="carfrontimg">
+            <div class="imgUp col-12">
+                <label asp-for="CarFrontImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="carFront-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('carfront-image-upload','carfrontImageValid')" id="carfront-image-upload" accept="image/*" asp-for="CarFrontImage">
+                <br />
+                <span asp-validation-for="CarFrontImage" id="carfrontImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="carbehindimg">
+            <div class="imgUp col-12">
+                <label asp-for="CarBehindImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="carbehind-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('carbehind-image-upload','carbehindImageValid')" id="carbehind-image-upload" accept="image/*" asp-for="CarBehindImage">
+                <br />
+                <span asp-validation-for="CarBehindImage" id="carbehindImageValid" class="text-danger"></span>
+            </div>
+        </div>
+       <div class="form-group row required" id="driversideimg">
+            <div class="imgUp col-12">
+                <label asp-for="DriverSideImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="driverside-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('driverside-image-upload','driversideImageValid')" id="driverside-image-upload" accept="image/*" asp-for="DriverSideImage">
+                <br />
+                <span asp-validation-for="DriverSideImage" id="driversideImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="apprenticsideimg">
+            <div class="imgUp col-12">
+                <label asp-for="ApprenticeSideImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="apprenticside-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('apprenticside-image-upload','apprenticsideImageValid')" id="apprenticside-image-upload" accept="image/*" asp-for="ApprenticeSideImage">
+                <br />
+                <span asp-validation-for="ApprenticeSideImage" id="apprenticsideImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="angle1img">
+            <div class="imgUp col-12">
+                <label asp-for="Angle1Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="angle1-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('angle1-image-upload','angle1ImageValid')" id="angle1-image-upload" accept="image/*" asp-for="Angle1Image">
+                <br />
+                <span asp-validation-for="Angle1Image" id="angle1ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="angle2img">
+            <div class="imgUp col-12">
+                <label asp-for="Angle2Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="angle2-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('angle2-image-upload','angle2ImageValid')" id="angle2-image-upload" accept="image/*" asp-for="Angle2Image">
+                <br />
+                <span asp-validation-for="Angle2Image" id="angle2ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="angle3img">
+            <div class="imgUp col-12">
+                <label asp-for="Angle3Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="angle3-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('angle3-image-upload','angle3ImageValid')" id="angle3-image-upload" accept="image/*" asp-for="Angle3Image">
+                <br />
+                <span asp-validation-for="Angle3Image" id="angle3ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="angle4img">
+            <div class="imgUp col-12">
+                <label asp-for="Angle4Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="angle4-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('angle4-image-upload','angle4ImageValid')" id="angle4-image-upload" accept="image/*" asp-for="Angle4Image">
+                <br />
+                <span asp-validation-for="Angle4Image" id="angle4ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="hoodimg">
+            <div class="imgUp col-12">
+                <label asp-for="HoodImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="hood-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('hood-image-upload','hoodImageValid')" id="hood-image-upload" accept="image/*" asp-for="HoodImage">
+                <br />
+                <span asp-validation-for="HoodImage" id="hoodImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="roofimg">
+            <div class="imgUp col-12">
+                <label asp-for="RoofImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="roof-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('roof-image-upload','roofImageValid')" id="roof-image-upload" accept="image/*" asp-for="RoofImage">
+                <br />
+                <span asp-validation-for="RoofImage" id="roofImageValid" class="text-danger"></span>
+            </div>
+        </div>
+         <div class="form-group row required" id="trunkimg">
+            <div class="imgUp col-12">
+                <label asp-for="TrunkImage" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="trunk-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('trunk-image-upload','trunkImageValid')" id="trunk-image-upload" accept="image/*" asp-for="TrunkImage">
+                <br />
+                <span asp-validation-for="TrunkImage" id="trunkImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep1" data-ajax-update="#cbform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+    </form>
+    
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+        
+        var percent = parseFloat((100 / 8)*2);
+        percent = percent.toFixed();
+        document.getElementById("prog-bar").style.width = percent + "%";
+        document.getElementById("properties").classList.remove("active");
+        document.getElementById("exterior").classList.add("active");
+        document.getElementById("internal").classList.remove("active");
+        document.getElementById("motor").classList.remove("active");
+        document.getElementById("accessories").classList.remove("active");
+        document.getElementById("bodystains").classList.remove("active");
+        document.getElementById("filmes").classList.remove("active");
+        document.getElementById("check").classList.remove("active");
+        
+
+        function ShowImage(src_el_id, show_el_id) {
+            var img_el = document.getElementById(src_el_id);
+            if (img_el !== null && img_el !== "undefined")
+            {
+                var imgname = img_el.value;
+                var src = "/images/icons/select-icon.png";
+                if (imgname !== "") {
+                    src = "/images/Ins/carBody/" + imgname;
+                }
+                document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+            }
+        }
+        ShowImage("StrCarFrontImage","carFront-image");
+        ShowImage("StrCarBehindImage","carbehind-image");
+        ShowImage("StrDriverSideImage","driverside-image");
+        ShowImage("StrApprenticeSideImage","apprenticside-image");
+        ShowImage("StrRoofImage","roof-image");
+        ShowImage("StrTrunkImage","trunk-image");
+        ShowImage("StrAngle1Image","angle1-image");
+        ShowImage("StrAngle2Image","angle2-image");
+        ShowImage("StrAngle3Image","angle3-image");
+        ShowImage("StrAngle4Image","angle4-image");
+        ShowImage("StrHoodImage","hood-image");
+        function UpdateValidSpan(inputId,spanId)
+        {
+            var inp = document.getElementById(inputId);
+            if (inp !== null && typeof(inp) !== "undefined")
+            {
+                if (inp.value !== null)
+                {
+                    var sp = document.getElementById(spanId);
+                    if (sp !== null && typeof(sp) !== "undefined")
+                    {
+                        sp.innerText = '';
+                    }
+                }
+
+            }
+        }
+
+        //var imgprevs = document.getElementsByClassName("imagePreview");
+        //for(var l=0 ; l<imgprevs.length; l++)
+        //{
+        //    imgprevs[l].addEventListener("click", function(){
+        //       beforeEl = this.nextElementSibling;
+        //       document.getElementById(beforeEl.id).click();
+        //    });
+        //}
+        document.querySelectorAll('.imagePreview').forEach((el) => el.addEventListener("click", function()
+              {
+                  //click sibling .uploadFile
+                  this.nextElementSibling.click();
+              }
+        ));
+        document.querySelectorAll('.uploadFile').forEach((el) => el.addEventListener("change", function()
+          {
+              this.parentNode.lastElementChild.innerHTML="";
+
+          }
+        ));
+
+       
+  
+
+    
+</script>

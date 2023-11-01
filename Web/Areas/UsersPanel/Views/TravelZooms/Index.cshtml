@@ -1,0 +1,72 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.Travel.TravelZoom>
+@using Core.Convertors;
+@using DataLayer.Entities.InsPolicy.Travel;
+@using Core.Services.Interfaces;
+@inject IGenericService<TravelClassZoom> _travelClassZoomService;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "مناطق سفر بیمه مسافرتی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">مناطق سفر بیمه مسافرتی</h1>
+@if (_userService.CheckPermissionByName("addtz",User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت منطقه سفر</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th class="text-xs-center align-middle">
+                کلاس های بیمه
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @{
+                        List<TravelClassZoom> classes = _travelClassZoomService.Filter(w => w.ZoomId == item.Id).ToList();
+                        <ul style="list-style:decimal inside" class="text-xs-center" >
+                            @foreach (var cls in classes)
+                            {
+                                <li class="text-xs-center">@cls.TravelInsClass.Title</li>
+                            }
+                        </ul>
+
+                    }
+                </td>
+
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("edittz",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletetz", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

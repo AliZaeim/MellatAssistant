@@ -1,0 +1,73 @@
+﻿@using Core.Prodocers;
+@{
+    ViewData["Title"] = "خطا در پرداخت";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    int? resd = null;
+    string message = string.Empty;
+    if (ViewData["code"] != null)
+    {
+        resd = int.Parse(ViewData["code"].ToString());
+        if (resd != null)
+        {
+            message = NextPayResult.NPMessage(resd.Value);
+        }
+
+    }
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="نتیجه پرداخت در بیمه ملت" />
+    <link href="/Layout/bundle/Index/index-style.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    <link rel="canonical" href="https://metainsur.ir/PaymentResult" />
+    }
+@section Header{
+    <partial name="_Header" />
+}
+<section id="above-page" class="container-fluid mb-sm-5 mb-3 ">
+    <div class="above-page-img">
+        <img src="/images/bg1.jpg" alt="" title="" class="d-lg-block d-none">
+    </div>
+    <div class="container border">
+        <div class="row">
+            <div class="above-page-content m-auto text-white text-center">
+                <div class="above-page-tagline ">
+                    <h1 class="main-tagline IRANSansWeb_Medium">خطا در پرداخت</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="reason" class="container py-3 py-sm-3">
+    <div class="row text-center mt-4 mx-1">
+        <div class="offset-lg-4 col-lg-4 offset-sm-0 col-sm-12">
+            <div class="value-body text-center mb-3">
+                <h4 class="alert alert-danger text-center">@message</h4>
+                
+            </div>
+        </div>
+
+    </div>
+</section>
+@section Footer{
+    <partial name="_Footer" />
+    }
+@section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+    }

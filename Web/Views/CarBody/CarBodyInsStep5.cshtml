@@ -1,0 +1,168 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.CarBodyInsStep5VM
+
+<div class="col-xs-12 offset-lg-3 col-lg-6 p-2 zsteps" data-step="1">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Car-Body-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    @*<h5 class="text-danger">حق بیمه : @Model.Premium.GetValueOrDefault(0).ToString("N0") ریال</h5>*@
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="CarBodyInsurance" method="post">
+                    <input type="hidden" name="Premium" value="@Model.Premium" />
+                    <input type="hidden" name="Clear" value="true" />
+                    <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-center text-white pl-1 pr-1 col-12 col-md-6">
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center">مرحله پنجم - تصاویر لاستیک و لوازم اضافی</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <h6 class="text-danger text-center">حداکثر حجم مجاز عکس 1 مگابایت می باشد</h6>
+    <form id="Step1Form" method="post" asp-action="CarBodyInsStep5" asp-controller="CarBody" asp-antiforgery="true" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#cbform-card" data-ajax-loading="#spinner" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for="Premium" />
+        <input type="hidden" asp-for="StrRimsandTires1Image" />
+        <input type="hidden" asp-for="StrRimsandTires2Image" />
+        <input type="hidden" asp-for="StrRimsandTires3Image" />
+        <input type="hidden" asp-for="StrRimsandTires4Image" />
+        <input type="hidden" asp-for="StrInsideBandsImage" />
+        <input type="hidden" asp-for="StrAudioSystemFromTrunkImage" />
+        <div class="form-group row required" id="tire1img">
+            <div class="imgUp col-12">
+                <label asp-for="RimsandTires1Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="tire1-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('tire1-image-upload','tire1ImageValid')" id="tire1-image-upload" accept="image/*" asp-for="RimsandTires1Image">
+                <br />
+                <span asp-validation-for="RimsandTires1Image" id="tire1ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row required" id="tire2img">
+            <div class="imgUp col-12">
+                <label asp-for="RimsandTires2Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="tire2-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('tire2-image-upload','tire2ImageValid')" id="tire2-image-upload" accept="image/*" asp-for="RimsandTires2Image">
+                <br />
+                <span asp-validation-for="RimsandTires2Image" id="tire2ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="tire3img">
+            <div class="imgUp col-12">
+                <label asp-for="RimsandTires3Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="tire3-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('tire3-image-upload','tire3ImageValid')" id="tire3-image-upload" accept="image/*" asp-for="RimsandTires3Image">
+                <br />
+                <span asp-validation-for="RimsandTires3Image" id="tire3ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="tire4img">
+            <div class="imgUp col-12">
+                <label asp-for="RimsandTires4Image" class="control-label col-7 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="tire4-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('tire4-image-upload','tire4ImageValid')" id="tire4-image-upload" accept="image/*" asp-for="RimsandTires4Image">
+                <br />
+                <span asp-validation-for="RimsandTires4Image" id="tire4ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row required" id="insideimg">
+            <div class="imgUp col-12">
+                <label asp-for="InsideBandsImage" class="control-label col-8 col-lg-4"></label><span>&lArr;</span>
+                <div class="imagePreview" id="inside-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('inside-image-upload','insideImageValid')" id="inside-image-upload" accept="image/*" asp-for="InsideBandsImage">
+                <br />
+                <span asp-validation-for="InsideBandsImage" id="tire4ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row required" id="audioimg">
+            <div class="imgUp col-12">
+                <label asp-for="AudioSystemFromTrunkImage" class="control-label col-7 col-lg-5"></label><span>&lArr;</span>
+                <div class="imagePreview" id="audio-image"></div>
+                <input type="file" class="uploadFile img no-display" onchange="UpdateValidSpan('audio-image-upload','audioImageValid')" id="audio-image-upload" accept="image/*" asp-for="AudioSystemFromTrunkImage">
+                <br />
+                <span asp-validation-for="AudioSystemFromTrunkImage" id="tire4ImageValid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/CarBody/CarBodyInsStep4" data-ajax-update="#cbform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" />
+        </div>
+    </form>    
+</div>
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    
+    var percent = parseFloat((100 / 8)*5);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("exterior").classList.remove("active");
+    document.getElementById("internal").classList.remove("active");
+    document.getElementById("motor").classList.remove("active");
+    document.getElementById("accessories").classList.add("active");
+    document.getElementById("bodystains").classList.remove("active");
+    document.getElementById("filmes").classList.remove("active");
+    document.getElementById("check").classList.remove("active");
+
+
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined")
+        {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/carBody/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    ShowImage("StrRimsandTires1Image","tire1-image");
+    ShowImage("StrRimsandTires2Image","tire2-image");
+    ShowImage("StrRimsandTires3Image","tire3-image");
+    ShowImage("StrRimsandTires4Image","tire4-image");
+    ShowImage("StrInsideBandsImage", "inside-image");
+    ShowImage("StrAudioSystemFromTrunkImage", "audio-image");
+    function UpdateValidSpan(inputId,spanId)
+    {
+        var inp = document.getElementById(inputId);
+        if (inp !== null && typeof(inp) !== "undefined")
+        {
+            if (inp.value !== null)
+            {
+                var sp = document.getElementById(spanId);
+                if (sp !== null && typeof(sp) !== "undefined")
+                {
+                    sp.innerText = '';
+                }
+            }
+
+        }
+    }
+
+     document.querySelectorAll('.imagePreview').forEach((el) => el.addEventListener("click", function()
+            {
+                //click sibling .uploadFile
+                this.nextElementSibling.click();
+            }
+        ));
+        document.querySelectorAll('.uploadFile').forEach((el) => el.addEventListener("change", function()
+            {
+                this.parentNode.lastElementChild.innerHTML="";
+
+            }
+        ));
+</script>

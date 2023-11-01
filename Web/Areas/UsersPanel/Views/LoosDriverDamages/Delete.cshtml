@@ -1,0 +1,35 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.LoosDriverDamage
+
+@{
+    ViewData["Title"] = "حذف جریمه خسارت راننده";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-danger">حذف جریمه خسارت راننده</h1>
+
+<h3 class="text-xs-center text-warning">آیا مطمئن به حــذف جریمه خسارت راننده هستید؟</h3>
+<div class="container-fluid">
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DamageCount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DamageCount)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DamagePercent)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DamagePercent)
+            </dd>
+        </dl>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="حــذف" class="btn btn-danger" /> |
+            <a asp-action="Index">بازگشــت</a>
+        </form>
+    </div>
+</div>
+

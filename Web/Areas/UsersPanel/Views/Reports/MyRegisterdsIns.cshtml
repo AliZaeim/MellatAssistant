@@ -1,0 +1,295 @@
+﻿@model Core.DTOs.Admin.RegisterdInsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@using System.Text.Json;
+@inject IThirdPartyService _thirdPartyService
+@inject IGenericInsService _genericInsService
+@{
+    string tit = "بیمه های من";
+    
+    ViewData["Title"] = tit;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    var json = JsonSerializer.Serialize(ViewData["InsStatuses"]);
+}
+<div class="container-fluid">
+    <form asp-action="MyRegisterdsIns" method="post">
+        <input type="hidden" asp-for="LogUserName" />
+        <input type="hidden" asp-for="InsSearchFormVM.LoginUserName" />
+        <input type="hidden" asp-for="InsSearchFormVM.SearchType" />
+        <input type="hidden" asp-for="InsSearchFormVM.IsForSale" />
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">جستجوی بیمه نامه ها : </legend>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.InsType" class="control-label"></label>
+                        <select asp-for="InsSearchFormVM.InsType" id="insType" class="form-control">
+                            <option value="all">همــه</option>
+                            @foreach (var type in Model.InsTypes)
+                            {
+                                <option value="@type.Value">@type.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="InsSearchFormVM.InsType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.TrCode" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.TrCode" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.TrCode" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="InsSearchFormVM.InsNo" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.InsNo" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.InsNo" class="text-danger"></span>
+                    </div>
+                </div>                
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.FRegDate" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.FRegDate" placeholder="yyyy/0m/0d" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.FRegDate" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="InsSearchFormVM.Insurer" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.Insurer" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.Insurer" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12 text-xs-center">
+                    <div>
+                        <label asp-for="InsSearchFormVM.ERegDate" class="control-label"></label>
+                        <input asp-for="InsSearchFormVM.ERegDate" placeholder="yyyy/0m/0d" class="form-control text-xs-center" />
+                        <span asp-validation-for="InsSearchFormVM.ERegDate" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="InsSearchFormVM.SalesEx" class="control-label"></label>
+                        <select asp-for="InsSearchFormVM.SalesEx" id="saleExCode" class="form-conterol w-100">
+                            <option value="all">هـــمه</option>
+                            @if (Model.InsSearchFormVM.Sellers != null)
+                            {
+                                @foreach (var se in Model.InsSearchFormVM.Sellers.ToList())
+                                {
+                                    
+                                    <option value="@se.Id">@se.SalesExFullName</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="InsSearchFormVM.SalesEx" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row  border-top mt-1">
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.SortType" class="control-label"></label>
+                    <select asp-for="InsSearchFormVM.SortType" class="form-control text-xs-center">
+                        <option value="order_desc">به صورت نزولی</option>
+                        <option value="order_asc">به صورت صعودی</option>
+                    </select>
+                    <span asp-validation-for="InsSearchFormVM.SortType" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.SortField" class="control-label"></label>
+                    <select asp-for="InsSearchFormVM.SortField" class="form-control text-xs-center">
+                        <option value="Change_Date">تاریخ تغییر</option>
+                        <option value="Reg_Date">تاریخ ثبت</option>
+                        <option value="Status_Date">تاریخ وضعیت </option>
+                    </select>
+                    <span asp-validation-for="InsSearchFormVM.SortField" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.RecPerPage" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.RecPerPage" min=1 class="form-control text-xs-center" />
+                    <span asp-validation-for="InsSearchFormVM.RecPerPage" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <label asp-for="InsSearchFormVM.PageN" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.PageN" min=1 class="form-control text-xs-center" />
+                    <span asp-validation-for="InsSearchFormVM.PageN" class="text-danger"></span>
+                </div>
+                <div class="col-md-1 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.TotalPage" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.TotalPage" type="text" class="form-control text-xs-center" disabled />
+                    <span asp-validation-for="InsSearchFormVM.TotalPage" class="text-danger"></span>
+                </div>
+                <div class="col-md-1 col-xs-12 text-xs-center">
+                    <label asp-for="InsSearchFormVM.TotalRecs" class="control-label"></label>
+                    <input asp-for="InsSearchFormVM.TotalRecs" type="text"  class="form-control text-xs-center" disabled />
+                    <span asp-validation-for="InsSearchFormVM.TotalRecs" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 col-xs-12 text-xs-center">
+                    <label class="control-label text-xs-center w-100">عملیات</label>
+                    <input type="submit" value="تایید" class=" text-xs-center btn btn-primary col-xs-12" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<h1 class="text-xs-center alert alert-info mt-1">@tit <span class="tag tag-square tag-warning">@Model.complexRegisterdsInsVMs.Count()</span></h1>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle p-0">
+                    #
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    شماره بیمه نامه
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    حق بیمه خالص
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    نوع بیمه نامه
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    کارشناس فروش
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    بیمه گذار
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    وضعیت
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    وضعیت پرداخت
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    تاریخ ثبت
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    تاریخ‌آخرین‌تغییر
+                </th>
+
+                <th class="text-xs-center align-middle p-0">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int rad = 1;
+            }
+            @foreach (var item in Model.complexRegisterdsInsVMs.OrderByDescending(x => x.LastChangeDate).ThenBy(x => x.RegDate).ToList())
+            {
+                <tr>
+                    <td class="text-xs-center align-middle p-0">
+                        @rad
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.InsNo)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @if (item.InsType != "life")
+                        {
+                            @item.NetPremium.GetValueOrDefault().ToString("N0")
+                        }
+                        else
+                        {
+                            @item.Premium.GetValueOrDefault().ToString("N0")
+                        }
+
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @{
+                            var inst = Model.InsTypes.FirstOrDefault(x => x.Value == item.InsType);
+                        }
+                        <span>@inst?.Text</span>
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+
+                        @item.SalesExPro.SalesExFullName - @item.SalesExPro.SalesExCode
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.InsurerFullName
+                    </td>
+                    @{
+                        string cls = "text-danger";
+                        if (item.LastIssueStatusVM != null)
+                        {
+                            if (item.LastIssueStatusVM.IsEndOfProcess && item.LastIssueStatusVM.IsSystemic)
+                            {
+                                cls = "text-success";
+                            }
+                        }
+                    }
+                    <td class="text-xs-center align-middle p-0 @cls font-size-samll">
+                        @if (item.LastIssueStatusVM != null)
+                        {
+                            <span>@item.LastIssueStatusVM.InsStatusText در @item.LastIssueStatusVM.RegLastStatusDate.ToShamsiWithTime()</span>
+                        }
+                        else
+                        {
+                            <span>نامعلوم</span>
+                        }
+                    </td>
+                    @{
+                        string tdcls = "text-danger";
+                        if (item.LastFinancialStatus != null)
+                        {
+                            if (item.LastFinancialStatus.IsEndOfProcess && item.LastFinancialStatus.IsSystemic)
+                            {
+                                tdcls = "text-success";
+                            }
+                        }
+                    }
+                    <td class="text-xs-center align-middle p-0 @tdcls font-size-samll">
+                        @{
+                            if (item.LastFinancialStatus != null)
+                            {
+                                <span>@item.LastFinancialStatus.InsStatusText در @item.LastFinancialStatus.RegLastStatusDate.ToShamsiWithTime()</span>
+                            }
+                            else
+                            {
+                                <span>نامعلوم</span>
+                            }
+
+                        }
+
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.RegDate.Value.ToShamsiWithTime()
+                    </td>
+                    <td data-toggle="tooltip" data-placement="top" title="@item.LastChangeSubject" class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.LastChangeDate.ToShamsiN_WithTime()
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @if (_genericInsService.CheckPermissionByName("mydetregins", User.Identity.Name))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.InsId.ToString()" asp-route-type="@item.InsType" asp-route-loc="myreginss">جزئیات</a>
+                        }                       
+                    </td>
+                </tr>
+                { rad++; }
+            }
+
+        </tbody>
+    </table>
+
+</div>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#insType").change(function() {
+                var request = $.ajax({
+                    url: "/UsersPanel/Reports/GetSellersOfInsues",
+                    type: "GET",
+                    async: true,
+                    data: { insType: $(this).val() },
+                    dataType: "json",
+                    success: function(data) {
+                        $("#saleExCode").empty();                        
+                        var options = "<option value='all'>هـــمه</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            options += "<option value=" + data[i].id + ">" + data[i].salesExFullName + "</option>";
+                        }
+                        $("#saleExCode").html(options);
+                    }
+                });
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,132 @@
+﻿@model DataLayer.Entities.InsPolicy.Liability.LiabilityInsurance
+<div class="row">
+    <div class="col-xs-12 col-lg-3">
+        <div class="row">
+            @{
+                string Instype = "";
+                if (Model.InsuranceType.Value == 1)
+                {
+                    Instype = "مدیران (مجتمع های مسکونی)";
+
+                }
+                if (Model.InsuranceType.Value == 2)
+                {
+                    Instype = "حرفه ای (پزشکان)";
+                }
+                if (Model.InsuranceType.Value == 3)
+                {
+                    Instype = "حرفه ای (پیراپزشکان)";
+                }
+                if (Model.InsuranceType.Value == 4)
+                {
+                    Instype = "حرفه ای (نظام مهندسی ساختمان)";
+                }
+                if (Model.InsuranceType.Value == 5)
+                {
+                    Instype = "کارفرما (کارگران ساختمانی و عمرانی)";
+                }
+                if (Model.InsuranceType.Value == 6)
+                {
+                    Instype = "کارفرما (صنعتی، بازرگانی، خدماتی)";
+                }
+                if (Model.InsuranceType.Value == 7)
+                {
+                    Instype = "آسانسور (دارندگان، نصابان، شرکتها)";
+                }
+            }
+
+            <div class="text-xs-center">نوع بیمه نامه : @Instype</div>
+            @if (Model.InsuranceType.Value == 1)
+            {
+                <div class="text-xs-center">
+                    <img class="rounded zoom" width="50" height="50" src="/images/Ins/lia/@Model.BuildingManagerNCImage" />
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-xs-12 col-lg-3 mb-1">
+        <div class="text-xs-center">تصویر فرم پیشنهاد صفحه اول</div>
+        <div class="text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/lia/@Model.SuggestionFormPage1" />
+        </div>
+    </div>
+    @if (Model.InsuranceType.GetValueOrDefault() != 3)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد صفحه دوم</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/lia/@Model.SuggestionFormPage2" />
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-3 col-xs-12">
+        <p class="text-xs-center">آیا سال قبل بیمه نامه داشته اید؟ : @((Model.HasPreviousYearInsurance)? "بله":"خیر")</p>
+    </div>
+    @if (Model.HasPreviousYearInsurance)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="col-xs-12 text-xs-center">تصویر بیمه نامه قبلی</div>
+            <div class="col-xs-12 text-xs-center">
+                <img class="rounded zoom" width="50" height="50" src="/images/Ins/lia/@Model.PreviousInsuranceImage" />
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-3 col-xs-12">
+        <p class="text-xs-center">سابقه عدم خسارت دارد؟ : @((Model.HasNoDamageHistory)? "بله":"خیر")</p>
+    </div>
+    @if (Model.HasNoDamageHistory)
+    {
+        <div class="col-xs-12 col-lg-3 mb-1">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">تصویر استعلام عدم خسارت</div>
+                <div class="col-xs-12 text-xs-center">
+                    <img class="rounded zoom" width="50" height="50" src="/images/Ins/lia/@Model.NoDamageHistoryImage" />
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined") {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes") {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "") {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+    }
+</script> 

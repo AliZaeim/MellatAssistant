@@ -1,0 +1,45 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.IncidentCover
+
+@{
+    ViewData["Title"] = "ویرایش پوششهای حوادث";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش پوششهای حوادث</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-md-4 col-md-4 col-xs-12">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="RegDate" />
+                <div class="form-group">
+                    <label asp-for="LifeEventCoverage" class="control-label"></label>
+                    <input asp-for="LifeEventCoverage" class="form-control" />
+                    <span asp-validation-for="LifeEventCoverage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DriverEventCoverage" class="control-label"></label>
+                    <input asp-for="DriverEventCoverage" class="form-control" />
+                    <span asp-validation-for="DriverEventCoverage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DriverEventPremium" class="control-label"></label>
+                    <input asp-for="DriverEventPremium" class="form-control" />
+                    <span asp-validation-for="DriverEventPremium" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

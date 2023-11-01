@@ -1,0 +1,36 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.FinancialPremium
+
+@{
+    ViewData["Title"] = "حذف پوشش مالی";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-danger">حذف پوشش مالی</h1>
+
+<h3 class="text-xs-center text-warning">آیا مطمئن به حــذف پوشش مالی هستید؟</h3>
+<div class="container-fluid">
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FinancialCoverage)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FinancialCoverage)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Premium)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Premium)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="حــذف" class="btn btn-danger" /> |
+            <a asp-action="Index">بازگشــت</a>
+        </form>
+    </div>
+</div>
+

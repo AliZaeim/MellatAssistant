@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DataLayer.Entities.Supplementary.AdminHelpInfo>
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "راهنمای کاربران";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<h1 class="text-xs-center alert alert-info">راهنمای کاربران</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">#</th>
+            <th class="text-xs-center align-middle">تاریخ</th>
+            <th class="text-xs-center align-middle">عنوان</th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rad = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">@rad</td>
+                <td class="text-xs-center align-middle">@item.RegDate.ToShamsiN()</td>
+                <td class="text-xs-center align-middle">@item.Title</td>
+                <td class="text-xs-center align-middle"><a href="/UsersPanel/Users/HelpInfo/@item.Id" class="btn btn-primary text-white">مشاهده</a></td>
+            </tr>
+            rad++;
+        }
+    </tbody>
+</table>

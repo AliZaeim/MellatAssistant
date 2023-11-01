@@ -1,0 +1,77 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.UpdateTPHistorySectionVM
+<div class="container-fluid">
+    <div class="row p-0">
+        <form method="post" asp-action="UpdatetpInsHistorySection" asp-controller="UpdateThirdPartyIns" asp-area="UsersPanel" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#tpHistorySection" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StrCarGreenPaperImage" />
+            <input type="hidden" asp-for="StrPrevInsurancePolicyImage" />
+            <input type="hidden" asp-for="guid" />
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="VehicleOperationKilometers" class="control-label"></label>
+                    <input class="form-control" asp-for="VehicleOperationKilometers">
+                    <span asp-validation-for="VehicleOperationKilometers" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LicensePlateChanged" class="control-label"></label>
+                    <select asp-for="LicensePlateChanged" class="form-control">
+                        <option value="false">خیر</option>
+                        <option value="true">بله</option>
+                    </select>
+                    <span asp-validation-for="LicensePlateChanged" class="text-danger"></span>
+                </div>
+                <div class="form-group @((Model.LicensePlateChanged)? "" : "hide")" id="greenPaperDiv">
+                    <label asp-for="CarGreenPaperImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrCarGreenPaperImage" />
+                    <input type="file" class="form-control" asp-for="CarGreenPaperImage">
+                    <span asp-validation-for="CarGreenPaperImage" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="col-md-6 col-xs-12">
+
+                <div class="form-group">
+                    <label asp-for="ExistPrevInsurancePolicy" class="control-label"></label>
+                    <select asp-for="ExistPrevInsurancePolicy" class="form-control">
+                        <option value="false">خیر</option>
+                        <option value="true">بله</option>
+                    </select>
+                    <span asp-validation-for="ExistPrevInsurancePolicy" class="text-danger"></span>
+                </div>
+                <div class="form-group @((Model.ExistPrevInsurancePolicy)? "":"hide")" id="prevInsDiv">
+                    <label asp-for="PrevInsurancePolicyImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrPrevInsurancePolicyImage" />
+                    <input type="file" class="form-control" asp-for="PrevInsurancePolicyImage">
+                    <span asp-validation-for="PrevInsurancePolicyImage" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#LicensePlateChanged").change(function() {
+            var vlu = $(this).val();
+            if (vlu == "true") {
+                $("#greenPaperDiv").show();
+            }
+            else {
+                $("#greenPaperDiv").hide();
+            }
+        });
+        $("#ExistPrevInsurancePolicy").change(function() {
+            var vlu = $(this).val();
+            if (vlu == "true") {
+                $("#prevInsDiv").show();
+            }
+            else {
+                $("#prevInsDiv").hide();
+            }
+        });
+    });
+</script>

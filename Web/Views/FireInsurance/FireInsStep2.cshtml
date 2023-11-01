@@ -1,0 +1,463 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.FireInsStep2VM
+<style>
+    body:empty{
+       display:none;
+      }
+</style>
+<div class="col-xs-12 p-2 zsteps" data-step="2">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row pr-2 pl-2">
+                <div class="col-md-4 col-xs-12">
+                    <a href="/Fire-Insurance-Price-Inquiry" class="btn btn-success text-white col-xs-12 col-md-6">استعلام مجدد</a>
+                </div>
+                <div class="col-md-4 col-xs-12 text-center pt-1">
+                    <h5 class="text-danger">حق بیمه : @Model.Premium.ToString("N0") تومان</h5>
+                </div>
+                <div class="col-md-4 col-xs-12 text-md-left">
+                    <form asp-action="FireInsuranceIndex" method="post">
+                        <input type="hidden" name="Premium" value="@Model.Premium" />
+                        <input type="hidden" name="Clear" value="true" />
+                        <input type="submit" value="خالی کردن فرم" class="btn btn-danger text-xs-center text-white pl-1 pr-1 col-xs-12 col-md-6">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="text-lg-center">مرحله دوم - مدارک</h3>
+    <h6 class="text-danger text-center">عکس های با پسوند jpeg, jpg, gif, png مورد قبول هستند</h6>
+    <form method="post" asp-action="FireInsStep2" asp-controller="FireInsurance" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace"
+          data-ajax-update="#fireform-card"  enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TrCode" />
+        <input type="hidden" asp-for=StrPropertiesListFile />
+        <input type="hidden" asp-for=StrExteriorofBuildingImage />
+        <input type="hidden" asp-for=StrGasBurningDevice1Image />
+        <input type="hidden" asp-for=StrGasBurningDevice2Image />
+        <input type="hidden" asp-for=StrGasBurningDevice3Image />
+        <input type="hidden" asp-for=StrGasBurningDevice4Image />
+        <input type="hidden" asp-for=StrInsuranceLocationInputImage />
+        <input type="hidden" asp-for=StrInsuredPlaceFuseandMeterImage />
+        <input type="hidden" asp-for=StrInsuredPlaceMeterandGasBranchesImage />
+        <input type="hidden" asp-for=StrMainMeterandElectricalPanelImage />
+        <input type="hidden" asp-for=StrWholeInteriorFilm />
+        <input type="hidden" asp-for="Premium" />
+        <div class="form-group required">            
+            <label asp-for="InsuranceType" class="control-label required"></label>
+            <select asp-for="InsuranceType" id="insType" class="custom-select">                
+                <option value="" selected="selected">نوع بیمه نامه را انتخاب کنید</option>
+                <option value=1>مسکونی</option>
+                <option value=2>غیرصنعتی</option>
+                <option value=3>صنعتی</option>
+            </select>
+            <span asp-validation-for="InsuranceType" id="insType_span" class="text-danger"></span>
+        </div>
+        @{
+            string clas1 = "form-group no-display";
+            string clas2 = "no-display";
+            string clas3 = "form-group no-display row";
+            if (Model.InsuranceType.GetValueOrDefault() == 1)
+            {
+                if (Model.HasTheftCover)
+                {
+                    clas1 = "form-group";
+                }
+            }
+            if (Model.InsuranceType.GetValueOrDefault() == 2)
+            {
+                clas2 = string.Empty;
+            }
+            if (Model.InsuranceType.GetValueOrDefault() == 3)
+            {
+                clas3 = "form-group row";
+            }
+
+        }
+        <div calss="@clas1" id="div_instype1">
+            <div class="form-group form-check @((Model.InsuranceType == 1) ? "":"no-display")" id="has_theft_cover_div">
+                <label class="form-check-label">
+                    <input class="form-check-input" id="hastheftcover_checkbox" asp-for="HasTheftCover" /> @Html.DisplayNameFor(model => model.HasTheftCover)
+                </label>
+            </div>
+            <div class="form-group @((Model.HasTheftCover) ? "":"no-display")" id="propFileDiv">
+                <label asp-for="PropertiesListFile" class="control-label"></label> 
+                @if (!string.IsNullOrEmpty(Model.StrPropertiesListFile)){                    
+                        @if (Model.StrPropertiesListFile.EndsWith("pdf"))
+                        {
+                            <span class="text-danger">فایل pdf انتخاب شده</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">تصویر انتخاب شده</span>
+                        }
+                    
+                }
+                <input asp-for="PropertiesListFile" type="file" class="form-control" />
+                <span asp-validation-for="PropertiesListFile" class="text-danger valid"></span>
+            </div>
+        </div>
+        <div class="@clas2" id="div_instype2">
+
+            <div class="form-group row required" id="ebiimg">
+                <div class="imgUp col-12">
+                    <label asp-for="ExteriorofBuildingImage" class="control-label"></label>
+                    <div class="imagePreview" id="ebi-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="ExteriorofBuildingImage_upload" asp-for="ExteriorofBuildingImage">
+                    <br />
+                    <span asp-validation-for="ExteriorofBuildingImage" id="ebiImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row required" id="iliiimg">
+                <div class="imgUp col-12">
+                    <label asp-for="InsuranceLocationInputImage" class="control-label"></label>
+                    <div class="imagePreview" id="ilii-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="InsuranceLocationInputImage_upload" asp-for="InsuranceLocationInputImage">
+                    <br />
+                    <span asp-validation-for="InsuranceLocationInputImage" id="ebiImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row required" id="mmepimg">
+                <div class="imgUp col-12">
+                    <label asp-for="MainMeterandElectricalPanelImage" class="control-label"></label>
+                    <div class="imagePreview" id="mmep-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="MainMeterandElectricalPanelImage_upload" asp-for="MainMeterandElectricalPanelImage">
+                    <br />
+                    <span asp-validation-for="MainMeterandElectricalPanelImage" id="mmepImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row required" id="imfmimg">
+                <div class="imgUp col-12">
+                    <label asp-for="InsuredPlaceFuseandMeterImage" class="control-label"></label>
+                    <div class="imagePreview" id="imfm-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="imfm-image-upload" asp-for="InsuredPlaceFuseandMeterImage">
+                    <br />
+                    <span asp-validation-for="InsuredPlaceFuseandMeterImage" id="imfmImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row required" id="ipmgbimg">
+                <div class="imgUp col-12">
+                    <label asp-for="InsuredPlaceMeterandGasBranchesImage" class="control-label"></label>
+                    <div class="imagePreview" id="ipmgb-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="InsuredPlaceMeterandGasBranchesImage_upload" asp-for="InsuredPlaceMeterandGasBranchesImage">
+                    <br />
+                    <span asp-validation-for="InsuredPlaceMeterandGasBranchesImage" id="ipmgbImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row required" id="gbd1img">
+                <div class="imgUp col-12">
+                    <label asp-for="GasBurningDevice1Image" class="control-label"></label>
+                    <div class="imagePreview" id="gbd1-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="GasBurningDevice1Image_upload" asp-for="GasBurningDevice1Image">
+                    <br />
+                    <span asp-validation-for="GasBurningDevice1Image" id="gbd1ImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row" id="gbd2img">
+                <div class="imgUp col-12">
+                    <label asp-for="GasBurningDevice2Image" class="control-label"></label>
+                    <div class="imagePreview" id="gbd2-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="GasBurningDevice2Image_upload" asp-for="GasBurningDevice2Image">
+                    <br />
+                    <span asp-validation-for="GasBurningDevice2Image" id="gbd2ImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row" id="gbd3img">
+                <div class="imgUp col-12">
+                    <label asp-for="GasBurningDevice3Image" class="control-label"></label>
+                    <div class="imagePreview" id="gbd3-image"></div>
+                    <input type="file" class="uploadFile img no-display" accept="image/*" id="GasBurningDevice3Image_upload" asp-for="GasBurningDevice3Image">
+                    <br />
+                    <span asp-validation-for="GasBurningDevice3Image" id="gbd3ImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row" id="gbd4img">
+                <div class="imgUp col-12">
+                    <label asp-for="GasBurningDevice4Image" class="control-label"></label>
+                    <div class="imagePreview" id="gbd4-image"></div>
+                    <input type="file" class="uploadFile img no-display" onChange="validate(this,this.value)" accept=".png, .jpg, .jpeg, .gif" id="GasBurningDevice4Image_upload" asp-for="GasBurningDevice4Image">
+                    <br />
+                    <span asp-validation-for="GasBurningDevice4Image" id="gbd4ImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            <div class="form-group row required" id="wifimg">
+                <div class="imgUp col-12">
+                    <label asp-for="WholeInteriorFilm" class="control-label col-9 col-lg-6"></label><span class="text-danger">حداکثر 1 دقیقه</span><span>&lArr;</span>
+                    
+                    <div class="imagePreview ml-1" id="wif-image"></div> &ensp;
+                    <video controls autoplay class="filmPreview" id="film-preview">
+                        <source src="/images/Ins/Fire/@Model.StrWholeInteriorFilm" />
+                    </video>
+                    <input type="file" class="uploadFile img no-display"  id="wholeInteriorFilm_upload"  asp-for="WholeInteriorFilm">
+                    <br />
+                    <span asp-validation-for="WholeInteriorFilm" id="wifImageValid" class="text-danger valid"></span>
+                </div>
+            </div>
+            
+        </div>
+        <div class="@clas3" id="div_instype3">
+            <h4 class="text-center text-danger w-100">پس از ثبت و ارسال مدارک، منتظر تماس کارشناس باشید</h4>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-danger text-white" href="#" data-ajax="true" data-ajax-url="/FireInsurance/FireInsStep1" data-ajax-update="#fireform-card">مرحله قبل</a>
+            <input type="submit" value="مرحله بعد" class="btn btn-primary" id="submit2" />
+        </div>
+        <div id="loader" class="no-display" style="position:absolute;top:90%;right:45%">
+            <img src="~/images/Spinner-3.gif" />
+        </div>
+    </form>
+    
+</div>
+
+<script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/customvalidate.js"></script>
+<script>
+    $(document)
+        .ajaxStart(function () {
+            $('#loader').removeClass("no-display");
+
+        })
+        .ajaxComplete(function () {
+            $('#loader').addClass("no-display");
+        });
+    var percent = parseFloat(100 / 2);
+    percent = percent.toFixed();
+    document.getElementById("prog-bar").style.width = percent + "%";
+    document.getElementById("properties").classList.remove("active");
+    document.getElementById("questionnaire").classList.add("active");
+    document.getElementById("records").classList.remove("active");
+    document.getElementById("check").classList.remove("active");    
+    window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    document.querySelectorAll('.uploadFile').forEach(function(el) {
+        el.addEventListener('change', function() {
+            var parent = this.parentElement;
+            parent.querySelector('.valid').innerText = '';
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return;
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function() { // set image data as background of div
+                    parent.querySelector('.imagePreview').style.backgroundImage = "url(" + this.result + ")";
+                }
+            }
+        });
+    });
+    function ShowImage(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined")
+        {
+            var imgname = img_el.value;
+            var src = "/images/icons/select-icon.png";
+            if (imgname !== "") {
+                src = "/images/Ins/fire/" + imgname;
+            }
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    function ShowFilm(src_el_id, show_el_id) {
+        var img_el = document.getElementById(src_el_id);
+        if (img_el !== null && img_el !== "undefined")
+        {
+            var imgname = img_el.value;
+            var src = "/images/icons/attach-check.png";
+            //if (imgname !== "") {
+            //    src = "/images/Ins/fire/" + imgname;
+            //}
+            document.getElementById(show_el_id).style.backgroundImage = "url('" + src + "')";
+        }
+    }
+    //1- hidden file Input /InsurerNCImage
+    // 2- Div for imagePreview fireinsurernc-image
+    ShowImage("StrExteriorofBuildingImage","ebi-image");
+    ShowImage("StrInsuranceLocationInputImage","ilii-image");
+    ShowImage("StrInsuredPlaceFuseandMeterImage","imfm-image");
+    ShowImage("StrMainMeterandElectricalPanelImage","mmep-image");
+    ShowImage("StrInsuredPlaceMeterandGasBranchesImage","ipmgb-image");
+    ShowImage("StrGasBurningDevice1Image","gbd1-image");
+    ShowImage("StrGasBurningDevice2Image","gbd2-image");
+    ShowImage("StrGasBurningDevice3Image","gbd3-image");
+    ShowImage("StrGasBurningDevice4Image","gbd4-image");
+   
+    ShowFilm("WholeInteriorFilm","wif-image")
+    var Instype = document.getElementById("insType");
+
+    Instype.addEventListener("change" , function(){
+        sel_option_val = Instype.options[Instype.selectedIndex].value;
+        //alert(sel_option_val);
+        var divinstype1 = document.getElementById("div_instype1");
+        var propFile_Div = document.getElementById("propFileDiv");
+        var divinstype2= document.getElementById("div_instype2");
+        var divinstype3 = document.getElementById("div_instype3");
+        var hastheleftcover_bool = document.getElementById("hastheftcover_checkbox");
+        var has_theft_coverdiv = document.getElementById("has_theft_cover_div");
+        if (sel_option_val === "")
+        {
+            if (divinstype1 != null && typeof(divinstype1) !== "undefined")
+            {
+                divinstype1.classList.add("no-display");
+            }
+            if (divinstype2 != null && divinstype2 !== "undefined")
+            {
+                divinstype2.classList.add("no-display");
+            }
+            if (divinstype3 != null && divinstype3 != "undefined")
+            {
+                divinstype3.classList.add("no-display");
+            }
+        }
+        else{
+            var instype_span = document.getElementById("insType_span");
+            instype_span.innerText="";
+        }
+        if (sel_option_val === "1")
+        {
+
+            if (divinstype1 != null && typeof(divinstype1) !== "undefined")
+            {
+                divinstype1.classList.remove("no-display");
+                document.getElementById("has_theft_cover_div").classList.remove("no-display");
+            }
+            if (divinstype2 != null && divinstype2 !== "undefined")
+            {
+                divinstype2.classList.add("no-display");
+            }
+            if (divinstype3 != null && divinstype3 != "undefined")
+            {
+                divinstype3.classList.add("no-display");
+            }
+
+
+        }
+        if (sel_option_val === "2")
+        {
+            if (divinstype1 != null && typeof(divinstype1) !== "undefined")
+            {
+                divinstype1.classList.add("no-display");
+            }
+            if (divinstype2 != null && divinstype2 !== "undefined")
+            {
+                divinstype2.classList.remove("no-display");
+            }
+            if (divinstype3 != null && divinstype3 != "undefined")
+            {
+                divinstype3.classList.add("no-display");
+            }
+            if (propFile_Div !== null && typeof(propFile_Div) !== "undefined")
+            {
+                propFile_Div.classList.add("no-display");
+            }
+        }
+        if (sel_option_val === "3")
+        {
+            if (divinstype1 != null && typeof(divinstype1) !== "undefined")
+            {
+                divinstype1.classList.add("no-display");
+            }
+            if (divinstype2 != null && divinstype2 !== "undefined")
+            {
+                divinstype2.classList.add("no-display");
+            }
+            if (divinstype3 != null && divinstype3 != "undefined")
+            {
+                divinstype3.classList.remove("no-display");
+            }
+            if (propFile_Div !== null && typeof(propFile_Div) !== "undefined")
+            {
+                propFile_Div.classList.add("no-display");
+            }
+        }
+    });
+    var hastheleftcover_chk = document.getElementById("hastheftcover_checkbox");
+    var propFile_Div = document.getElementById("propFileDiv");
+    if (hastheleftcover_chk != null && hastheleftcover_chk != "undefined")
+    {
+        hastheleftcover_chk.classList.remove("no-display");
+        hastheleftcover_chk.addEventListener("change", function(){
+            if (hastheleftcover_chk.checked == true)
+            {
+                if (propFile_Div !== null && typeof(propFile_Div) !== "undefined")
+                {
+                    propFile_Div.classList.remove("no-display");
+                }
+            }
+            else
+            {
+                if (propFile_Div !== null && typeof(propFile_Div) !== "undefined")
+                {
+                    propFile_Div.classList.add("no-display");
+                }
+            }
+        });
+    }
+
+
+    var imgpreviews = document.getElementsByClassName("imagePreview");
+    for (var l = 0; l < imgpreviews.length; l++) {
+        imgpreviews[l].addEventListener("click", function(){
+
+           var nextEl = this.nextElementSibling;
+           var elem = document.getElementById(nextEl.id);           
+           elem.click();
+        });
+    }
+    var filmprev = document.getElementById("film-preview");
+    if (filmprev != null && typeof(filmprev) !== "undefined")
+    {
+        filmprev.addEventListener("click", function(){
+            
+            var nextEl = this.nextElementSibling;
+            document.getElementById(nextEl.id).click();
+        });
+    }
+    var btnSubmit = document.getElementById("submit2");
+    var uploader = document.getElementById("wholeInteriorFilm_upload");
+    if (uploader !== null && typeof(uploader !== "undefined"))
+    {
+        uploader.onchange = function(){
+        reader = new FileReader();
+        reader.onload = function(e) {
+            var videoElement = document.createElement('video');
+            videoElement.src = e.target.result;
+            var timer = setInterval(function () {
+            if (videoElement.readyState === 4){
+                console.log("The duration is: " + videoElement.duration.toFixed(2) + " seconds");
+                var vidSpan = document.getElementById("wifImageValid");
+                if (vidSpan !== null && typeof(vidSpan !== "undefined"))
+                {
+                    if (videoElement.duration > 120)
+                    {
+                        if (btnSubmit !== "null" && typeof(btnSubmit) !== "undefined")
+                        {
+                            btnSubmit.disabled = true;
+                            btnSubmit.classList.remove("btn-primary");
+                            btnSubmit.classList.add("btn-secondary")
+                        }
+                        vidSpan.innerText = "حداکثر مدت زمان فیلم باید 1 دقیقه باشد !";
+
+                    }
+                    else
+                    {
+                        if (btnSubmit !== "null" && typeof(btnSubmit) !== "undefined")
+                        {
+                            btnSubmit.disabled = false;
+                            btnSubmit.classList.remove("btn-secondary");
+                            btnSubmit.classList.add("btn-primary")
+                            vidSpan.innerText = " ";
+                        }
+                    }
+
+                }
+                clearInterval(timer);
+            }
+            }, 500)
+        };
+            reader.readAsDataURL(uploader.files[0]);
+        }
+    }
+
+</script>

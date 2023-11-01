@@ -1,0 +1,189 @@
+﻿@model Core.DTOs.Admin.AdminFinancialReportVM
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "کارمزد";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">کارمزد</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-md-2 col-md-8 col-xs-12">
+            <form asp-action="Index">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col-md-6 col-xs-12">
+                    <label asp-for="Year" class="control-label"></label>
+                    <input asp-for="Year" class="form-control" />
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6 col-xs-12">
+                    <label asp-for="Mounth" class="control-label"></label>
+                    <input asp-for="Mounth" class="form-control" />
+                    <span asp-validation-for="Mounth" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="تایید" class="btn btn-primary offset-md-3 col-md-6 col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if (Model.complexRegisterdsInsVMs.Count() != 0)
+{
+    <br>
+    <div class="mt-5">
+
+        <table class="table table-borderd">
+            <thead>
+                <tr>
+                    <th class="text-xs-center align-middle p-0">
+                        #
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        شماره بیمه نامه
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        نوع
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        تاریخ صدور
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        کارشناس فروش
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        بیمه گذار
+                    </th>
+
+                    <th class="text-xs-center align-middle p-0">
+                        تاریخ پرداخت
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        حق بیمه
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        حق بیمه خالص
+                    </th>
+
+                    <th class="text-xs-center align-middle p-0">
+                        کارمزد خالص
+                    </th>
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int rad = 1;
+                }
+                @foreach (var item in Model.complexRegisterdsInsVMs)
+                {
+                    <tr>
+                        <td class="text-xs-center align-middle p-0">
+                            @rad
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @Html.DisplayFor(modelItem => item.InsNo)
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @Html.DisplayFor(modelItem => item.FaInsType)
+                        </td>
+                        @{
+                            string cls = "text-danger";
+                            if (item.LastIssueStatusVM != null)
+                            {
+                                if (item.LastIssueStatusVM.IsEndOfProcess && item.LastIssueStatusVM.IsSystemic)
+                                {
+                                    cls = "text-success";
+                                }
+                            }
+                        }
+                        <td class="text-xs-center align-middle p-0 @cls font-size-samll">
+                            @if (item.LastIssueStatusVM != null)
+                            {
+                                <span>@item.LastIssueStatusVM.RegLastStatusDate.ToShamsi()</span>
+                            }
+                            else
+                            {
+                                <span>نامعلوم</span>
+                            }
+                        </td>
+                        <td class="text-xs-center align-middle p-0 font-size-samll">
+
+                            @item.SalesExPro.SalesExFullName - @item.SalesExPro.SalesExCode
+                        </td>
+                        <td class="text-xs-center align-middle p-0 font-size-samll">
+                            @item.InsurerFullName
+                        </td>
+
+                        @{
+                            string tdcls = "text-danger";
+                            if (item.LastFinancialStatus != null)
+                            {
+                                if (item.LastFinancialStatus.IsEndOfProcess && item.LastFinancialStatus.IsSystemic)
+                                {
+                                    tdcls = "text-success";
+                                }
+                            }
+                        }
+                        <td class="text-xs-center align-middle p-0 @tdcls font-size-samll">
+                            @{
+                                if (item.LastFinancialStatus != null)
+                                {
+                                    <span>@item.LastFinancialStatus.RegLastStatusDate.ToShamsiWithTime()</span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            }
+                        </td>
+                        <td class="text-xs-center align-middle p-0 font-size-samll">
+                            @item.Premium.GetValueOrDefault().ToString("N0")
+                        </td>
+                        <td class="text-xs-center align-middle p-0 font-size-samll">
+                            @item.NetPremium.GetValueOrDefault().ToString("N0")
+                        </td>
+                       
+                        <td class="text-xs-center align-middle p-0 font-size-samll">
+                            @item.NetCommission.GetValueOrDefault().ToString("N0")
+                        </td>
+                    </tr>
+                    { rad++; }
+                }
+                @if(Model.complexRegisterdsInsVMs.Count() !=0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-xs-left align-middle">جـــمع</td>
+                        <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.Premium.Value).ToString("N0")</td>
+                        <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.NetPremium.Value).ToString("N0")</td>
+                        <td class="text-xs-center align-middle">@Model.complexRegisterdsInsVMs.Sum(x => x.NetCommission.Value).ToString("N0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (_userService.CheckPermissionByName("dfile",User.Identity.Name))
+    {
+        <form method="post" asp-action="DownloadNoneLifeCommissionTextFile">
+            <input type="hidden" value="@Model.Mounth" name="Mounth">
+            <input type="hidden" value="@Model.Year" name="Year">
+            <input type="submit" class="btn btn-success" value="دانلود فایل">
+        </form>
+    }
+    
+}
+
+
+
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}
+

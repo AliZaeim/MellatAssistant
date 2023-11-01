@@ -1,0 +1,78 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.ThirdParty
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.SuggestionFormImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر بیمه نامه قبلی</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.PrevInsPolicyImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر روی کارت خودرو</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.CarCardFrontImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر پشت کارت خودرو</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.CarCardBackImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر روی گواهینامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.DrivingPermitFrontImage" />
+    </div>
+</div>
+<div class="col-xs-12 col-lg-6 mb-1">
+    <div class="col-xs-12 text-xs-center">تصویر پشت گواهینامه</div>
+    <div class="col-xs-12 text-xs-center">
+        <img class="rounded zoom" width="50" height="50" src="/images/Ins/tp/@Model.DrivingPermitBackImage" />
+    </div>
+</div>
+<input type="hidden" id="inpMess" value="@TempData["error"]" />
+<input type="hidden" id="inpSuccInner" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined") {
+        var x = document.getElementById("inpSuccInner").value;
+        if (x === "yes") {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+        var m = document.getElementById("inpMess").value;
+        if (m !== "") {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: m,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

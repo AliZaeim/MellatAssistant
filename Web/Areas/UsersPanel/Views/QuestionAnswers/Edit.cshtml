@@ -1,0 +1,56 @@
+﻿@model DataLayer.Entities.Supplementary.QuestionAnswer
+
+@{
+    ViewData["Title"] = "ویرایش سئوال متداول";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش سئوال متداول</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-md-2 col-md-8 col-xs-12">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group">
+                    <label asp-for="Question" class="control-label"></label>
+                    <input asp-for="Question" class="form-control" />
+                    <span asp-validation-for="Question" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Answer" class="control-label"></label>
+                    <textarea asp-for="Answer" rows="4" class="form-control"></textarea>
+                    <span asp-validation-for="Answer" class="text-danger"></span>
+                </div>
+                <script>
+                    CKEDITOR.replace('Answer');
+                </script>
+                <div class="form-group">
+                    <label asp-for="IsActive" class="control-label"></label>
+                    <select asp-for="IsActive" rows="4" class="form-control">
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </select>
+                    <span asp-validation-for="IsActive" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}

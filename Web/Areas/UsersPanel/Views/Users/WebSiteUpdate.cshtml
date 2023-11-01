@@ -1,0 +1,24 @@
+﻿@model DataLayer.Entities.Supplementary.WebsiteUpdate
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "جزئیات بروزرسانی";
+    
+}
+<div class="container">
+    <div class="row">
+        <h1 class="text-xs-center alert alert-info">@Model.Title</h1>
+        <div class="col-xs-12">
+            <span class="text-primary">توضیحات :</span><br />
+            @foreach (var item in Model.CommentList)
+            {
+                <p>@item</p>
+            }
+            <p>
+                تاریخ ثبت : @Model.RegDate.ToShamsi()
+            </p>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="WebSiteUpdates">بازگشت</a>
+</div>

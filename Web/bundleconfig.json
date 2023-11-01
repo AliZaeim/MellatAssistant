@@ -1,0 +1,26 @@
+[
+  {
+    "outputFileName": "wwwroot/Layout/bundle/Index/index-style.css",
+    "inputFiles": [
+      "wwwroot/Layout/Css/bootstrap.min.css",
+      "wwwroot/Layout/Css/bootstrap-rtl.min.css",
+      "wwwroot/Layout/Css/animate.css",
+      "wwwroot/Layout/Css/Style.css",
+      "wwwroot/Layout/Css/owl-carousel/owl.carousel.min.css",
+      "wwwroot/Layout/Css/sina-nav.min.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/Layout/bundle/Index/index-style.js",
+    "inputFiles": [
+      "wwwroot/Layout/Js/jquery-2.0.0.min.js",
+      "wwwroot/Layout/Js/bootstrap.min.js",
+      "wwwroot/Layout/Js/owl.carousel.js",
+      "wwwroot/Layout/Js/custom.js",
+      "wwwroot/Layout/Js/sina-nav.min.js",
+      "wwwroot/Layout/Js/font-awesome-all.min.js"
+    ]
+  }
+
+  
+]

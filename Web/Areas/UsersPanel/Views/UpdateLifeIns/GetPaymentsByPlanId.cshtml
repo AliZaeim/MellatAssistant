@@ -1,0 +1,10 @@
+﻿@model Core.DTOs.SiteGeneric.LifeIns.SelectPaymentVM
+<label asp-for="PeymentMethodId" class="control-label w-100"></label>
+<select asp-for="PeymentMethodId" class="custom-select w-100">
+    <option value="">لطفا  روش پرداخت را انتخاب کنید</option>
+    @foreach (var item in Model.PaymentMethods)
+	{
+		 <option value="@item.Id">@item.Title</option>
+	}
+</select>
+<span asp-validation-for="PeymentMethodId" class="text-danger w-100"></span>

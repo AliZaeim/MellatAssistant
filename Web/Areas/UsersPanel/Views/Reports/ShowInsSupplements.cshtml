@@ -1,0 +1,92 @@
+﻿@model Core.DTOs.Admin.ShowInsuranceSupplementsData
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+@{
+    string removecommand = "Submit_RemoveSupp('" + Model.RefreshElemanId + "')";
+}
+
+<table class="table table-bordered font-small-2">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle p-0 width-50">#</th>
+            <th class="text-xs-center align-middle p-0 width-10-per">عنوان</th>
+            <th class="text-xs-center align-middle p-0 width-15-per">تاریخ</th>
+            <th class="text-xs-center align-middle p-0 width-10-per">توسط</th>
+            <th class="text-xs-center align-middle p-0 width-10-per">فایل</th>
+            <th class="text-xs-center align-middle p-0 ">پیام</th>
+            <th class="text-xs-center align-middle p-0">دانلود</th>
+            <th class="text-xs-center align-middle p-0">حــذف</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rad = 1;
+        }
+        @foreach (var item in Model.showInsSupplementsVMs.OrderByDescending(x => x.RegDate))
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">@rad</td>
+                <td class="text-xs-center align-middle p-0">@item.Title</td>
+                <td class="text-xs-center align-middle p-0">@item.RegDate.ToShamsiN()</td>
+                <td class="text-xs-center align-middle p-0">@item.User.FullName</td>
+                <td class="text-xs-center align-middle p-0">
+                    @if (!string.IsNullOrEmpty(item.File))
+                    {
+                        @if (Core.Utility.Applications.IsImage(item.File))
+                        {
+                            <img src="@item.FileRoot" class="rounded mx-auto zoom" with=50 height=50>
+                        }
+                        @if (item.File.EndsWith(".pdf"))
+                        {
+                            <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                        }
+                    }
+
+                </td>
+                <td class="text-xs-center align-middle">
+                    @foreach (string ml in item.MessageLines)
+                    {
+                        if (ml != item.MessageLines.LastOrDefault())
+                        {
+                            <span class="w-100">@ml</span>
+
+                            <br />
+                        }
+                        else
+                        {
+                            <span class="w-100">@ml</span>
+                        }
+
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    
+                    @if (_genericInsService.CheckPermissionByName(Model.PermissionNames?.GetValueOrDefault("دانلود فایل پیوست شده"), User.Identity.Name))
+                    {
+                        <form asp-area="UsersPanel" asp-controller="Reports" asp-action="DownloadFile" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="filename" value="@item.File">
+                            <input type="hidden" name="insType" value="@Model.InsType">
+                            <button type="submit" title="دانلود" class="text-success cursor-pointer font-size-large"><span class="icon-download"></span></button>
+                        </form>
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_genericInsService.CheckPermissionByName(Model.PermissionNames?.GetValueOrDefault("حذف فایل پیوست شده"), User.Identity.Name))
+                    {
+                        <form id="removeSuppForm" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="insSupId" value="@item.Id">
+                            <input type="hidden" name="type" value="@Model.InsType">
+                            <input type="hidden" name="refreshId" value="@Model.RefreshElemanId">
+                            <button type="button" onclick="@removecommand" title="حذف" class="text-danger cursor-pointer font-size-large btnRemoveInsSup"><span class="icon-android-delete"></span></button>
+                        </form>
+                    }                   
+                </td>
+
+            </tr>
+            rad++;
+        }
+    </tbody>
+</table>

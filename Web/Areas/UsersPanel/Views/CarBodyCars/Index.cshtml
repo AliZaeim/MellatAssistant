@@ -1,0 +1,105 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.CarBody.CarBodyCar>
+@using Core.Services.Interfaces;
+@inject ICarBodyService _carBodyService;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "خودروها";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (ViewData["gId"] == null)
+{
+    <h1 class="text-xs-center alert alert-info">خودروها</h1>
+}
+else
+{
+    <h1 class="text-xs-center alert alert-info">خودروهای گروه @ViewData["gName"].ToString()</h1>
+}
+@if (ViewData["gId"] != null)
+{
+    <p>
+        @if (_userService.CheckPermissionByName("addcbcar", User.Identity.Name))
+        {
+            <a asp-action="Create" asp-route-gId="@ViewData["gId"]" class="btn btn-success">ثبت خودرو </a>
+        }
+        @if (_userService.CheckPermissionByName("cbinsgroup", User.Identity.Name))
+        {
+            <a asp-action="Index" asp-controller="CarBodyCarGroups" asp-area="UsersPanel" class="btn btn-success">گروه های خودرو</a>
+        }
+
+    </p>
+}
+else
+{
+    @if (_userService.CheckPermissionByName("viewcbcars", User.Identity.Name))
+    {
+        <p>
+            <a asp-action="Index" asp-controller="CarBodyCarGroups" asp-area="UsersPanel" class="btn btn-success">گروه های خودرو</a>
+        </p>
+    }
+
+}
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CarBodyCarGroup.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.ConsYear)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.BasePremium)
+            </th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayFor(model => item.CarBodyCarGroup.Title)
+                </th>
+                <td class="text-xs-center align-middle p-0">
+                    @item.Price?.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @Html.DisplayFor(modelItem => item.ConsYear)
+                </td>
+                <td class="text-xs-center align-middle p-0">
+                    @item.BasePremium?.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (item.Second2YearsPremium != null)
+                    {
+                        @if (_userService.CheckPermissionByName("detcbcar", User.Identity.Name))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id">جزئیات</a> <span>|</span>
+                        }
+                    }
+                    @if (_userService.CheckPermissionByName("editcbcar",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletecbcar", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                    }                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

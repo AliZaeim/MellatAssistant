@@ -1,0 +1,167 @@
+﻿@model DataLayer.Entities.Blogs.Blog
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "ویرایش خبر";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+}
+<h1 class="text-xs-center alert alert-info">ویرایش خبر</h1>
+<section class="container-fluid">
+   <div class="row">
+    <div class="offset-md-3 col-md-6 col-xs-12">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BlogId" />
+            <input type="hidden" asp-for="BlogDate" />
+            <input type="hidden" asp-for="BlogImageInBlog" />
+            <input type="hidden" asp-for="BlogImageInBlogDetails" />
+            <div class="form-group">
+                <label asp-for="BlogGroupId" class="control-label"></label>
+                <select asp-for="BlogGroupId" asp-items="ViewBag.BlogGroupId" class="form-control">
+                    <option value="">گروه خبر را انتخاب کنید...</option>
+                </select>
+                <span asp-validation-for="BlogGroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogTitle" class="control-label"></label>
+                <input asp-for="BlogTitle" placeholder="تگ H1" class="form-control" />
+                <span asp-validation-for="BlogTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogPageTitle" class="control-label"></label>
+                <input asp-for="BlogPageTitle" placeholder="عنوان صفحه- تگ Title" class="form-control" />
+                <span asp-validation-for="BlogPageTitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BlogSummary" class="control-label"></label><span class="float-xs-left">مانده : <span id="summary-char-count" class="text-danger">500</span></span>
+                <textarea asp-for="BlogSummary" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="BlogSummary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogPageDescription" class="control-label"></label><span class="float-xs-left">مانده : <span id="char-count" class="text-danger">160</span></span>
+                <textarea asp-for="BlogPageDescription" maxlength="160" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="BlogPageDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BlogImageInBlog" class="control-label"></label>&ensp;<span class="requried-danger">*</span><img class="float-xs-left" src="/images/blogs/@Model.BlogImageInBlog" width="50" height="50" />
+                <input type="file" asp-for="BlogImageInBlog" class="form-control" />
+                <span asp-validation-for="BlogImageInBlog" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogImageInBlogDetails" class="control-label"></label>&ensp;<span class="requried-danger">*</span><img class="float-xs-left" src="/images/blogs/@Model.BlogImageInBlogDetails" width="50" height="50" />
+                <input type="file" asp-for="BlogImageInBlogDetails" class="form-control" />
+                <span asp-validation-for="BlogImageInBlogDetails" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogText" class="control-label"></label>
+                <textarea asp-for="BlogText" class="form-control" rows="15"></textarea>
+                <span asp-validation-for="BlogText" class="text-danger"></span>
+            </div>
+            <script>
+                CKEDITOR.replace('BlogText');
+            </script>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="HasVideo" /> @Html.DisplayNameFor(model => model.HasVideo)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="HasVoice" /> @Html.DisplayNameFor(model => model.HasVoice)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogTags" class="control-label"></label>
+                    <input asp-for="BlogTags" class="form-control" placeholder="با - از هم جدا شوند" />
+                <span asp-validation-for="BlogTags" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="BlogIsActive" /> @Html.DisplayNameFor(model => model.BlogIsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogUrl" class="control-label"></label>
+                <input asp-for="BlogUrl" onkeypress="return /[a-z,-]/i.test(event.key)" placeholder="انگلیسی باشد و جای خالی با علامت - پر شود مثال about-insurance" class="form-control" />
+                <span asp-validation-for="BlogUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogRefferalLink" class="control-label"></label>
+                <input asp-for="BlogRefferalLink" placeholder="اگر خبر از سایتی دیگر است، لینک آن قرار داده شود" class="form-control" />
+                <span asp-validation-for="BlogRefferalLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogLinkText" class="control-label"></label>
+                <input asp-for="BlogLinkText" placeholder="متن لینک خبر خارج سایت" class="form-control" />
+                <span asp-validation-for="BlogLinkText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogViewsCount" class="control-label"></label>
+                <input asp-for="BlogViewsCount" class="form-control" />
+                <span asp-validation-for="BlogViewsCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuthorId" class="control-label"></label>
+                <select asp-for="AuthorId" asp-items="ViewBag.AuthorId" class="form-control">
+                    <option value="">نویسنده را انتخاب کنید...</option>
+                </select>
+                <span asp-validation-for="AuthorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogDate" class="control-label"></label>
+                <input value="@Model.BlogDate.Value.ToShamsiWithTime()" readonly class="form-control" />
+                
+            </div>
+            <div class="form-group ">
+                <label class="control-label">تاریخ امروز اعمال شود</label>
+                <select name="chdate" class="form-control">
+                    <option value="no">خیر</option>
+                    <option value="yes">بله</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+</section>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+        function countChar(inobj, maxl, outobj) {
+            var len = inobj.value.length;
+
+            if (len >= maxl) {
+                inobj.value = inobj.value.substring(0, maxl);
+                $(outobj).text(0);
+            } else {
+                $(outobj).text(maxl - len);
+            }
+        }
+        $(document).ready(function () {
+            var curChars = $('#BlogPageDescription').val().length;
+            var maxchars = 160 - curChars;
+            $('#char-count').text(maxchars);
+            $('#BlogPageDescription').keyup(function () {
+                countChar(this, 160, '#char-count');
+            });
+            //BlogSummary
+            var curChars = $('#BlogSummary').val().length;
+            var maxchars = 500 - curChars;
+            $('#summary-char-count').text(maxchars);
+            $('#BlogSummary').keyup(function () {
+                countChar(this, 500, '#summary-char-count');
+            });
+        });
+    </script>
+}

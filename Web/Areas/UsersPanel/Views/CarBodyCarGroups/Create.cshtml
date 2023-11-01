@@ -1,0 +1,50 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyCarGroup
+
+@{
+    ViewData["Title"] = "ثبت گروه خودرو بیمه بدنه";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ثبت گروه خودرو بیمه بدنه</h1>
+<div class="container-fluid">
+    <div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BaseRate" class="control-label"></label>
+                <input asp-for="BaseRate" class="form-control" />
+                <span asp-validation-for="BaseRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IncreasePeriod" class="control-label"></label>
+                <input asp-for="IncreasePeriod" class="form-control" />
+                <span asp-validation-for="IncreasePeriod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IncreaseCoefficient" class="control-label"></label>
+                <input asp-for="IncreaseCoefficient" class="form-control" />
+                <span asp-validation-for="IncreaseCoefficient" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,0 +1,51 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس نمای کامل موتور</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.EngineFullViewImage" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس پلاک موتور</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.EngineLicensePlate" />
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-lg-4 mb-1">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">عکس حک شاسی</div>
+        <div class="col-xs-12 text-xs-center">
+            <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.ChassisEngravingImage" />
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="inpSuccEngine" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSuccEngine").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            document.getElementById("close-modal").click();
+        }
+    }
+</script>

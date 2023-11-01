@@ -1,0 +1,170 @@
+﻿@model Core.DTOs.Admin.RolePermissionVM
+@using Core.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    if (ViewData["roleTitle"] == null)
+    {
+        ViewData["Title"] = "دسترسی ها";
+    }
+    else
+    {
+        ViewData["Title"] = "دسترسی های نقش " + ViewData["roleTitle"].ToString();
+    }
+
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    bool ExistAll = false;
+    if (Model.SelectedPermissions.Count == Model.Permissions.Count)
+    {
+        ExistAll = true;
+    }
+}
+<style>
+    .panel-collapse {
+        margin-right: 5mm;
+    }
+
+    .last {
+        margin-right: 5mm;
+    }
+    #chkAll{
+        margin-bottom:5mm;
+    }
+</style>
+<form asp-action="Index">
+    <input type="hidden" asp-for="RoleId" />
+    <div class="container">
+        <h2>دسترسی های <span class="text-success">@Model.Role.RoleTitle</span></h2>
+        <input id="chkAll" type="checkbox" @((ExistAll)? "checked" : "") /> &ensp; <span>هــمه</span>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                @foreach (var item1 in Model.Permissions.Where(w => w.ParentId == null).ToList())
+                {
+                    string hreff1 = "collapse" + item1.PermissionId.ToString();
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <a data-toggle="collapse" href="#@hreff1">
+                                <span class="@((item1.Permissions.Count > 0)? "fa fa-plus-circle":"")"></span>
+                            </a>
+                            <input name="SelectedPermission" value="@item1.PermissionId" type="checkbox" @((Model.SelectedPermissions.Any(z => z == item1.PermissionId)? "checked":"")) />
+                            <span >&ensp; @item1.PermissionTitle</span>
+                        </h6>
+                    </div>
+                    @if (item1.Permissions.Count > 0)
+                    {
+                        <div id="@hreff1" class="panel-collapse collapse">
+                            @foreach (var item2 in item1.Permissions.ToList())
+                            {
+                                string hreff2 = "collapse2" + item2.PermissionId.ToString();
+                                <div class="panel-heading">
+                                    <h6 class="panel-title">
+                                        <a data-toggle="collapse" href="#@hreff2">
+                                            <span class="@((item2.Permissions.Count>0)? "fa fa-plus-circle":"")"></span>
+                                        </a>
+                                        <input name="SelectedPermission" value="@item2.PermissionId" type="checkbox" @((Model.SelectedPermissions.Any(z => z == item2.PermissionId)? "checked":"")) />
+                                        <span>&ensp; @item2.PermissionTitle</span>
+                                    </h6>
+                                </div>
+                                @if (item2.Permissions.Count > 0)
+                                {
+                                    <div id="@hreff2" class="panel-collapse collapse">
+                                        @foreach (var item3 in item2.Permissions.ToList())
+                                        {
+                                            string hreff3 = "collapse3" + item3.PermissionId.ToString();
+                                            <div class="panel-heading">
+                                                <h6 class="panel-title">
+                                                    <a data-toggle="collapse" href="#@hreff3">
+                                                        <span class="@((item3.Permissions.Count>0)? "fa fa-plus-circle":"")"></span>
+                                                    </a>
+                                                    <input name="SelectedPermission" value="@item3.PermissionId" type="checkbox" @((Model.SelectedPermissions.Any(z => z == item3.PermissionId)? "checked":"")) />
+                                                    <span>&ensp; @item3.PermissionTitle</span>
+                                                </h6>
+                                            </div>
+                                            @if (item3.Permissions.Count > 0)
+                                            {
+                                                <div id="@hreff3" class="panel-collapse collapse">
+                                                    @foreach (var item4 in item3.Permissions.ToList())
+                                                    {
+                                                        string hreff4 = "collapse4" + item4.PermissionId.ToString();
+                                                        <div class="panel-heading">
+                                                            <h6 class="panel-title">
+                                                                <a data-toggle="collapse" href="#@hreff4">
+                                                                    <span class="@((item4.Permissions.Count>0)? "fa fa-plus-circle":"")"></span>
+                                                                </a>
+                                                                <input name="SelectedPermission" value="@item4.PermissionId" type="checkbox" @((Model.SelectedPermissions.Any(z => z == item4.PermissionId)? "checked":"")) />
+                                                                <span>&ensp; @item4.PermissionTitle</span>
+                                                            </h6>
+                                                        </div>
+                                                        @if (item1.Permissions.Count > 0)
+                                                        {
+                                                            <div id="@hreff4" class="panel-collapse collapse">
+                                                                @foreach (var item5 in item4.Permissions.ToList())
+                                                                {
+                                                                    string hreff5 = "collapse5" + item5.PermissionId.ToString();
+                                                                    <div class="panel-heading">
+                                                                        <h6 class="panel-title">
+                                                                            <a data-toggle="collapse" href="#@hreff5">
+                                                                                <span class="@((item5.Permissions.Count>0)? "fa fa-plus-circle":"last")"></span>
+                                                                            </a>
+                                                                            <input name="SelectedPermission" value="@item5.PermissionId" type="checkbox" @((Model.SelectedPermissions.Any(z => z == item5.PermissionId)? "checked":"")) />
+                                                                            <span>&ensp; @item5.PermissionTitle</span>
+                                                                        </h6>
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                                
+                                                        }
+                                                    }                                                   
+                                                </div>
+                                            }
+
+                                        }
+
+                                    </div>
+                                }
+
+                            }
+                        </div>
+                    }
+
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="ثبت" class="btn btn-primary" />
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+@section Scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $(".fa").click(function () {
+                $(this).toggleClass("fa-plus-circle fa-minus-circle");
+            });
+            $("#chkAll").click(function () {
+                $("input:checkbox").prop('checked', $(this).prop("checked"));
+            });
+            $('input[type=checkbox]').click(function () {
+                if ($(this).attr("id") !== "chkAll") {
+                    if (!$(this).is(':checked')) {
+                        $("#chkAll").prop("checked", false);
+                    }
+                }
+            })
+        })
+    </script>
+
+        }
+

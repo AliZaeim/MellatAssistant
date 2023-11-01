@@ -1,0 +1,63 @@
+﻿@model IEnumerable<DataLayer.Entities.Supplementary.WebsiteUpdate>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "گزارش بروزرسانی ها";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">بروزرسانی ها</h1>
+@if (_userService.CheckPermissionByName("addwup",User.Identity.Name))
+{
+<p>
+    <a asp-action="Create" class="btn btn-success">ثبت بروزرسانی</a>
+</p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RegDate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @item.RegDate.ToShamsiWithTime()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @foreach (var com in item.CommentList)
+                    {
+                        <p>@com</p>
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editwup",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deletewup", User.Identity.Name))
+                    {
+                         <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                    }
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

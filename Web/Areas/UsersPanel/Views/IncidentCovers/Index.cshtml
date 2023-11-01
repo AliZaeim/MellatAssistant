@@ -1,0 +1,66 @@
+﻿@model IEnumerable<DataLayer.Entities.InsPolicy.ThirdParty.IncidentCover>
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "پوشش های حوادث";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">پوشش های حوادث</h1>
+@if (_userService.CheckPermissionByName("addic", User.Identity.Name))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت پوشش حوادث</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.LifeEventCoverage)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.DriverEventCoverage)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.DriverEventPremium)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RegDate)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @item.LifeEventCoverage.Value.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.DriverEventCoverage.Value.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.DriverEventPremium.Value.ToString("N0")
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.RegDate.ToShamsiN()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_userService.CheckPermissionByName("editic",User.Identity.Name))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+                    @if (_userService.CheckPermissionByName("deleteic", User.Identity.Name))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

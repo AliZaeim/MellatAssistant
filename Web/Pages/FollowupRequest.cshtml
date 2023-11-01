@@ -1,0 +1,177 @@
+﻿@page
+@using Core.Convertors;
+@model Web.Pages.FollowupRequestModel
+@{
+    ViewData["Title"] = "پیگیری درخواست";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="با استفاده از کد پیگیری ارائه شده در هنگام ثبت درخواست در سایت می توانید وضعیت درخواست خود در بیمه ملت را پیگیری کنید" />
+    <link href="~/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="~/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="~/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="~/lib/fonts/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    <link rel="canonical" href="metainsur.ir/FollowupRequest" />
+
+}
+@section Header{
+    <partial name="_Header" />
+}
+<section class="container-fluid intro-section text-white">
+    <div class="container p-md-5 p-4">
+        <div class="row">
+            <div class="col-lg-12 text-justify">
+                <h1 class="mb-4 bt-color IRANSansWeb_Medium text-center">پیگیری درخواست بیمه ملت</h1>
+
+            </div>
+        </div>
+    </div>
+    <object class="d-none d-xl-block" type="image/svg+xml" data="/Images/Svg/desktop-wave.svg"></object>
+
+</section>
+<section class="container-fluid">
+    <div class="row">
+        <div class="offset-lg-4 col-lg-4 offset-sm-0 col-sm-12 mt-5">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="@Model.FollowUpInsVM.TrCode" class="control-label"></label>
+                    <input asp-for="@Model.FollowUpInsVM.TrCode" class="form-control" />
+                    <span asp-validation-for="@Model.FollowUpInsVM.TrCode" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="@Model.FollowUpInsVM.InsType" class="control-label"></label>
+                    <select asp-for="@Model.FollowUpInsVM.InsType" class="custome-select w-100">
+                        <option value="">لطفا نوع بیمه نامه را انتخاب کنید</option>
+                        <option value="tp">شخص ثالث</option>
+                        <option value="cb">بدنه</option>
+                        <option value="life">زندگی</option>
+                        <option value="travel">مسافرتی</option>
+                        <option value="lia">مسئولیت</option>
+                        <option value="fire">آتش سوزی</option>
+                    </select>
+                    <span asp-validation-for="@Model.FollowUpInsVM.InsType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" id="btnSubmit" value="ارسال" class="btn btn-primary col-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (Model.FollowUpInsVM.IsPosted)
+{
+    @if (Model.FollowUpInsVM.ExistReq)
+    {
+        <div class="container mt-5" id="tblF">
+            <div class="row">
+                <table class="table table-bordered w-100" >
+                    <tr>
+                        <td colspan="2" class="text-center ">
+                            <b>وضعیت درخواست شماره : @Model.FollowUpInsVM.TrCode | @Model.FollowUpInsVM.Seller</b>
+                            <p class="alert alert-info">برای مشاهده کامل جزئیات درخواست، به بخش درخواست ها در دفتر کار مراجعه کنید</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w-50">تاریخ ثبت: @Model.FollowUpInsVM.RegDate.ToShamsiN()</td>
+                        <td class="w-50">
+                            تاریخ صدور:
+                            @if (Model.FollowUpInsVM.IssuDate != null)
+                            {
+                                <span>@@Model.FollowUpInsVM.IssuDate.ToShamsiN()</span>
+                            }
+                            else
+                            {
+                                <span>صادر نشده است !</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>نوع درخواست: @Model.FollowUpInsVM.InsTypeFaText</td>
+                        <td>حق بیمه: @Model.FollowUpInsVM.Premium.GetValueOrDefault().ToString("N0") تومان</td>
+                    </tr>
+                    <tr>
+                        <td>بیمه گذار: @Model.FollowUpInsVM.InsurerName</td>
+                        <td>بیمه شده: @Model.FollowUpInsVM.InsuredName</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center align-middle"><b>وضعیت صدور</b></td>
+                        <td class="text-center align-middle"><b>وضعیت مالی</b></td>
+                    </tr>
+                    <tr>
+                        <td>آخرین وضعیت: @Model.FollowUpInsVM.LastStatusTitle</td>
+                        <td>آخرین وضعیت: @Model.FollowUpInsVM.LastFStatusTitle</td>
+                    </tr>
+                    <tr>
+                        <td>تاریخ: @Model.FollowUpInsVM.LastStatusDate.ToShamsiN()</td>
+                        <td>تاریخ: @Model.FollowUpInsVM.LastFStatusDate.ToShamsiN() </td>
+                    </tr>
+                    <tr>
+                        <td>کارشناس صدور: @Model.FollowUpInsVM.LastStatusUserName</td>
+                        <td>کارشناس مالی: @Model.FollowUpInsVM.LastStatusUserName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            توضیحات:
+                            @foreach (var stCom in Model.FollowUpInsVM.LastStatusComments)
+                            {
+                                <p>@stCom</p>
+                            }
+                        </td>
+                        <td>
+                            توضیحات:
+                            @foreach (var fstCom in Model.FollowUpInsVM.LastFStatusComments)
+                            {
+                                <p>@fstCom</p>
+                            }
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container mt-5">
+            <div class="row">
+                <h4 class="alert alert-danger text-center col-12">با شماره پیگیری وارد شده درخواستی ثبت نشده است !</h4>
+            </div>
+        </div>
+    }
+
+}
+<input type="hidden" id="withlink" value="@Model.FollowUpInsVM.GoWithLink" />
+@section Footer
+    {
+    <partial name="_Footer" />
+    }
+@section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/jquery-validate\jquery.validate.min.js"></script>
+    <script src="/jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var pos = $("#btnSubmit").position();
+            var top = pos.top + 100;
+            $("html, body").animate({ scrollTop: top }, "slow");
+        });
+    </script>
+}

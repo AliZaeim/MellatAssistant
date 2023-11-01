@@ -1,0 +1,216 @@
+﻿@page "/blog/d/{url}"
+@model Web.Pages.BlogDetailsModel
+@using Core.Convertors;
+@using Core.Services.Interfaces;
+@inject IBlogService _blogService;
+@{
+    ViewData["Title"] = Model.Blog.BlogPageTitle;
+
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <meta name="description" content="@Model.Blog.BlogPageDescription" />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    <link rel="canonical" href="metainsur.ir/Blog/@Model.Blogurl" />
+}
+    @section Header{
+    <partial name="_Header" />
+}
+    <section class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 col-12 mb-5">
+                <div class="box p-4 text-justify">
+                    <h1 class="mt-3 fs-20 IRANSansWeb_Bold">@Model.Blog.BlogTitle</h1>
+                    <p>
+                        <span>
+                            <i class="fas fa-history pl-1"></i>تاریخ انتشار : <time datetime="@Model.Blog.BlogDate.Value">@Model.Blog.BlogDate.Value.ToShamsiWithTime()</time> <span class="pr-1 pl-1">|</span>
+                        </span>
+                        <span>
+                            <i class="fas fa-user pl-1"></i>ناشر : @Model.Blog.Author <span class="pr-1 pl-1">|</span>
+                        </span>
+                        <span>
+                            <i class="fas fa-object-group pl-1"></i>گروه : @Model.Blog.BlogGroup.BlogGroupTitle <span class="pr-1 pl-1">|</span>
+                        </span>
+                        <span>
+                            <i class="fas fa-eye pl-1"></i>@Model.Blog.BlogViewsCount
+                        </span>
+                    </p>
+                    <img src="/Images/blogs/@Model.Blog.BlogImageInBlogDetails" class="img-fluid w-100 rad25 pb-3 w-75" />
+                    <div class="col-12">
+                        @Html.Raw(Model.Blog.BlogText)
+                    </div>
+
+                    <ul class="inline">
+                    @foreach (var tg in Model.Blog.TagsList)
+                    {
+                        @if (tg != Model.Blog.TagsList.LastOrDefault())
+                        {
+                            <li>
+                                <a href="/blogs?tag=@tg.Trim().Replace(" ","-")" class="key-word">@tg</a>
+                            </li>
+                            <li>&ensp;</li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/blogs?tag=@tg.Trim().Replace(" ","-")" class="key-word">@tg</a>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4">
+
+            <div class="box card text-center">
+                <div id="prof" class="card-body relative">
+                    <img class="pic90 rounded-circle absolute" src="@Model.AuthorAvatar" alt="" style="top:-30px;right:40%">
+                    <h6 class="IRANSansWeb_Medium mt-5">@Model.Blog.Author</h6>
+                    <p class="bottom_p IRANSansWeb_Medium">@Model.AuthorLastRole.RoleTitle</p>
+                    <span class="bg-warning py-1 px-2 text-white text-shadow rad25">@Model.AuthorBlogs.Count پست</span>
+
+                    <div class="px-3 py-1 my-3 dash rad12 d-flex flex-row text-center">
+                        <div class="flex-fill">
+                            @{
+                                string AuCodeText = "کد همکاری";
+                                string AuCode = Model.BlogAuthor.ReferralCode;
+                                @if (!string.IsNullOrEmpty(Model.BlogAuthor.SalesExCode))
+                                {
+                                    AuCodeText = "کد کارشناسی";
+                                    AuCode = Model.BlogAuthor.SalesExCode;
+                                }
+                                @if (!string.IsNullOrEmpty(Model.BlogAuthor.AgentCode))
+                                {
+                                    AuCodeText = "کد نمایندگی";
+                                    AuCode = Model.BlogAuthor.AgentCode;
+                                }
+                            }
+                            <p class="mb-0 IRANSansWeb_Medium">@AuCode</p>
+                            <span>@AuCodeText</span>
+                        </div>
+                        <div class="flex-fill">
+                            <p class="mb-0 IRANSansWeb_Medium">@Model.BlogAuthor.InsWokHistory</p>
+                            <span>تجربه</span>
+                        </div>
+                        <div class="flex-fill">
+                            <p class="mb-0 IRANSansWeb_Medium">@Model.AuthorLastBlogDate</p>
+                            <span>آخرین پست</span>
+                        </div>
+
+                    </div>
+                    <div class="d-flex flex-md-row flex-column">
+                        @{
+                            string Code = "3312";
+                            if (!string.IsNullOrEmpty(Model.BlogAuthor.ReferralCode))
+                            {
+                                Code = Model.BlogAuthor.ReferralCode;
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(Model.BlogAuthor.AgentCode))
+                                {
+                                    Code = Model.BlogAuthor.AgentCode;
+                                }
+                                else
+                                {
+                                    if (!string.IsNullOrEmpty(Model.BlogAuthor.SalesExCode))
+                                    {
+                                        Code = Model.BlogAuthor.SalesExCode;
+                                    }
+                                }
+                            }
+                        }
+                        <a href="/Products/?code=@Code" class="btn btn-danger btn-block text-white m-2 rad25">محصولات</a>
+                        <a target="_blank" href="https://api.whatsapp.com/send?phone=@Model.BlogAuthor.Cellphone" class="btn btn-success btn-block text-white m-2 rad25">ارتباط با واتز آپ</a>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="blogpost">
+                <h5 class="IRANSansWeb_Medium p-3">پـادکست ها</h5>
+                <ul class="box pt-3">
+                    @foreach (var item in Model.BlogsAsPodcast)
+                    {
+                        var user = await _blogService.GetUserByIdAsync(item.AuthorId.Value);
+                        string authrAv = "/images/icons/avatar128.png";
+                        if (user != null)
+                        {
+                            if (!string.IsNullOrEmpty(user.PersonalImage))
+                            {
+                                authrAv = "/images/users/" + user.PersonalImage;
+                            }
+                        }
+                        <li>
+                            <div class="px-3 d-flex flex-row">
+                                <a href="/blog/d/@item.BlogUrl" class="bg-red rounded">
+                                    <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rounded" />
+                                </a>
+                                <a href="/blog/d/@item.BlogUrl" class="pr-3 flex-fill">
+                                    <h3 class="IRANSansWeb_Medium blog-item-title"><i class="fas fa-microphone-alt fa-2x text-danger ml-2"></i>@item.BlogTitle </h3>
+                                    <span class="float-right gray11">@item.Author</span>                                    
+                                </a>
+                            </div>
+                        </li>
+                    }                   
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+    @{
+        int aublogCount = 0;
+        aublogCount = Model.AuthorBlogs.Where(w => w.BlogId != Model.Blog.BlogId).Count();
+    }
+    @if (aublogCount != 0)
+    {
+        <div class="row">
+            <div class="col-md-12 box mt-2 p-4 ">
+                <h5 class="IRANSansWeb_Medium mb-4 bt-color">دیگر مطالب @Model.BlogAuthor.FullName (@aublogCount)</h5>
+                <div id="owl-toppost" class="owl-carousel owl-theme text-right ">
+                    @foreach (var item in Model.AuthorBlogs.Where(w => w.BlogId != Model.Blog.BlogId).ToList())
+                    {
+                        <div class="mx-2">
+                            <a href="/Blog/d/@item.BlogUrl">
+                                <img src="/images/blogs/@item.BlogImageInBlog" class="img-fluid rad25 bigpic" alt="@item.BlogTitle" />
+                                <div class="blogdiv">
+                                    <h6 class="IRANSansWeb_Medium text-warning text-shadow">@item.BlogTitle </h6>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+</section>
+@section Footer{
+    <partial name="_Footer" />
+    }
+    @section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+}
+
+

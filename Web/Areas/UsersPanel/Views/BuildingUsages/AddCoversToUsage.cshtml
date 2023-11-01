@@ -1,0 +1,43 @@
+﻿@model DataLayer.Entities.InsPolicy.Fire.BuildingUsage
+@{
+    ViewData["Title"] = "مدیریت پوششهای کاربری" + " " + Model.Title;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+    List<DataLayer.Entities.InsPolicy.Fire.FireInsCoverage> fireInsCoverages = ViewData["covers"] as List<DataLayer.Entities.InsPolicy.Fire.FireInsCoverage>;
+    List<DataLayer.Entities.InsPolicy.Fire.FireInsCoverage> selectedCoverages = ViewData["selectedCovers"] as List<DataLayer.Entities.InsPolicy.Fire.FireInsCoverage>;
+    
+}
+<h1 class="text-xs-center alert alert-info">مدیریت پوششهای  کاربری @Model.Title</h1>
+<div class="container">
+    <div class="row">
+        <div class="offset-md-4 col-md-4 col-xs-12 ">
+            <form asp-action="AddCoversToUsage" method="post" class="border block p-1">
+            <input type="hidden" name="usageId" value="@Model.Id" />
+            @for(int i = 0; i < fireInsCoverages.Count; i++)
+            {                
+                <div class="form-group form-check text-xs-right offset-md-4 col-md-6 col-xs-12">
+                    <label class="form-check-label">
+                        @if(selectedCoverages.Any(a => a.Id == fireInsCoverages[i].Id ))
+                        {
+                            <input type="checkbox" checked name="selectedcovers" value="@fireInsCoverages[i].Id" class="form-check-input"  /> @fireInsCoverages[i].Title
+                        }
+                        else
+                        {
+                            <input type="checkbox" name="selectedcovers" value="@fireInsCoverages[i].Id" class="form-check-input"  /> @fireInsCoverages[i].Title
+                        }
+
+                    </label>
+                </div>
+                
+            }
+            <input type="submit" class="btn btn-primary w-100 mb-2" value="تایید" />
+        </form>
+        </div>
+        
+    </div>
+</div>
+
+@*<div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="BlogIsActive" /> @Html.DisplayNameFor(model => model.BlogIsActive)
+                </label>
+            </div>*@

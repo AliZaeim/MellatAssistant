@@ -1,0 +1,95 @@
+﻿@model Core.DTOs.SiteGeneric.CarBodyIns.UpdateCarBodyOuterImagesVM
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateCBIns" asp-action="UpdateCarBodyOuterImages" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#cbOuterImages">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Str_Angle1Image" />
+            <input type="hidden" asp-for="Str_Angle2Image" />
+            <input type="hidden" asp-for="Str_Angle3Image" />
+            <input type="hidden" asp-for="Str_Angle4Image" />
+            <input type="hidden" asp-for="Str_ApprenticeSideImage" />
+            <input type="hidden" asp-for="Str_CarBehindImage" />
+            <input type="hidden" asp-for="Str_CarFrontImage" />
+            <input type="hidden" asp-for="Str_DriverSideImage" />
+            <input type="hidden" asp-for="Str_RoofImage" />
+            <input type="hidden" asp-for="Str_HoodImage" />
+            <input type="hidden" asp-for="Str_TrunkImage" />
+            <div class="col-md-4 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="CarFrontImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_CarFrontImage" />
+                    <input asp-for="CarFrontImage" type="file" class="form-control" />
+                    <span asp-validation-for="CarFrontImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarBehindImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_CarBehindImage" />
+                    <input asp-for="CarBehindImage" type="file" class="form-control" />
+                    <span asp-validation-for="CarBehindImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DriverSideImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_DriverSideImage" />
+                    <input asp-for="DriverSideImage" type="file" class="form-control" />
+                    <span asp-validation-for="DriverSideImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ApprenticeSideImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_ApprenticeSideImage" />
+                    <input asp-for="ApprenticeSideImage" type="file" class="form-control" />
+                    <span asp-validation-for="ApprenticeSideImage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                 <div class="form-group">
+                    <label asp-for="Angle1Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Angle1Image" />
+                    <input asp-for="Angle1Image" type="file" class="form-control" />
+                    <span asp-validation-for="Angle1Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Angle2Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Angle2Image" />
+                    <input asp-for="Angle2Image" type="file" class="form-control" />
+                    <span asp-validation-for="Angle2Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Angle3Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Angle3Image" />
+                    <input asp-for="Angle3Image" type="file" class="form-control" />
+                    <span asp-validation-for="Angle3Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Angle4Image" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_Angle4Image" />
+                    <input asp-for="Angle4Image" type="file" class="form-control" />
+                    <span asp-validation-for="Angle4Image" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                 <div class="form-group">
+                    <label asp-for="HoodImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_HoodImage" />
+                    <input asp-for="HoodImage" type="file" class="form-control" />
+                    <span asp-validation-for="HoodImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoofImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_RoofImage" />
+                    <input asp-for="RoofImage" type="file" class="form-control" />
+                    <span asp-validation-for="RoofImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TrunkImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/carbody/@Model.Str_TrunkImage" />
+                    <input asp-for="TrunkImage" type="file" class="form-control" />
+                    <span asp-validation-for="TrunkImage" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

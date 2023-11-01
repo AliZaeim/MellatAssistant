@@ -1,0 +1,42 @@
+﻿@using Core.Convertors
+@model IEnumerable<DataLayer.Entities.Blogs.Blog>
+<section id="least_blog" class="container  py-3 py-sm-3 ">
+    <h5 class="IRANSansWeb_Medium bt-color text-center">آخرین خبرهای دنیای بیمه</h5>
+    <div class="row value-body mt-4 mx-1">
+        @{
+            DataLayer.Entities.Blogs.Blog blog = Model.FirstOrDefault();
+        }
+        @if (blog != null)
+        {
+            <div class="col-lg-7  py-3 pl-3">
+                <div class="row">
+                    <div class="col-lg-6 mb-3">
+                        <a href="/blog/d/@blog.BlogUrl" class="IRANSansWeb_Medium">@blog.BlogTitle</a>
+                        <p class="pt-3 text-justify">@blog.BlogSummary</p>
+                        <a href="/blog/d/@blog.BlogUrl" class="btn btn-danger text-white">بیشتر بدانید ..</a>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <a href="/blog/d/@blog.BlogUrl"><img src="/images/blogs/@blog.BlogImageInBlog" class="img-fluid rad10" /></a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model != null)
+        {
+            <div id="s_post" class="col-lg-5 py-3 pl-3">
+                <div class="d-flex flex-column">
+                    @foreach (var blg in Model.Where(w => w.BlogId != blog.BlogId).ToList())
+                    {
+                        <div class="d-flex flex-md-row flex-column mb-2">
+                            <img src="/images/blogs/@blg.BlogImageInBlogDetails" class="img-fluid ml-3 rad10 mb-2" />
+                            <div>
+                                <a href="/blog/d/@blg.BlogUrl" class="IRANSansWeb_Medium">@blg.BlogTitle</a>
+                                <p class="text-justify">@blg.BlogSummary.Get_Nth_Character(100) ... </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

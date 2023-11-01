@@ -1,0 +1,109 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.UpdateFireInsStateSection
+<div class="container-fluid">
+    <div class="row">
+        <form asp-area="UsersPanel" asp-controller="UpdateFireIns" asp-action="UpdateFireStateSection" enctype="multipart/form-data"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#fireState">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="guid" />
+            <input type="hidden" asp-for="Str_InsurerNCImage" />
+            <input type="hidden" asp-for="Str_AttributedLetterImage" />
+            <input type="hidden" asp-for="Str_PayrollDeductionImage" />
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="SellerCode" class="control-label"></label>
+                    <input asp-for="SellerCode" class="form-control" />
+                    <span asp-validation-for="SellerCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsurerName" class="control-label"></label>
+                    <input asp-for="InsurerName" class="form-control" />
+                    <span asp-validation-for="InsurerName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsurerFamily" class="control-label"></label>
+                    <input asp-for="InsurerFamily" class="form-control" />
+                    <span asp-validation-for="InsurerFamily" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsurerCellphone" class="control-label"></label>
+                    <input asp-for="InsurerCellphone" class="form-control" />
+                    <span asp-validation-for="InsurerCellphone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="InsurerNCImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/fire/@Model.Str_InsurerNCImage" />
+                    <input asp-for="InsurerNCImage" type="file" class="form-control" />
+                    <span asp-validation-for="InsurerNCImage" class="text-danger"></span>
+                </div>
+                <div class="form-group required">
+                    <label asp-for="InsurerStatus" class="control-label required"></label>
+                    <Select asp-for="InsurerStatus" class="custom-select w-100">
+                        <option selected="selected" value="">وضعیت بیمه گذار را انتخاب کنید</option>
+                        <option value="np" data-id="np">فرد عادی</option>
+                        <option value="retired" data-id="retired">بازنشسته کشوری یا تامین اجتماعی</option>
+                        <option value="related" data-id="related">منتسب بازنشسته</option>
+                    </Select>
+                    <span asp-validation-for="InsurerStatus" class="text-danger"></span>
+                </div>
+                <div class="form-group @((Model.InsurerStatus == "related")?"":"no-display")" id="attribDiv">
+                    <label asp-for="AttributedLetterImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/fire/@Model.Str_AttributedLetterImage" />
+                    <input asp-for="AttributedLetterImage" type="file" class="form-control" />
+                    <span asp-validation-for="AttributedLetterImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PayinInstallment" class="control-label"></label>
+                    <select asp-for="PayinInstallment" class="form-control">
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </select>
+                </div>
+                <div class="form-group @((Model.PayinInstallment)?"":"no-display")" id="payrolldeDiv">
+                    <label asp-for="PayrollDeductionImage" class="control-label"></label><img width="30" height="30" class="float-md-left zoom" src="~/images/Ins/fire/@Model.Str_PayrollDeductionImage" />
+                    <input asp-for="PayrollDeductionImage" type="file" class="form-control" />
+                    <span asp-validation-for="PayrollDeductionImage" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#InsurerStatus").on("change", function() {
+            var vl = $(this).val();
+
+            if (vl == "related") {
+                $("#attribDiv").show();
+            }
+            else {
+                $("#attribDiv").hide();
+            }
+        });
+        $("#PayinInstallment").on("change", function() {
+            var vl = $(this).val();
+
+            if (vl === "false") {
+                $("#payrolldeDiv").hide();
+            }
+            else {
+                $("#payrolldeDiv").show();
+            }
+        });
+    });
+
+</script>

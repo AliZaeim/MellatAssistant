@@ -1,0 +1,106 @@
+﻿@model DataLayer.Entities.InsPolicy.ThirdParty.VehicleGroup
+
+@{
+    string title = string.Empty;
+    string filedName = string.Empty;
+    string ptitle = string.Empty;
+    string selectText = string.Empty;
+    bool saveGroup = true;
+    if (ViewData["PId"] == null)
+    {
+        title = "ثبت گروه وسیله نقلیه";
+        filedName = "عنوان گروه";
+        ptitle = "والد";
+        selectText = "گروه والد را انتخاب کنید";
+    }
+    else
+    {
+        saveGroup = false;
+        title = "ثبت وسیله نقلیه";
+        filedName = "وسیله نقلیه";
+        ptitle = "گروه";
+        selectText = "گروه را انتخاب کنید";
+    }
+    ViewData["Title"] = title;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">@title</h1>
+<div class="container-fluid">
+    <div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (saveGroup == false)
+            {
+                <div class="form-group">
+                    <label class="control-label">@ptitle</label>
+                    <select asp-for="ParentId" class="form-control" asp-items="ViewBag.ParentId">
+                        <option value="">@selectText</option>
+                    </select>
+                </div>
+            }
+
+            <div class="form-group">
+                <label class="control-label">@filedName</label>&ensp;<span class="text-danger font-weight-bold">*</span>
+                <input asp-for="GroupTitle" class="form-control" />
+                <span asp-validation-for="GroupTitle" class="text-danger"></span>
+            </div>
+            @if (saveGroup == false)
+            {
+                <div class="form-group">
+                    <label asp-for="FinancialPremium" class="control-label"></label>
+                    <input asp-for="FinancialPremium" class="form-control" />
+                    <span asp-validation-for="FinancialPremium" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DelayedPenalty" class="control-label"></label>
+                    <input asp-for="DelayedPenalty" class="form-control" />
+                    <span asp-validation-for="DelayedPenalty" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ImmunityStartDate" class="control-label"></label>
+                    <input asp-for="ImmunityStartDate" id="sd" class="form-control" dir="ltr" placeholder="####/0#/0#" />
+                    <span asp-validation-for="ImmunityStartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ImmunityEndDate" class="control-label"></label>
+                    <input asp-for="ImmunityEndDate" id="ed" class="form-control" dir="ltr" placeholder="####/0#/0#" />
+                    <span asp-validation-for="ImmunityEndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GroupPremium" class="control-label"></label>
+                    <input asp-for="GroupPremium" class="form-control" />
+                    <span asp-validation-for="GroupPremium" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VehicleConstructionYearLimit" class="control-label"></label>
+                    <input asp-for="VehicleConstructionYearLimit" class="form-control" />
+                    <span asp-validation-for="VehicleConstructionYearLimit" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+
+@section Scripts
+{
+    <script src="~/Layout/Js/vanilla-masker.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    var newInput = document.getElementById("sd");
+    VMasker(newInput).maskPattern("9999/99/99");
+    var newInput2 = document.getElementById("ed");
+    VMasker(newInput2).maskPattern("9999/99/99");
+</script>
+}

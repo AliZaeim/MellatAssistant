@@ -1,0 +1,90 @@
+﻿@page
+@model Web.Pages.ContactModel
+@{
+    ViewData["Title"] = "ارتباط با سازمان فروش بیمه ملت";
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="علی اصل زعیم" />
+    <meta name="description" content="ارتباط با بیمه ملت" />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="canonical" href="metainsur.ir/Contact" />
+}
+    @section Header{
+    <partial name="_Header" />
+}
+    <section class="container-fluid pt-5 pb-4 pb-lg-0 intro-section">
+        <div class="container mb-5  box br-top p-5 ">
+            <h5 class="mb-4 bt-color text-center">ارتباط با بیمه ملت</h5>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    @if (TempData["success"] != null)
+                {
+                    if (TempData["success"].ToString() == "yes")
+                    {
+                        <script>
+                            alert("پیام شما با موفقیت ثبت شد.");
+                        </script>
+                    }
+                }
+                <p class="mb-3">جهت ارتباط با ما و ارسال نظـرات و پیشنهادات خود می توانید از فرم زیر استفاده نمایید</p>
+                <form method="post">
+                    <div class="form-group">
+                        <input class="form-control w-75 mb-2" type="text" asp-for="contactMessage.FullName" placeholder="نـام کامل" />
+                        <span asp-validation-for="contactMessage.FullName" class="text-danger"></span>
+                        <input class="form-control w-75 mb-2" type="email" asp-for="contactMessage.Email" placeholder="ایمیل معتـبر" />
+                        <span asp-validation-for="contactMessage.Email" class="text-danger"></span>
+                        <input class="form-control w-75 mb-2"  asp-for="contactMessage.Cellphone" placeholder="شمـاره موبایل" />
+                        <span asp-validation-for="contactMessage.Cellphone" class="text-danger"></span>
+                        <input class="form-control w-75 mb-2" type="text" asp-for="contactMessage.Title" placeholder="موضوع پیام" />
+                        <span asp-validation-for="contactMessage.Title" class="text-danger"></span>
+                        <textarea class="form-control area mb-2"  cols="60" rows="9" maxlength="300" placeholder="متن پیام" asp-for="contactMessage.Message" style="height: 150px!important"></textarea>
+                        <span asp-validation-for="contactMessage.Message" class="text-danger"></span>
+                    </div>
+                    <button class="btn btn-danger mb-3" type="submit">ارسـال پیـام<i class="fa fa-paper-plane pr-2"></i></button>
+                </form>
+                
+            </div>
+            <div class="col-md-6 pr-md-4">
+                <p class="text-justify">
+                    همکاران ما آماده پاسخگویی به کلیه سوالات شما در زمینه صدور بیمه نامه و پرداخت خسارت در کلیه رشته های بیمه ای هستند. برای ارسال سوال خود می توانید از این فرم استفاده نمائید، همکاران ما در سریعترین زمان ممکن از طریق راههای ارتباطی اعلام شده توسط شما پاسخگوی شما خواهند بود.
+                </p>
+                <p class="text-left">
+                    <b>بیمه ملت ، همراه خانواده</b>
+                </p>
+                <p><span class="IRANSansWeb_Medium  text-lightgreen"><i class="fas fa-map-marker-alt ml-2"></i>آدرس :</span> تهران - چهار راه کالج - اداره بیمه های زندگی </p>
+                <p><span class="IRANSansWeb_Medium  text-lightgreen"><i class="fas fa-phone pl-2"></i>تلفن : </span><span>8533</span>&ensp;<span>2842</span> <span>- 021</span></p>
+
+            </div>
+        </div>
+
+    </div>
+    <object class="d-none d-xl-block" type="image/svg+xml" data="Images/Svg/desktop-wave.svg"></object>
+</section>
+
+@section Footer{
+    <partial name="_Footer" />
+}
+    @section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+}
+
+

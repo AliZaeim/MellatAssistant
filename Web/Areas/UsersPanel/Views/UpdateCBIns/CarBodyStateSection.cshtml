@@ -1,0 +1,112 @@
+﻿@model DataLayer.Entities.InsPolicy.CarBody.CarBodyInsurance
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+<div class="col-xs-12  text-xs-center">
+
+    <h6 class="text-xs-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+    @{
+        DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.SellerCode);
+    }
+    <div class="row">
+        <p class="col-md-4 col-xs-12">نام : @seller?.FullName</p>
+        <p class="col-md-4 col-xs-12">تلفن : @seller?.Cellphone</p>
+        <p class="col-md-4 col-xs-12">کد : @Model.SellerCode</p>
+    </div>
+
+    <div class="col-xs-12 text-xs-center mt-2">
+        @{
+            string state = "فرد عادی";
+            if (Model.InsurerStatus == "retired")
+            {
+                state = "بازنشته کشوری یا تامین اجتماعی";
+            }
+            if (Model.InsurerStatus == "related")
+            {
+                state = "منتسب بازنشسته";
+            }
+        }
+        <h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <p>نام : @Model.InsurerName @Model.InsurerFamily</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <p>تلفن : @Model.InsurerCellphone</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <p>وضعیت : @state</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        @if (Model.HasInstallmentRequest)
+                        {
+                            <p>پرداخت به صورت اقساط : بله</p>
+                        }
+                        else
+                        {
+                            <p>پرداخت به صورت اقساط : خیر</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-md-4 col-xs-12">
+                        @if (Model.HasInstallmentRequest)
+                        {
+                            <div class="w-100 text-xs-center">تصویر رضایت کسر از حقوق</div>
+                            <div class="w-100 text-xs-center mb-2">
+                                <img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/carbody/@Model.PayrollDeductionImage" />
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <span class="w-100">تصویر کارت ملی</span>
+                        <div class="w-100 text-xs-center mb-2 ">
+                            <img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/carbody/@Model.InsurerNCImage" />
+                        </div>
+                    </div>
+                    @if (Model.InsurerStatus == "related")
+                    {
+                        <div class="col-md-4 col-xs-12">
+
+                            <div class="w-100 text-xs-center">تصویر معرفی نامه منتسب</div>
+                            <div class="w-100 text-xs-center">
+                                <img class="rounded zoom" width="50" height="50" src="/images/Ins/carbody/@Model.AttributedLetterImage" />
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="inpSucc" value="@ViewData["success"]" />
+<script>
+    var mmodal = document.getElementById("adminmodal");
+    if (mmodal !== null && mmodal !== "undefined")
+    {
+        var x = document.getElementById("inpSucc").value;
+        if (x === "yes")
+        {
+            Swal.fire({
+                toast: true,
+                icon: "success",
+                title: "عملیات با موفقیت انجام شد",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            document.getElementById("close-modal").click();
+
+        }
+    }
+</script>

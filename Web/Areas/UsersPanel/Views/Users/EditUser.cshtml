@@ -1,0 +1,301 @@
+﻿@model Core.DTOs.Admin.UpUserVM
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات کاربر";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش اطلاعات کاربر</h1>
+
+<section class="container-fluid">
+    <div class="row">
+        <form asp-action="EditUser" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="col-md-3 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Family" class="control-label"></label>
+                    <input asp-for="Family" class="form-control" />
+                    <span asp-validation-for="Family" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NC" class="control-label"></label>
+                    <input asp-for="NC" class="form-control" />
+                    <span asp-validation-for="NC" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NCImage" class="control-label"></label><img src="/images/users/@Model.StrNCImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="NCImage" type="file" class="form-control" />
+                    <span asp-validation-for="NCImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Father" class="control-label"></label>
+                    <input asp-for="Father" class="form-control" />
+                    <span asp-validation-for="Father" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthDate" class="control-label"></label>
+                    <input asp-for="BirthDate" placeholder="0#/0#/####" class="form-control" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdNumber" class="control-label"></label>
+                    <input asp-for="IdNumber" class="form-control" />
+                    <span asp-validation-for="IdNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IssuePlace" class="control-label"></label>
+                    <input asp-for="IssuePlace" class="form-control" />
+                    <span asp-validation-for="IssuePlace" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Sex" class="control-label"></label>
+                    <select class="form-control" asp-for="Sex">
+                        <option value="">لطفا جنیست را مشخص کنید</option>
+                        <option value="مــرد">مــرد</option>
+                        <option value="زن">زن</option>
+                        <option value="حقوقی">حقوقی</option>
+                    </select>
+                    <span asp-validation-for="Sex" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cellphone" class="control-label"></label>
+                    <input asp-for="Cellphone" class="form-control" />
+                    <span asp-validation-for="Cellphone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ReferralCode" class="control-label"></label>
+                    <input asp-for="ReferralCode" class="form-control" />
+                    <span asp-validation-for="ReferralCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label">استان</label>
+                    <select asp-for="StateId" class="form-control" asp-items="ViewBag.StateId">
+                        <option value="">لطفا استان را انتخاب کنید</option>
+                    </select>
+                    <span asp-validation-for="StateId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CountyId" class="control-label"></label>
+                    <select asp-for="CountyId" class="form-control" asp-items="ViewBag.CountyId">
+                        <option value="">لطفا شهرستان را انتخاب کنید</option>
+                    </select>
+                    <span asp-validation-for="CountyId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <textarea asp-for="Address" maxlength="200" rows="2" class="form-control"></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PostalCode" class="control-label"></label>
+                    <input asp-for="PostalCode" class="form-control" />
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FieldofStudy" class="control-label"></label>
+                    <input asp-for="FieldofStudy" class="form-control" />
+                    <span asp-validation-for="FieldofStudy" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LevelofStudy" class="control-label"></label>
+                    <input asp-for="LevelofStudy" class="form-control" />
+                    <span asp-validation-for="LevelofStudy" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GraduationDate" class="control-label"></label>
+                    <input asp-for="GraduationDate" placeholder="0#/0#/####" class="form-control" />
+                    <span asp-validation-for="GraduationDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EducationDegreeImage" class="control-label"></label><img src="/images/users/@Model.StrEducationDegreeImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="EducationDegreeImage" type="file" class="form-control" />
+                    <span asp-validation-for="EducationDegreeImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UniversityName" class="control-label"></label>
+                    <input asp-for="UniversityName" class="form-control" />
+                    <span asp-validation-for="UniversityName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsWokHistory" class="control-label"></label>
+                    <input asp-for="InsWokHistory" class="form-control" />
+                    <span asp-validation-for="InsWokHistory" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="UserCreditCardNumber" class="control-label"></label>
+                    <input asp-for="UserCreditCardNumber" class="form-control" />
+                    <span asp-validation-for="UserCreditCardNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserBankAccountNumber" class="control-label"></label>
+                    <input asp-for="UserBankAccountNumber" class="form-control" />
+                    <span asp-validation-for="UserBankAccountNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ShebaNumber" class="control-label"></label><span class="float-xs-left">مانده : <span id="sheba-count" class="text-danger">24</span></span>
+                    <input asp-for="ShebaNumber" type="number" maxlength="24" class="form-control" />
+                    <span asp-validation-for="ShebaNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SHEBAImage" class="control-label"></label><img src="/images/users/@Model.StrSHEBAImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="SHEBAImage" type="file" class="form-control" />
+                    <span asp-validation-for="SHEBAImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DemandNo" class="control-label"></label>
+                    <input asp-for="DemandNo" class="form-control" />
+                    <span asp-validation-for="DemandNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DemandValue" class="control-label"></label>
+                    <input asp-for="DemandValue" class="form-control" />
+                    <span asp-validation-for="DemandValue" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DemandFrontImage" class="control-label"></label><img src="/images/users/@Model.StrDemandFrontImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="DemandFrontImage" type="file" class="form-control" />
+                    <span asp-validation-for="DemandFrontImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DemandBackImage" class="control-label"></label><img src="/images/users/@Model.StrDemandBackImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="DemandBackImage" type="file" class="form-control" />
+                    <span asp-validation-for="DemandBackImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SalesExCode" class="control-label"></label>
+                    <input asp-for="SalesExCode" class="form-control" />
+                    <span asp-validation-for="SalesExCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AgentCode" class="control-label"></label>
+                    <input asp-for="AgentCode" class="form-control" />
+                    <span asp-validation-for="AgentCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PortalPassword" class="control-label"></label>
+                    <input asp-for="PortalPassword" class="form-control" />
+                    <span asp-validation-for="PortalPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="PortalIsActive" class="control-label"></label>
+                    <select asp-for="PortalIsActive" class="form-control">
+                        <option value="false">غیر فعال</option>
+                        <option value="true">فعال</option>
+                    </select>
+                    <span asp-validation-for="PortalIsActive" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PersonalImage" class="control-label"></label><img src="/images/users/@Model.StrPersonalImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="PersonalImage" type="file" class="form-control" />
+                    <span asp-validation-for="PersonalImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndofServiceImage" class="control-label"></label><img src="/images/users/@Model.StrEndofServiceImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="EndofServiceImage" type="file" class="form-control" />
+                    <span asp-validation-for="EndofServiceImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Exam96Image" class="control-label"></label><img src="/images/users/@Model.StrExam96Image" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="Exam96Image" type="file" class="form-control" />
+                    <span asp-validation-for="Exam96Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NoAddictionImage" class="control-label"></label><img src="/images/users/@Model.StrNoAddictionImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="NoAddictionImage" type="file" class="form-control" />
+                    <span asp-validation-for="NoAddictionImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CriminalRecordImage" class="control-label"></label><img src="/images/users/@Model.StrCriminalRecordImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="CriminalRecordImage" type="file" class="form-control" />
+                    <span asp-validation-for="CriminalRecordImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AgentRequestImage" class="control-label"></label><img src="/images/users/@Model.StrAgentRequestImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="AgentRequestImage" type="file" class="form-control" />
+                    <span asp-validation-for="AgentRequestImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SignImage" class="control-label"></label><img src="/images/users/@Model.StrSignImage" width="50" height="50" class="float-xs-left" />
+                    <input asp-for="SignImage" type="file" class="form-control" />
+                    <span asp-validation-for="SignImage" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary offset-md-4 col-md-4 col-xs-12" />
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function countChar(inobj, maxl, outobj) {
+            var len = inobj.value.length;
+
+            if (len >= maxl) {
+                inobj.value = inobj.value.substring(0, maxl);
+                $(outobj).text(0);
+            } else {
+                $(outobj).text(maxl - len);
+            }
+        };
+        $(document).ready(function() {
+            $("#StateId").change(function() {
+                var id = $(this).val();
+                $.ajax({
+                    url: "/UsersPanel/Users/GetCountiesOfState",
+                    data: { sId: id },
+                    async: true,
+                    success: function(result) {                        
+                        if (Object.keys(result).length > 0) {
+                            $("#CountyId").find('option').not(':first').remove();                            
+                            for (let i = 0; i < Object.keys(result).length; i++) {
+                                var op = "<option value=" + result[i].countyId + ">" + result[i].countyName + "</option>";
+                                $("#CountyId").append(op);
+                            }
+                        }
+                    }
+                });
+            });
+
+            //sheba
+            var curChars = $('#ShebaNumber').val().length;
+            var maxchars = 24 - curChars;
+            $('#sheba-count').text(maxchars);
+            $('#ShebaNumber').keyup(function () {
+                countChar(this, 24, '#sheba-count');
+            });
+        });
+    </script>
+}

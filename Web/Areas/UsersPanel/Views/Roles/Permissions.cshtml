@@ -1,0 +1,187 @@
+﻿@model IEnumerable<DataLayer.Entities.Permissions.Permission>
+@{
+    ViewData["Title"] = "دسترسی ها";
+
+}
+<h1 class="text-xs-center alert alert-info">دسترسی ها</h1>
+<a asp-action="CreatePermission" class="btn btn-success">ثبت دسترسی جدید</a>
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+<style>
+    .just-padding {
+        padding: 15px;
+    }
+
+    .list-group.list-group-root {
+        padding: 0;
+        overflow: hidden;
+    }
+
+        .list-group.list-group-root .list-group {
+            margin-bottom: 0;
+        }
+
+        .list-group.list-group-root .list-group-item {
+            border-radius: 0;
+            border-width: 1px 0 0 0;
+        }
+
+        .list-group.list-group-root > .list-group-item:first-child {
+            border-top-width: 0;
+        }
+
+        .list-group.list-group-root > .list-group > .list-group-item {
+            padding-left: 30px;
+        }
+
+        .list-group.list-group-root > .list-group > .list-group > .list-group-item {
+            padding-left: 45px;
+        }
+
+    .list-group-item .fa {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .collapse {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .level2 {
+        padding-right: 10mm;
+    }
+
+    .level3 {
+        padding-right: 15mm;
+    }
+
+    .level4 {
+        padding-right: 20mm;
+    }
+    .level5 {
+        padding-right: 25mm;
+    }
+    .level6 {
+        padding-right: 30mm;
+    }
+</style>
+
+<div class="just-padding">
+    <div class="list-group list-group-root">
+        @{
+            List<DataLayer.Entities.Permissions.Permission> list1 = Model.Where(w => w.ParentId == null).ToList();
+        }
+        @foreach (var item1 in list1)
+        {
+            string itemId1 = "item-" + item1.PermissionId.ToString();
+            List<DataLayer.Entities.Permissions.Permission> list2 = Model.Where(w => w.ParentId == item1.PermissionId).ToList();
+            if (item1.Permissions.Count != 0)
+            {
+                <a href="#@itemId1" class="list-group-item list-group-item-action" data-toggle="collapse">
+                    <i class="fa fa-plus-circle text-danger"></i>@item1.PermissionTitle <span class="mr-2">@item1.PermissionName</span>
+                </a>
+                <div class="list-group collapse " id="@itemId1">
+                    @foreach (var item2 in item1.Permissions)
+                    {
+                        string itemId2 = "item-" + item2.PermissionId.ToString();
+                        List<DataLayer.Entities.Permissions.Permission> list3 = Model.Where(w => w.ParentId == item2.PermissionId).ToList();
+                        if (list3.Count != 0)
+                        {
+                            <a href="#@itemId2" class="list-group-item list-group-item-action level2" data-toggle="collapse">
+                                <i class="fa fa-plus-circle text-success"></i>@item2.PermissionTitle<span class="mr-2">@item2.PermissionName</span>
+                            </a>
+                            <div class="list-group collapse" id="@itemId2">
+
+                                @foreach (var item3 in list3.Select((value, i) => (value, i)))
+                                {
+                                    string itemId3 = "item-" + item3.value.PermissionId.ToString();
+                                    List<DataLayer.Entities.Permissions.Permission> list4 = Model.Where(w => w.ParentId == item3.value.PermissionId).ToList();
+                                    if (list4.Count != 0)
+                                    {
+                                        <a href="#@itemId3" class="list-group-item list-group-item-action level3" data-toggle="collapse">
+                                            <i class="fa fa-plus-circle text-success"></i>@item3.value.PermissionTitle<span class="mr-2">@item3.value.PermissionName</span>
+                                        </a>
+                                        <div class="list-group collapse" id="@itemId3">
+                                            @foreach (var item4 in list4.Select((value, i) => (value, i)))
+                                            {
+                                                string itemId4 = "item-" + item4.value.PermissionId.ToString();
+                                                List<DataLayer.Entities.Permissions.Permission> list5 = Model.Where(w => w.ParentId == item4.value.PermissionId).ToList();
+                                                if (list5.Count != 0)
+                                                {
+                                                    <a href="#@itemId4" class="list-group-item list-group-item-action level4" data-toggle="collapse">
+                                                        <i class="fa fa-plus-circle text-success"></i>@item4.value.PermissionTitle<span class="mr-2">@item4.value.PermissionName</span>
+                                                    </a>
+                                                    <div class="list-group collapse" id="@itemId4">
+                                                        @foreach (var item5 in list5.Select((value, i) => (value, i)))
+                                                        {
+                                                            string itemId5 = "item-" + item5.value.PermissionId.ToString();
+                                                            List<DataLayer.Entities.Permissions.Permission> list6 = Model.Where(w => w.ParentId == item5.value.PermissionId).ToList();
+                                                            if (list6.Count != 0)
+                                                            {
+                                                                @foreach (var item6 in list6.Select((value, i) => (value, i)))
+                                                                {
+                                                                    <p class="list-group-item list-group-item-action level5">@(item6.i + 1) - @item6.value.PermissionTitle <span class="mr-2">@item6.value.PermissionName</span> </p>
+                                                                }
+                                                            }
+                                                            else{
+                                                                <p class="list-group-item list-group-item-action level5">@(item5.i + 1) - @item5.value.PermissionTitle <span class="mr-2">@item5.value.PermissionName</span> </p>
+                                                            }
+                                                            
+                                                        }
+
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="list-group-item list-group-item-action level4">@(item3.i + 1) - @item3.value.PermissionTitle <span class="mr-2">@item3.value.PermissionName</span> </p>
+                                    }
+
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="list-group-item list-group-item-action level3">
+                                @item2.PermissionTitle <span class="mr-2">@item2.PermissionName</span>
+                            </p>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="list-group-item list-group-item-action level2">
+                    @item1.PermissionTitle <span class="mr-2">@item1.PermissionName</span>
+                </p>
+            }
+
+        }
+
+
+    </div>
+</div>
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+@section Scripts
+    {
+
+    <script>
+        $(document).ready(function () {
+            $('.list-group-item').on('click', function () {
+                $('.fa', this)
+                    .toggleClass('fa-plus-circle')
+                    .toggleClass('fa-minus-circle');
+            });
+        });
+
+    </script>
+}

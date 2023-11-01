@@ -1,0 +1,648 @@
+﻿@model Core.DTOs.Admin.InsDetailsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+@inject IGenericInsService _genericInsService
+@{
+    ViewData["Title"] = "جزئیات بیمه آتش سوزی";
+}
+<style>
+
+    .colored-toast .swal2-html-container {
+        color: white;
+    }
+
+    .no-display {
+        display: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row alert alert-info">
+        <div class="col-xs-10">
+            @{
+                int type = Model.FireInsurance.InsuranceType.GetValueOrDefault();
+                string StrType = string.Empty;
+                if (type == 1)
+                {
+                    StrType = "مسکونی";
+                }
+                if (type == 2)
+                {
+                    StrType = "غیر صنعتی";
+                }
+                if (type == 3)
+                {
+                    StrType = "صنعتی";
+                }
+                string title = "جزئیات درخواست بیمه آتش سوزی " + StrType + " | کد پیگیری : " + Model.FireInsurance.TraceCode + " | شماره بیمه نامه : " + Model.FireInsurance.IssuedInsNo + " | حق بیمه: " + Model.FireInsurance.Premium.GetValueOrDefault().ToString("N0") + " تومان";
+            }
+            <h4 class="text-xs-right pt-1 pb-1">
+                @title
+                @if (Model.FireInsurance.Canceled)
+                {
+                    <span class="bg bg-danger text-white pr-1 pl-1 rounded mr-1">انصراف</span>
+                }
+            </h4>
+        </div>
+        <div class="col-xs-2 text-xs-left">
+            @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود مدارک"), User.Identity.Name))
+            {
+                <form method="post" class="d-inline-block" asp-action="DownloadZipDouments" asp-controller="Reports" asp-area="UsersPanel" title="دانلود مدارک">
+                    <input type="hidden" name="insId" value="@Model.FireInsurance.Id" />
+                    <input type="hidden" name="type" value="fire" />
+                    <button type="submit" class="btn btn-primary rounded"><span class="fa fa-download" title="دانلود مدارک"></span></button>
+                    <p class="p-0 m-0 text-xs-center">دانلود مدارک</p>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<section class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="hidden" id="tpartyid" value="@Model.FireInsurance.Id" />
+            <div class="row">
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                مشخصات
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.FireInsurance.Id, "fire") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_fire_state" data-insid="@Model.FireInsurance.Id" data-insissueno="@Model.FireInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <section class="col-xs-12  text-xs-center" id="fireState">
+
+                    <h6 class="text-xs-center border-bottom"><span class="text-primary">کارشناس فروش</span></h6>
+                    @{
+                        DataLayer.Entities.User.User seller = await _genericInsService.GetUserBySalesExCodeAsync(Model.FireInsurance.SellerCode);
+                    }
+                    <div class="row">
+                        <p class="col-md-4 col-xs-12">نام : @seller?.FullName</p>
+                        <p class="col-md-4 col-xs-12">تلفن : @seller?.Cellphone</p>
+                        <p class="col-md-4 col-xs-12">کد : @Model.FireInsurance.SellerCode</p>
+                    </div>
+                    @{
+                        string state = "فرد عادی";
+                        if (Model.FireInsurance.InsurerStatus == "retired")
+                        {
+                            state = "بازنشته کشوری یا تامین اجتماعی";
+                        }
+                        if (Model.FireInsurance.InsurerStatus == "related")
+                        {
+                            state = "منتسب بازنشسته";
+                        }
+                    }
+                    <h6 class="text-xs-center border-bottom"><span class="text-primary">بیمه گذار</span></h6>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12">
+                                    <p>نام : @Model.FireInsurance.InsurerName @Model.FireInsurance.InsurerFamily</p>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <p>تلفن : @Model.FireInsurance.InsurerCellphone</p>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <p>وضعیت : @state</p>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    @if (Model.FireInsurance.HasInstallmentRequest)
+                                    {
+                                        <p>پرداخت به صورت اقساط : بله</p>
+                                    }
+                                    else
+                                    {
+                                        <p>پرداخت به صورت اقساط : خیر</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-12">
+                                    @if (Model.FireInsurance.HasInstallmentRequest)
+                                    {
+                                        <div class="w-100 text-xs-center">تصویر رضایت کسر از حقوق</div>
+                                        <div class="w-100 text-xs-center mb-2">
+                                            <a href="/images/Ins/fire/@Model.FireInsurance.PayrollDeductionImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.PayrollDeductionImage" /></a>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-md-4 col-xs-12">
+                                    <span class="w-100">تصویر کارت ملی</span>
+                                    <div class="w-100 text-xs-center mb-2 ">
+                                        <a href="/images/Ins/fire/@Model.FireInsurance.InsurerNCImage"><img class="rounded mx-auto zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsurerNCImage" /></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-xs-12">
+                                    @if (Model.FireInsurance.InsurerStatus == "related")
+                                    {
+                                        <div class="w-100 text-xs-center">تصویر معرفی نامه منتسب</div>
+                                        <div class="w-100 text-xs-center">
+                                            <a href="/images/Ins/fire/@Model.FireInsurance.AttributedLetterImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.AttributedLetterImage" /></a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12 alert alert-success">
+                    <div class="row">
+                        <div class="col-md-2 col-xs-3">
+                        </div>
+                        <div class="col-md-8 col-xs-6">
+                            <h4 class="text-xs-center ">
+                                مدارک
+                            </h4>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            @if (await _genericInsService.CheckInsIssuedAsync(Model.FireInsurance.Id, "fire") == false)
+                            {
+                                @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ویرایش"), User.Identity.Name))
+                                {
+                                    <a class="float-lg-left font-medium-1" id="btnUpdate_docs_state" data-insid="@Model.FireInsurance.Id" data-insissueno="@Model.FireInsurance.IssuedInsNo" href="javascript:void(0)">ویرایش</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <section class="col-xs-12 mt-1" id="fireDocs">
+                    <div class="row">
+                        <div class="col-xs-12 col-lg-3 mb-1">
+                            @{
+                                string instype = "مسکونی";
+                                if (Model.FireInsurance.InsuranceType.GetValueOrDefault() == 3)
+                                {
+                                    instype = "صنعتی";
+                                }
+                                if (Model.FireInsurance.InsuranceType.GetValueOrDefault() == 2)
+                                {
+                                    instype = "غیر صنعتی";
+                                }
+                            }
+                            <div class="col-xs-12 text-xs-center">نوع بیمه : @instype</div>
+                        </div>
+                        @if (Model.FireInsurance.InsuranceType.GetValueOrDefault() == 1)
+                        {
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">پوشش سرقت دارد؟ @((Model.FireInsurance.HasTheftCover) ? "بله" : "خیر")</div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">لیست اموال</div>
+
+                                @if (!string.IsNullOrEmpty(Model.FireInsurance.PropertiesFile))
+                                {
+                                    @if (Core.Utility.Applications.IsImage(Model.FireInsurance.PropertiesFile))
+                                    {
+                                        <a href="/images/Ins/fire/@Model.FireInsurance.PropertiesFile"><img src="/images/Ins/fire/@Model.FireInsurance.PropertiesFile" class="rounded mx-auto zoom" with=50 height=50></a>
+                                    }
+                                    @if (Model.FireInsurance.PropertiesFile.EndsWith(".pdf"))
+                                    {
+                                        <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="w-100 text-xs-center text-danger">مشخص نشده است !</p>
+                                }
+                            </div>
+                        }
+                        @if (Model.FireInsurance.InsuranceType == 2)
+                        {
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد صفحه اول</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.SuggestionFormPage1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.SuggestionFormPage1Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر فرم پیشنهاد صفحه دوم</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.SuggestionFormPage2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.SuggestionFormPage2Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر نمای بیروم ساختمان</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.ExteriorofBuildingImage"> <img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.ExteriorofBuildingImage" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر ورودی محل بیمه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.InsuranceLocationInputImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsuranceLocationInputImage" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر کنتور و فیوز محل بیمه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.InsuredPlaceFuseandMeterImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsuredPlaceFuseandMeterImage" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر کنتور و انشعابات گاز محل بیمه</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.InsuredPlaceMeterandGasBranchesImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.InsuredPlaceMeterandGasBranchesImage" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 1</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice1Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice1Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 2</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice2Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice2Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 3</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice3Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice3Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر وسیله گاز سوز 4</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice4Image"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.GasBurningDevice4Image" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="col-xs-12 text-xs-center">تصویر کنتور و تابلو برق اصلی</div>
+                                <div class="col-xs-12 text-xs-center">
+                                    <a href="/images/Ins/fire/@Model.FireInsurance.MainMeterandElectricalPanelImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.MainMeterandElectricalPanelImage" /></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 mb-1 text-xs-center">
+                                <div class="row">
+                                    <div class="col-xs-12 text-xs-center">فیلم کوتاه از فضای داخلی</div>
+                                    <div class="col-xs-12 text-xs-center">
+                                        <video controls width="150" height="150" class="filmPreview" id="film-preview">
+                                            <source src="/images/Ins/fire/@Model.FireInsurance.WholeInteriorFilm" />
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mb-1">
+                            @{
+                                string sb = " ";
+                                if (Model.FireInsurance.InsuranceHistoryStatus.GetValueOrDefault() == 1)
+                                {
+                                    sb = "بیمه آتش سوزی ندارد";
+                                }
+                                if (Model.FireInsurance.InsuranceHistoryStatus.GetValueOrDefault() == 2)
+                                {
+                                    sb = "بیمه آتش سوزی از سایر شرکت ها";
+                                }
+                                if (Model.FireInsurance.InsuranceHistoryStatus.GetValueOrDefault() == 3)
+                                {
+                                    sb = "بیمه آتش سوزی از بیمه ملت";
+                                }
+                            }
+                            <p>وضعیت سابقه بیمه : @sb</p>
+                        </div>
+                        @if (Model.FireInsurance.InsuranceHistoryStatus.GetValueOrDefault() == 2 || Model.FireInsurance.InsuranceHistoryStatus.GetValueOrDefault() == 3)
+                        {
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="row">
+                                    <div class="col-xs-12 text-xs-center">تصویر بیمه نامه قبلی</div>
+                                    <div class="col-xs-12 text-xs-center">
+                                        <a href="/images/Ins/fire/@Model.FireInsurance.PerviousInsImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.PerviousInsImage" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-xs-12 col-lg-3 mb-1">
+                            <div class="row">
+                                <div class="col-xs-12 text-xs-center">آیا تخفیف عدم خسارت دارد؟ @((Model.FireInsurance.HasNoDamagedDiscount) ? "بله" : "خیر")</div>
+                            </div>
+                        </div>
+                        @if (Model.FireInsurance.HasNoDamagedDiscount)
+                        {
+                            <div class="col-xs-12 col-lg-3 mb-1">
+                                <div class="row">
+                                    <div class="col-xs-12 text-xs-center">تصویر گواهی عدم خسارت</div>
+                                    <div class="col-xs-12 text-xs-center">
+                                        <a href="/images/Ins/fire/@Model.FireInsurance.NoDamageCertificateImage"><img class="rounded zoom" width="50" height="50" src="/images/Ins/fire/@Model.FireInsurance.NoDamageCertificateImage" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.FireInsurance.InsuranceHistoryStatus.GetValueOrDefault() == 3)
+                        {
+                            <div class="col-xs-12 col-lg-6 mb-1">
+                                <p>آیا سلامت مورد بیمه تغییر پیدا کرده است؟ @((Model.FireInsurance.InsuredHealthChanged) ? "بله" : "خیر")</p>
+                            </div>
+                            <div class="col-xs-12 col-lg-6 mb-1">
+                                <p>آیا سال قبل خسارت گرفته اید؟ @((Model.FireInsurance.SufferDamageLastYear) ? "بله" : "خیر")</p>
+                            </div>
+                        }
+                    </div>
+                    @{
+                        bool hasUserUp = false;
+                        if (Model.FireInsurance.FireInsuranceSupplements.Where(w => !string.IsNullOrEmpty(w.Message) && w.Message.Contains("fu")).Any())
+                        {
+                            hasUserUp = true;
+                        }
+                    }
+                    @if (hasUserUp)
+                    {
+                        <div class="col-lg-12">
+                            <h5 class="text-xs-center text-danger">فایلهای آپلود شده جدید </h5>
+                            <table class="table table-bordered font-small-2">
+                                <thead>
+                                    <tr>
+                                        <th class="text-xs-center align-middle p-0 width-50">#</th>
+                                        <th class="text-xs-center align-middle p-0 width-10-per">عنوان</th>
+                                        <th class="text-xs-center align-middle p-0 width-15-per">تاریخ</th>
+                                        <th class="text-xs-center align-middle p-0 width-10-per">توسط</th>
+                                        <th class="text-xs-center align-middle p-0 width-10-per">فایل</th>
+                                        <th class="text-xs-center align-middle p-0 ">پیام</th>
+                                        <th class="text-xs-center align-middle p-0">دانلود</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int rad = 1;
+                                    }
+                                    @foreach (var item in Model.FireInsurance.FireInsuranceSupplements.Where(w => w.Message.Contains("fu")).OrderByDescending(x => x.RegDate).ToList())
+                                    {
+                                        <tr>
+                                            <td class="text-xs-center align-middle p-0">@rad</td>
+                                            <td class="text-xs-center align-middle p-0">@item.Title</td>
+                                            <td class="text-xs-center align-middle p-0">@item.RegDate.ToShamsiN()</td>
+                                            <td class="text-xs-center align-middle p-0">
+                                                @{
+                                                    var user = await _genericInsService.GetUserByNameAsync(item.UserName);
+                                                    string userFullName = user?.FullName ?? "-";
+                                                }
+                                                @userFullName
+                                            </td>
+                                            <td class="text-xs-center align-middle p-0">
+                                                @if (!string.IsNullOrEmpty(item.File))
+                                                {
+                                                    @if (Core.Utility.Applications.IsImage(item.File))
+                                                    {
+                                                        <img src="~/Supp/fire/@item.File" class="rounded mx-auto zoom" with=50 height=50>
+                                                    }
+                                                    @if (item.File.EndsWith(".pdf"))
+                                                    {
+                                                        <img src="~/images/Svg/pdf.svg" width=50 height=50>
+                                                    }
+                                                }
+                                            </td>
+                                            <td class="text-xs-center align-middle">
+                                                @foreach (string ml in item.MessageLines)
+                                                {
+                                                    if (ml != item.MessageLines.LastOrDefault())
+                                                    {
+                                                        <span class="w-100">@ml.Replace("fu"," ")</span>
+
+                                                        <br />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="w-100">@ml.Replace("fu"," ")</span>
+                                                    }
+
+                                                }
+                                            </td>
+                                            <td class="text-xs-center align-middle">
+                                                <form asp-area="UsersPanel" asp-controller="Reports" asp-action="DownloadFile" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="filename" value="@item.File">
+                                                    <input type="hidden" name="insType" value="fire">
+                                                    <button type="submit" title="دانلود" class="text-success cursor-pointer font-size-large"><span class="icon-download"></span></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        rad++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </section>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-3"></div>
+                                <div class="col-md-8 col-xs-6">
+                                    <h4 class="text-xs-right text-md-center">
+                                        وضعیت مالی
+                                    </h4>
+                                </div>
+                                <div class="col-md-2 col-xs-3">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت مالی"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.FireInsurance.Id" data-instype="fire" data-refreshid="FindivStatus" data-loc="@Model.Location" class="btn btn-primary float-xs-left FinbtnInsertState">ثبت وضعیت </button>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="FindivStatus" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowFinancialStatusesVM showFinancialStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedFinancialStatusesAsync(Model.FireInsurance.Id, "fire", "FindivStatus", "false", User.Identity.Name);
+                                showFinancialStatusesVM.PermissionNames = Model.PermissinKeys;
+                                showFinancialStatusesVM.Location = Model.Location;
+                            }
+                            <partial name="ShowInsFinanceStatus" model="@showFinancialStatusesVM" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-3">
+                                    @if (string.IsNullOrEmpty(Model.FireInsurance.IssuedInsNo))
+                                    {
+                                        @if (!Model.FireInsurance.Canceled)
+                                        {
+                                            <button data-insid="@Model.FireInsurance.Id" data-instype="fire" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-danger float-xs-right" id="btnCanceled">اعلام انصراف</button>
+                                        }
+                                    }
+
+                                    @if (Model.FireInsurance.Canceled)
+                                    {
+                                        <span class="text-danger">انصراف داده شده است !</span>
+                                    }
+                                </div>
+                                <div class="col-md-8 col-xs-6">
+                                    <h4 class="text-xs-right text-md-center">وضعیت صدور</h4>
+                                </div>
+                                <div class="col-md-2 col-xs-3">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("ثبت وضعیت صدور"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.FireInsurance.Id" data-instype="fire" data-refreshid="divStatus" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertState">ثبت وضعیت</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divStatus" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowInsStatusesVM showInsStatusesVM = await _genericInsService.PreparationDataForShowAnyInsIssuedStatus(Model.FireInsurance.Id, "fire", "divStatus", "false", User.Identity.Name);
+                                showInsStatusesVM.PermissionNames = Model.PermissinKeys;
+                                showInsStatusesVM.Location = Model.Location;
+                            }
+                            <partial name="ShowInsStatuses" model="@showInsStatusesVM" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mt-1">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-success">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-4"></div>
+                                <div class="col-md-6 col-xs-4">
+                                    <h4 class="text-xs-right text-md-center">بیمه نامه</h4>
+                                </div>
+                                <div class="col-md-3 col-xs-4">
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("پیوست فایل"), User.Identity.Name))
+                                    {
+                                        <button data-insid="@Model.FireInsurance.Id" data-refreshid="divSupp" data-instype="fire" data-loc="@Model.Location" class="btn btn-primary float-xs-left btnInsertSupp">پیوست فایل</button>
+                                    }
+                                    @if (_genericInsService.CheckPermissionByName(Model.PermissinKeys.GetValueOrDefault("دانلود تمام فایلهای پیوست شده"), User.Identity.Name))
+                                    {
+                                        @if (Model.FireInsurance.FireInsuranceSupplements.Any(z => string.IsNullOrEmpty(z.Message) || (!string.IsNullOrEmpty(z.Message) && !z.Message.Contains("fu"))))
+                                        {
+                                            <form method="post" class="d-inline-block" asp-action="DownloadZipSupps" asp-controller="Reports" asp-area="UsersPanel">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="insId" value="@Model.FireInsurance.Id" />
+                                                <input type="hidden" name="type" value="fire" />
+                                                <button type="submit" class="btn btn-warning rounded">دانلود پیوست ها</button>
+                                            </form>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divSupp" class="col-xs-12 table-responsive mt-2">
+                            @{
+                                Core.DTOs.Admin.ShowInsuranceSupplementsData showInsuranceSupplementsData = await _genericInsService.PreparationDataForShowInsSupplementsAsync(Model.FireInsurance.Id, "fire", "divSupp", "false", User.Identity.Name);
+                                showInsuranceSupplementsData.PermissionNames = Model.PermissinKeys;
+                                showInsuranceSupplementsData.Location = Model.Location;
+                            }
+                            <partial name="ShowInsSupplements" model="@showInsuranceSupplementsData" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div style="position:fixed;bottom :10mm;left:2mm">
+        @if (!string.IsNullOrEmpty(Model.FireInsurance.IssuedInsNo))
+        {
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdsIns" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+        else
+        {
+
+            @if (User.Identity.Name == "0000000000")
+            {
+                <a asp-action="RegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+            else
+            {
+                <a asp-action="MyRegisterdReqs" class="btn btn-danger"><span>&lArr;</span></a>
+            }
+        }
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/AdminLayout/app-assets/js/scripts/InsDetails.js"></script>
+    <script>
+        $(document).on("click", "#btnUpdate_fire_state", function () {
+            var id = $(this).attr("data-insid");
+            var insissueno = $(this).attr("data-insissueno");
+            $.ajax({
+                async: true,
+                url: "/UsersPanel/UpdateFireIns/UpdateFireStateSection",
+                data: { guid: id },
+                type: "GET",
+            }).done(function (result) {
+                $("#adminmodal #modal-dialog").addClass("modal-lg");
+                $("#adminmodal .modal-body").html(result);
+                var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت وضعیت بیمه نامه آتش سوزی با شماره" + " " + insissueno + "</h4>";
+                $("#adminmodal .modal-title").html(html);
+                $("#close-modal").hide();
+                $("#adminmodal").modal('show');
+            });
+        });
+        //btnUpdate_docs_state
+        $(document).on("click", "#btnUpdate_docs_state", function () {
+            var id = $(this).attr("data-insid");
+            var insissueno = $(this).attr("data-insissueno");
+            $.ajax({
+                async: true,
+                url: "/UsersPanel/UpdateFireIns/UpdateFireDocsSection",
+                data: { guid: id },
+                type: "GET",
+            }).done(function (result) {
+                $("#adminmodal #modal-dialog").addClass("modal-lg");
+                $("#adminmodal .modal-body").html(result);
+                var html = "<h4 class='text-xs-center alert alert-success'>" + "ویرایش قسمت وضعیت بیمه نامه آتش سوزی با شماره" + " " + insissueno + "</h4>";
+                $("#adminmodal .modal-title").html(html);
+                $("#close-modal").hide();
+                $("#adminmodal").modal('show');
+            });
+        });
+        $(document).on("click", "#btnCanceled", function () {
+            var id = $(this).attr("data-insid");
+            var instype = $(this).attr("data-instype");
+            if (confirm('آیا مطمئن به لغو درخواست خود هستید ؟')) {
+                $.ajax({
+                    url: "/UsersPanel/Reports/CancelRequest",
+                    data: { insId: id, type: instype },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    type: "POST",
+
+                    async: true,
+
+                }).done(function (result) {
+                    if (result == true) {
+                        window.location.reload();
+                    }
+                });
+            }
+
+        });
+        var loc = window.location.href;
+        $("#sloc").val(loc);
+    </script>
+
+}

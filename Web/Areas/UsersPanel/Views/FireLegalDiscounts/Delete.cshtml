@@ -1,0 +1,41 @@
+﻿@model DataLayer.Entities.InsPolicy.Fire.FireLegalDiscount
+
+@{
+    ViewData["Title"] = "حذف تخفیف و اضافه نرخ";
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-danger">حذف تخفیف و اضافه نرخ</h1>
+
+<h3 class="text-xs-center text-warning">آیا مطمئن به حــذف تخفیف یا اضافه نرخ هستید؟</h3>
+<div class="container-fluid">
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Percent)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Percent)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Type)
+            </dt>
+            <dd class="col-sm-10">
+                @((Model.Type=="add")? "اضافه نرخ":"تخفیف")
+            </dd>
+        </dl>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="حــذف" class="btn btn-danger" /> |
+            <a asp-action="Index">بازگشــت</a>
+        </form>
+    </div>
+</div>
+

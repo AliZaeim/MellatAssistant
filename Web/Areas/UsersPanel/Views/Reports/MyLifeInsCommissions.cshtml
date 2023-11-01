@@ -1,0 +1,159 @@
+﻿@model Core.DTOs.Admin.RegisterdInsVM
+@using Core.Services.Interfaces;
+@using Core.Convertors;
+
+
+@inject IGenericInsService _genericInsService
+@{
+    string tit = "کارمزد فروش بیمه زندگی";
+
+    ViewData["Title"] = tit;
+    Layout = "~/Areas/UsersPanel/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+<h1 class="text-xs-center alert alert-info mt-1">@tit <span class="tag tag-square tag-warning">@Model.complexRegisterdsInsVMs.Count()</span></h1>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle p-0">
+                    #
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    شماره بیمه نامه
+                </th>
+
+                <th class="text-xs-center align-middle p-0">
+                    کارشناس فروش
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    بیمه گذار
+                </th>
+
+                <th class="text-xs-center align-middle p-0">
+                    تاریخ پرداخت
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    حق بیمه
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    حق بیمه خالص
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    کارمزد
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    کارمزد خالص
+                </th>
+               
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int rad = 1;
+            }
+            @foreach (var item in Model.complexRegisterdsInsVMs)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle p-0">
+                        @rad
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.InsNo)
+                    </td>
+
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+
+                        @item.SalesExPro.SalesExFullName - @item.SalesExPro.SalesExCode
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.InsurerFullName
+                    </td>
+
+                    @{
+                        string tdcls = "text-danger";
+                        if (item.LastFinancialStatus != null)
+                        {
+                            if (item.LastFinancialStatus.IsEndOfProcess && item.LastFinancialStatus.IsSystemic)
+                            {
+                                tdcls = "text-success";
+                            }
+                        }
+                    }
+                    <td class="text-xs-center align-middle p-0 @tdcls font-size-samll">
+                        @{
+                            if (item.LastFinancialStatus != null)
+                            {
+                                <span>@item.LastFinancialStatus.RegLastStatusDate.ToShamsiWithTime()</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+
+                        }
+
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @item.Premium.GetValueOrDefault().ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @{
+                            decimal val = (decimal)(item.Premium.GetValueOrDefault() - (item.Premium.GetValueOrDefault() * 0.09));
+                            double nutPremium = Math.Round((item.Premium.Value / 1.09), MidpointRounding.ToNegativeInfinity);
+                        }
+                        @nutPremium.ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @{
+                            float percent = 0;
+                            var ur = await _genericInsService.GetUserRoleByUserNameandRole(User.Identity.Name, item.SellerRoleId.GetValueOrDefault());
+                            var role = await _genericInsService.GetRoleByIdAsync(item.SellerRoleId.GetValueOrDefault());
+                            if (ur != null)
+                            {
+                                percent = ur.LifePercent.GetValueOrDefault();
+
+                            }
+                            else
+                            {
+                                if (role != null)
+                                {
+                                    if (role.LifePercent.HasValue)
+                                    {
+                                        percent = role.LifePercent.Value;
+                                    }
+                                }
+                            }
+                            int percentValue = (int)((nutPremium * percent) / 100);
+                        }
+                        @percentValue.ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0 font-size-samll">
+                        @{
+                            int netComm = (int)(percentValue * .09);
+                        }
+                        @netComm.ToString("N0")
+                    </td>
+                    
+
+                </tr>
+                { rad++; }
+            }
+
+        </tbody>
+    </table>
+
+</div>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+        });
+    </script>
+}
+

@@ -1,0 +1,55 @@
+﻿@model Core.DTOs.SiteGeneric.ThirdPartyIns.UpdateTPDocsSectionVM
+<div class="container-fluid">
+    <div class="row">
+        <form method="post" asp-action="UpdatetpInsDocsSection" asp-controller="UpdateThirdPartyIns" asp-area="UsersPanel" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#tpDocsSection" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StrSuggestionFormImage" />
+            <input type="hidden" asp-for="StrPrevInsPolicyImage" />
+            <input type="hidden" asp-for="StrCarCardFrontImage" />
+            <input type="hidden" asp-for="StrCarCardBackImage" />
+            <input type="hidden" asp-for="StrDrivingPermitFrontImage" />
+            <input type="hidden" asp-for="StrDrivingPermitBackImage" />
+            <input type="hidden" asp-for="guid" />
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="SuggestionFormImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrSuggestionFormImage" />
+                    <input type="file" class="form-control" asp-for="SuggestionFormImage">
+                    <span asp-validation-for="SuggestionFormImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PrevInsPolicyImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrPrevInsPolicyImage" />
+                    <input type="file" class="form-control" asp-for="PrevInsPolicyImage">
+                    <span asp-validation-for="PrevInsPolicyImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarCardFrontImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrCarCardFrontImage" />
+                    <input type="file" class="form-control" asp-for="CarCardFrontImage">
+                    <span asp-validation-for="CarCardFrontImage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label asp-for="CarCardBackImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrCarCardBackImage" />
+                    <input type="file" class="form-control" asp-for="CarCardBackImage">
+                    <span asp-validation-for="CarCardBackImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DrivingPermitFrontImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrDrivingPermitFrontImage" />
+                    <input type="file" class="form-control" asp-for="DrivingPermitFrontImage">
+                    <span asp-validation-for="DrivingPermitFrontImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DrivingPermitBackImage" class="control-label"></label><img class="float-left" width="50" height="50" src="~/images/Ins/tp/@Model.StrDrivingPermitBackImage" />
+                    <input type="file" class="form-control" asp-for="DrivingPermitBackImage">
+                    <span asp-validation-for="DrivingPermitBackImage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

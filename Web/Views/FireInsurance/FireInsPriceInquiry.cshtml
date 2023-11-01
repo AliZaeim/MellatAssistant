@@ -1,0 +1,560 @@
+﻿@model Core.DTOs.SiteGeneric.FireIns.FireInsInquiryVM
+@using Core.Convertors;
+@{
+    ViewData["Title"] = "استعلام قیمت بیمه آتش سوزی - بیمه ملت";
+    bool dis = false;
+    if (Model.IsPosted == "yes")
+    {
+        dis = true;
+    }
+}
+@section Head{
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="fa" />
+    <meta name="document-type" content="Public" />
+    <meta name="document-rating" content="General" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ali Asle Zaeim" />
+    <link href="/Layout/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/animate.css" rel="stylesheet" />
+    <link href="/Layout/Css/Style.css" rel="stylesheet" />
+    <link href="/Layout/Css/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/Layout/Css/sina-nav.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.webp" />
+    <style>
+        [data-tooltip] {
+            position: relative;
+            /*border-bottom: 1px dashed #000;*/
+            cursor: help;
+            float: left;
+        }
+
+            [data-tooltip]::after {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+                content: attr(data-tooltip);
+                left: 0;
+                top: calc(100% + 10px);
+                border-radius: 3px;
+                box-shadow: 0 0 5px 2px rgba(100, 100, 100, 0.6);
+                background-color: white;
+                z-index: 10;
+                padding: 8px;
+                width: 300px;
+                transform: translateY(-10px);
+                transition: all 150ms cubic-bezier(.25, .8, .25, 1);
+            }
+
+            [data-tooltip]:hover::after {
+                opacity: 1;
+                transform: translateY(0);
+                transition-duration: 300ms;
+            }
+
+    </style>
+}
+
+@section Header{
+    <partial name="_Header" />
+}
+
+<div class="container-fluid border">
+    <div class="row d-block justify-content-center">
+        <div class="col-12 text-center mt-1 mb-2">
+            <div class="card bg-zinfo">
+                <div class="row">
+                    <div class="col-md-2 hidden-sm-down">
+                    </div>
+                    <div class="col-md-8 col-xs-12 text-xs-center">
+                        <h2 id="heading" class="zHeaderfont-size">استعلام قیمت بیمه آتش سوزی</h2>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <a href="javascript:void(0)" id="moreInfo" class="btn btn-purple text-white mt-1 ml-3 mb-1">نیاز به اطلاعات بیشتر دارید؟</a>
+                    </div>
+                </div>
+                <form method="post">
+                    <div class="container-fluid">
+                        <div class="row  bg-light pt-2 pb-1">
+                            <div class="col-12 col-lg-3 pt-4">
+                                <h5 class="col-12 text-xs-center text-lg-right pr-sm-0 pr-md-5">مشخصات عمومی بیمه</h5>
+                            </div>
+                            @*asp-items="ViewBag.FireBuildingUsageTypeId"*@
+                            <div class="col-12 col-lg-9 pt-1 pr-3 pl-3">
+                                <div class="row">
+                                    <div class="col-12 col-lg-3">
+                                        <div class="form-group">
+                                            <span class="control-label">نوع کاربری ملک</span>
+                                            <select asp-for="FireBuildingUsageTypeId" id="fbtypeId" onchange="fetchCoverages(this,[],false)" disabled="@dis" class="custom-select">
+                                                <option value="">کاربری ملک را مشخص کنید</option>
+                                                @foreach (var item in Model.BuildingUsages)
+                                                {
+                                                    <option value="@item.Id" data-need="@item.NeedsToInquiry">@item.Title</option>
+                                                }
+                                            </select>
+                                            <span asp-validation-for="FireBuildingUsageTypeId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <div class="form-group">
+                                            <span class="control-label">نوع سازه</span>
+                                            <select asp-for="FireStructureTypeId" id="fstypeId" disabled="@dis" class="custom-select">
+                                                <option value="">نوع سازه را انتخاب کنید</option>
+                                                @foreach (var fs in Model.FireStructureTypes)
+                                                {
+                                                    <option data-limit="@fs.HasCoverageLimit" value="@fs.Id">@fs.Title</option>
+                                                }
+                                            </select>
+                                            <span asp-validation-for="FireStructureTypeId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <div class="form-group">
+                                            <span class="control-label">محل ساختمان</span>
+                                            <select asp-for="StateId" id="fbtypeId" disabled="@dis" class="custom-select">
+                                                <option value="">محل ساختمان را انتخاب کنید</option>
+                                                @foreach (var st in Model.States)
+                                                {
+                                                    <option value="@st.StateId">@st.StateName</option>
+                                                }
+                                            </select>
+                                            <span asp-validation-for="StateId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <span class="control-label"> مدت به ماه</span>
+                                        <div class="form-group">
+                                            <select asp-for="Duration" disabled="@dis" class="custom-select">
+                                                <option value="">مدت بیمه نامه را انتخاب کنید</option>
+                                                <option value=1>یک ماه</option>
+                                                <option value=3>سه ماه</option>
+                                                <option value=6>شش ماه</option>
+                                                <option value=9>نه ماه</option>
+                                                <option value=12>یکسال</option>
+                                            </select>
+                                            <span asp-validation-for="Duration" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-12 col-lg-3 pt-4">
+                                <h5 class="col-12 text-xs-center text-lg-right pr-sm-0 pr-md-5">پوششهای درخواستی</h5>
+                            </div>
+                            <div class="col-12 col-lg-9 pt-1 pr-3 pl-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="mt-3" id="chkCovers">
+                                            </div>
+                                            <span asp-validation-for="SelectedCovers" id="SelCoversValid" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 pt-1 pr-3 pl-3">
+                                        @{
+                                            string sar = "سرمایه کلی شامل ارزش ملک ( به قیمت ساخت بدون احتساب ارزش زمین )، ارزش اثاثیه و ارزش تاسیسات می باشد.";
+                                        }
+                                        <div class="row">
+                                            <div class="col-12 col-lg-3">
+                                                <span class="control-label">سرمایه کلی تحت پوشش <span>(تومان)</span><span class="cursor-pointer float-lg-left" data-tooltip="@sar"><i class="fa fa-question-circle  text-danger "></i></span></span>
+                                                <div class="form-group">
+                                                    <input asp-for="Capital" disabled="@dis" placeholder="حداقل 50 میلیون تومان" class="form-control mb-0 text-center numberInput" />
+                                                    <span asp-validation-for="Capital" class="text-danger w-100"></span>
+                                                    <p class="text-white wordify zchangewordfontsize"></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-3">
+                                                @{
+                                                    string mess1 = "در صورت تمایل به داشتن پوشش سرقت ارزش لوازم تحت این پوشش را وارد نمائید. وجوه نقد، اوراق بهادار، ارز و طلا تحت پوشش سرقت نمی باشد.";
+                                                }
+                                                <span class="control-label">سرمایه تحت پوشش سرقت <span>(تومان)</span><span class="cursor-pointer float-lg-left" data-tooltip="@mess1"><i class="fa fa-question-circle  text-danger "></i></span></span>
+                                                <div class="form-group">
+                                                    <input asp-for="StolenCoverageCapital" disabled="@dis" placeholder="اختیاری" class="form-control mb-0 text-center numberInput" />
+                                                    <span asp-validation-for="StolenCoverageCapital" class="text-danger"></span>
+                                                    <p class="text-white wordify zchangewordfontsize"></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-3">
+                                                @{
+                                                    string mess2 = "در صورت تمایل به داشتن پوشش شکست شیشه و آینه ارزش آنرا وارد نمائید. در غیر این صورت بابت این موارد خسارت قبل پرداخت نمی باشد.";
+                                                }
+                                                <span class="control-label">سرمایه شیشه و تابلو <span>(تومان)</span> <span class="cursor-pointer float-lg-left" data-tooltip="@mess2"><i class="fa fa-question-circle  text-danger "></i></span></span>
+                                                <div class="form-group">
+                                                    <input asp-for="GlassCapital" disabled="@dis" placeholder="اختیاری" class="form-control mb-0 text-center numberInput" />
+                                                    <span asp-validation-for="GlassCapital" class="text-danger"></span>
+                                                    <p class="text-white wordify zfontsize-10"></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-3">
+                                                @{
+                                                    string clear = "در صورت تمایل به دریافت هزینه پاکسازی پس از وقوع حادثه، مبلغ مورد نظر را وارد نمائید. حداکثر این مبلغ برابر کل سرمایه تحت پوشش و حداکثر 200 میلیون تومان می باشد.";
+                                                }
+                                                <span class="w-100">هزینه پاکسازی <span>(تومان)</span> <span class="cursor-pointer float-lg-left" data-tooltip="@clear"><i class="fa fa-question-circle  text-danger "></i></span></span>
+                                                <div class="form-group">
+                                                    <input asp-for="CleaningCost" disabled="@dis" placeholder="اختیاری" class="form-control mb-0 text-center numberInput" />
+                                                    <span asp-validation-for="CleaningCost" class="text-danger"></span>
+                                                    <p class="text-white wordify zfontsize-10"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row bg-light pb-1 ">
+                            <div class="col-12 col-lg-3 pt-4">
+                                <h5 class="col-12 text-xs-center text-lg-right pr-sm-0 pr-md-5">وضعیت بیمه گذار</h5>
+                            </div>
+                            <div class="col-12 col-lg-9 pt-1 pr-3 pl-3">
+                                <div class="row">
+                                    <div class="col-12 col-lg-3">
+                                        <div class="form-group">
+                                            <span class="control-label">نوع بیمه گذار</span>
+                                            <Select asp-for="FireInsurerType" id="InsurerType" disabled="@dis" class="custom-select">
+                                                <option value="">نوع بیمه گذار را انتخاب کنید</option>
+                                                @foreach (var item in Model.FireInsurerTypes)
+                                                {
+                                                    <option value="@item.Id">@item.Title</option>
+                                                }
+                                            </Select>
+                                            <span asp-validation-for="FireInsurerType" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <span class="control-label">درصد تخفیف گروه بیمه گذار</span>
+                                        <div class="form-group">
+                                            <input class="form-control text-center" id="extradis" readonly asp-for="ExtraFinancialDiscount" placeholder="درصد تخفیف مازاد مالی" />
+                                            <span asp-validation-for="ExtraFinancialDiscount" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <span class="control-label" id="lblPerAdd">درصد نهایی تخفیف یا اضافات</span>
+
+                                        <div class="form-group">
+                                            <input class="form-control text-center" id="legaldis" asp-for="LegalDiscount" value="@Model.LegalDiscount" readonly />
+                                            <span asp-validation-for="LegalDiscount" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-12 col-lg-3 pt-3">
+                                <h5 class="col-12 text-xs-center text-lg-right pr-sm-0 pr-md-5">سوابق بیمه ای</h5>
+                            </div>
+                            <div class="col-12 col-lg-9 pt-1 pr-3 pl-3 ">
+                                <div class="row ">
+                                    <div class="col-12 col-lg-3 pt-3 text-right">
+                                        <div class="form-group form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" disabled="@dis" asp-for="HasPrevIns" />&ensp; @Html.DisplayNameFor(model => model.HasPrevIns)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3 previnsfield @((Model.HasPrevIns) ? "":"no-display")">
+                                        <div class="form-group">
+                                            <span class="control-label">تاریخ اعتبار بیمه نامه</span>
+                                            <input asp-for="InsValidDate" disabled="@dis" class="form-control text-center" dir="ltr" placeholder="تاریخ اعتبار بیمه نامه" title="مثال : 1394/02/11" />
+                                            <span asp-validation-for="InsValidDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-3 previnsfield @((Model.HasPrevIns) ? "":"no-display")">
+                                        <div class="form-group">
+                                            <span class="control-label">سابقه عدم خسارت</span>
+                                            <input asp-for="NoDamageHistory" disabled="@dis" min="0" placeholder="سابقه عدم خسارت" class="form-control text-center" />
+                                            <span asp-validation-for="NoDamageHistory" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row bg-light pt-1">
+
+                            <div class="col-12 col-lg-5 mt-2 mb-2 justify-content-center align-items-center">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend col-6 col-lg-4 p-0">
+                                        <button type="submit" class="btn btn-outline-primary col-12">اعلام حق بیمه <span class="fas fa-hand-pointer text-danger"></span></button>
+                                    </div>
+                                    <input type="text" disabled class="form-control text-center font-weight-bold font-large-5 col-6 col-lg-8 p-0" value="@((Model.Premium != null)? Model.Premium.Value.ToString("N0")+ " تومان":Model.Premium)">
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-7 mt-2 mb-2 justify-content-center align-items-center">
+                                <form method="post" id="frmX">
+                                    <input type="hidden" asp-for="Premium" name="Premium" value="@Model.Premium" />
+                                    <input type="submit" id="frmXsubmit"  asp-action="FireInsuranceIndex" asp-controller="FireInsurance" class="btn btn-outline-success mb-2 col-12 col-lg-4 @Model.InsSaveClass" value="تایید و ثبت درخواست" />
+                                </form>
+
+                                <a asp-action="FireInsPriceInquiry" asp-controller="FireInsurance" class="btn btn-outline-danger mb-2 col-12 col-lg-4">استعلام مجدد</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="container mt-5" id="minf">
+    <div class="row">
+        <div id="s_post" class="col-lg-6 py-3 pl-3">
+            <div class="d-flex flex-column">
+                @foreach (var blg in Model.Blogs.ToList())
+                {
+                    <div class="d-flex flex-md-row flex-column mb-2">
+                        <img src="/images/blogs/@blg.BlogImageInBlog" class="img-fluid ml-3 rad10 mb-2" />
+                        <div>
+                            <a href="/blog/d/@blg.BlogUrl" class="IRANSansWeb_Medium">@blg.BlogTitle</a>
+                            <p class="text-justify">@blg.BlogSummary.Get_Nth_Character(100) ... </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Footer{
+    <partial name="_Footer" />
+    }
+@section Scripts{
+    <script src="/Layout/Js/jquery-2.0.0.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Layout/Js/bootstrap.min.js"></script>
+    <script src="/Layout/Js/owl.carousel.js"></script>
+    <script src="/Layout/Js/custom.js"></script>
+    <script src="/Layout/Js/sina-nav.min.js"></script>
+    <script src="~/Layout/Js/vanilla-masker.js"></script>
+    <script src="~/Layout/Js/wordifyfa.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
+    <script>
+
+        var newInput = document.getElementById("InsValidDate");
+        VMasker(newInput).maskPattern("9999/99/99");
+        //var fbTypeId = document.getElementById("fbtypeId");
+        // alert(fbTypeId.value);
+
+        function fetchCoverages(elem, covers, isposted) {
+            var url = "/FireInsurance/GetBuildingCoverages?buTypeId=" + elem.value;
+            var e = document.getElementById(elem.id);
+
+            var ned = elem.options[e.selectedIndex].dataset.need;
+            if (ned === "True") {
+                fetch(url, {
+                    method: "Get",
+                    headers: { "Content-type": "json/application" },
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        return response.json();
+                    }
+                })
+                    .then((content) => {
+                        var cov = document.getElementById("chkCovers");
+                        cov.innerHTML = "";
+                        var fstype = document.getElementById("fstypeId");
+                        var limit = "False";
+                        if (fstype.value !== "") {
+                            var selectedOption = fstype.options[fstype.selectedIndex];
+                            limit = selectedOption.getAttribute("data-limit");
+
+                        }
+                        for (var j = 0; j < content.length; j++) {
+                            var x = document.createElement("INPUT");
+                            x.setAttribute("type", "checkbox");
+                            x.value = content[j].id;
+                            x.name = "SelectedCovers";
+                            x.setAttribute("data-limit", content[j].hasCoverageLimit);
+                            if (covers !== null) {
+                                if (covers.includes(content[j].id)) {
+                                    x.checked = true;
+                                }
+                            }
+                            if (isposted == 'yes') {
+                                x.setAttribute('disabled', 'true');
+
+                            }
+                            else {
+                                x.removeAttribute('disabled');
+                                if (limit === "True" && content[j].hasCoverageLimit) {
+                                    x.setAttribute('disabled', 'true');
+                                }
+                            }
+                            x.style.marginLeft = "1mm";
+                            var lbl = document.createElement("Lable");
+                            lbl.innerText = content[j].title;
+                            lbl.style.marginLeft = "3mm";
+                            cov.appendChild(x);
+                            cov.appendChild(lbl);
+                            x.onchange = function () {
+                                if (this.checked == true) {
+                                    var selValid = document.getElementById("SelCoversValid");
+                                    selValid.innerText = "";
+                                }
+                            }
+
+                        }
+                    }).catch(error => (console.log(error)));
+            }
+            else {                
+                var urrl3 = "/Fire-Insurance-Index"
+                //window.location.replace(urrl3);
+                var formData = new FormData();
+                formData.append("Premium","0");
+                formData.append("Clear","true");
+                fetch(urrl3,
+                    {
+                        method: "POST",
+                        mode: "no-cors",
+                        cache: "no-cache",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "form-data"
+                        },
+                        body: formData
+                    })
+                    .then(function (response) {
+                        if (response.status == 200)
+                        {
+                            window.location.replace(urrl3);
+                        }
+                    }).then(function (text) {
+                        //text is the server's response
+                    });
+                
+
+            }
+
+        }
+
+        //FireBuildingUsageTypeId
+        let usagetype = document.getElementById("fbtypeId");
+
+        if (usagetype.value !== "") {
+            var ar = @Html.Raw(Json.Serialize(Model.SelectedCovers));
+            var post = @Html.Raw(Json.Serialize(Model.IsPosted));
+            fetchCoverages(usagetype, ar, post);
+        }
+        //FireStructureTypeId
+        let building_type = document.getElementById("fstypeId");
+        if (building_type.value !== "") {
+            var ar = @Html.Raw(Json.Serialize(Model.SelectedCovers));
+            var post = @Html.Raw(Json.Serialize(Model.IsPosted));
+            fetchCoverages(usagetype, ar, post);
+        }
+        building_type.addEventListener("change", function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var limit = selectedOption.getAttribute("data-limit");
+            var mcovers = document.getElementsByName("SelectedCovers");
+            if (limit == "True") {
+                for (t = 0; t < mcovers.length; t++) {
+                    var climit = mcovers[t].getAttribute("data-limit");
+                    if (climit === "true") {
+                        mcovers[t].setAttribute('disabled', 'true');
+                        mcovers[t].checked = false;
+                    }
+                }
+            }
+            else {
+                for (t = 0; t < mcovers.length; t++) {
+                    var climit = mcovers[t].getAttribute("data-limit");
+                    if (climit === "true") {
+                        mcovers[t].removeAttribute('disabled');
+                    }
+                }
+            }
+        });
+        let insType = document.getElementById("InsurerType");
+        insType.addEventListener("change", function () {
+            var url = "/FireInsurance/GetInsurerType?id=" + this.value;
+            fetch(url, {
+                method: "Get",
+                headers: { "Content-type": "json/application" },
+            }).then(function (response) {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            })
+                .then((content) => {
+                    let percent = document.getElementById("extradis");
+
+                    percent.value = content.discountPercent;
+                }).catch(error => (console.log(error)));
+
+            var url = "/FireInsurance/GetFireLegalResult";
+            //fetch(url, {
+            //    method: "Get",
+            //    headers: { "Content-type": "json/application" },
+            //}).then(function (response) {
+            //    if (response.status == 200) {
+            //        return response.json();
+            //    }
+            //})
+            //    .then((content) => {
+            //        let legdis = document.getElementById("legaldis");
+            //        let lbl = document.getElementById("lblPerAdd");
+            //        if (Math.sign(content) === 1) {
+            //            lbl.innerText = "درصد اضافه نرخ";
+            //        }
+            //        else {
+            //            lbl.innerText = "درصد تخفیف";
+            //        }
+
+            //        legdis.value = Math.abs(content);
+            //    }).catch(error => (console.log(error)));
+        });
+        var hasprevins = document.getElementById("HasPrevIns");
+        hasprevins.addEventListener("change", function () {
+            var fields = document.getElementsByClassName("previnsfield");
+            if (hasprevins.checked) {
+                for (var i = fields.length - 1; i >= 0; i--) {
+                    fields[i].classList.remove("no-display");
+                }
+            }
+            else {
+                for (var i = fields.length - 1; i >= 0; i--) {
+                    fields[i].classList.add("no-display");
+                }
+            }
+        });
+        var numInps = document.getElementsByClassName("numberInput");
+        for (var j = 0; j < numInps.length; j++) {
+            numInps[j].addEventListener("keyup", function () {
+                var x = wordifyfa(this.value);
+                var parent = this.parentElement;
+                var parentclass = parent.className;
+                var next = this.nextElementSibling;
+                var next2 = parent.querySelector(".wordify");
+                if (next2 !== null && typeof (next2) !== "undefined") {
+                    if (this.value !== "") {
+                        next2.innerText = x;
+                    }
+                    else {
+                        next2.innerText = "";
+                    }
+
+                }
+            });
+        };
+
+        document.getElementById("moreInfo").addEventListener("click", function () {
+            var element = document.getElementById('minf');
+            var topPos = element.getBoundingClientRect().top + window.scrollY - 200;
+            window.scrollTo({
+                top: topPos,
+                behavior: "smooth"
+            });
+        });
+    </script>
+
+    }
+
+
+
